@@ -13,7 +13,8 @@
 
 ### 简介📖
 
-这是一个- [为TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
+这是一个- 为[TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
+（二创，我写帮助+建库，[弦塔](https://github.com/Sczr0)改的代码）原仓库[虚空插件](https://github.com/go-farther-and-farther/akasha-terminal-plugin)
 
 ### 安装说明🖥️
 <div>
