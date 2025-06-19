@@ -141,5 +141,6 @@ pnpm install -P
   
   - 联系我们 Q群 1017886209
   </details>
-本插件开源协议为GPL-2.0-1-ov-file
+
+本插件开源协议为GPL-2.0-license
 
