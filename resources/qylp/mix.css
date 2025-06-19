@@ -1,0 +1,41 @@
+    h1 {
+        color: chartreuse;
+        text-align: center;
+    }
+
+    body {
+        margin: auto;
+    }
+
+    .end{
+        text-align: center;
+    }
+    
+    .box {
+        width: 100px;
+        height: 100px;
+        float: left;
+        border: 1px solid rgb(114, 110, 110);
+        box-shadow: 5px 2px 5px black inset;
+    }
+
+    .mixbox {
+        background-color: rgba(190, 188, 186, 0.983);
+        width: 306px;
+        height: 306px;
+        margin: auto;
+    }
+
+    .mixresult {
+        background-color: rgba(190, 188, 186, 0.983);
+        width: 100px;
+        height: 100px;
+        margin: auto;
+        box-shadow: 5px 2px 5px black inset;
+        border: 1px solid rgb(114, 110, 110);
+    }
+
+    .jiantou{
+        text-align: center;
+    }
+

@@ -1,0 +1,20 @@
+- group: 
+  list:
+    - icon: 55
+      title: "#虚空配置更改+配置名*数值"
+      desc: "#虚空配置更改撤回时间*30"
+    - icon: 55
+      title: "#虚空更新"
+      desc: "更新半虚空插件"
+
+- group: 
+  list:
+    - icon: 5
+      title: "#虚空开启+云崽/私聊/功能名"
+      desc: "#虚空关闭云崽"
+    - icon: 5
+      title: "#虚空添加主人+QQ"
+      desc: "#虚空删除主人+QQ"
+    - icon: 55
+      title: "#云崽配置状态"
+      desc: "后台打印记录可查看"
