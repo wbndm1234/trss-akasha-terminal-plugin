@@ -13,7 +13,7 @@
 
 ### 简介📖
 
-这是一个- [Yunzai-Bot V3](https://github.com/Le-niao/Yunzai-Bot)插件包，提供群内各种小游戏以及相关管理工具。
+这是一个- [为TRSS崽适配](https://github.com/TimeRainStarSky/Yunzai)插件包，提供群内各种小游戏以及相关管理工具。
 
 ### 安装说明🖥️
 <div>
