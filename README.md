@@ -4,7 +4,7 @@
 
 <h1 align="center">Akasha-Terminal-plugin</h1>
 
-[![访问量](https://profile-counter.glitch.me/akasha-terminal-plugin/count.svg)](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
+[![访问量](https://profile-counter.glitch.me/akasha-terminal-plugin/count.svg)](https://github.com/wbndm1234/trss-akasha-terminal-plugin)
 
 #### 声明📣
 <h2 align="center" color="red">本插件仅供娱乐!</h2>
