@@ -8,13 +8,13 @@ if (!global.segment) {
   global.segment = (await import("oicq")).segment
 }
 
-const files = fs.readdirSync('./plugins/akasha-terminal-plugin/apps').filter(file => file.endsWith('.js'))//以js结束的文件被读取
+const files = fs.readdirSync('./plugins/trss-akasha-terminal-plugin/apps').filter(file => file.endsWith('.js'))//以js结束的文件被读取
 const apps = await BotApi.Index.toindex({ indexName: 'apps' });
 let ret = []
 
 if (Bot?.logger?.info) {
     Bot.logger.info('🌱🌱🌱🌱🌱🌱🌱🌱')
-    Bot.logger.info(chalk.green(`(🍀Akasha-Terminal-Plugin🍀):"虚空插件trss版"初始化.....`))
+    Bot.logger.info(chalk.green(`(🍀trss-akasha-terminal-plugin🍀):"虚空插件trss版"初始化.....`))
     Bot.logger.info(chalk.yellow(`┎┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┒`))
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(` ┅┅┅┅┳┅┅┅┅      ⋏     ┅┅┅┅┳┅┅┅┅  ┎┅┅┅┅┅┅┒ `)+chalk.yellow(`┃`))
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋         / \\       ┋      ┃      ┃ `)+chalk.yellow(`┃`))
@@ -22,11 +22,11 @@ if (Bot?.logger?.info) {
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋       /     \\     ┋      ┃        `)+chalk.yellow(`┃`))
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋      /       \\    ┋      ┃        `)+chalk.yellow(`┃`))
     Bot.logger.info(chalk.yellow(`┖┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┚`))
-    Bot.logger.warn(chalk.blue(`(🍀Akasha-Terminal-Plugin🍀):若出现README.md中未提及的问题,请联系我们!!!`))
-    Bot.logger.info(chalk.green('(🍀Akasha-Terminal-Plugin🍀):"初始化完成,祝您游玩愉快!🌴'))
+    Bot.logger.warn(chalk.blue(`(🍀trss-akasha-terminal-plugin🍀):若出现README.md中未提及的问题,请联系我们!!!`))
+    Bot.logger.info(chalk.green('(🍀trss-akasha-terminal-plugin🍀):"初始化完成,祝您游玩愉快!🌴'))
     Bot.logger.info('🌴🌴🌴🌴🌴🌴🌴🌴')
 } else {
-    console.log(`正在载入"🌱虚空插件"~`)
+    console.log(`正在载入"🌱虚空插件trss版"~`)
 }
 
 
