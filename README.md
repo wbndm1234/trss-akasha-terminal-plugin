@@ -2,9 +2,9 @@
 
 <img width="200" src="resources/虚空终端.png">
 
-<h1 align="center">Akasha-Terminal-plugin</h1>
+<h1 align="center">Trss-Akasha-Terminal-plugin</h1>
 
-[![访问量](https://profile-counter.glitch.me/akasha-terminal-plugin/count.svg)](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
+[![访问量](https://count.kjchmc.cn/get/@:trss-akasha-terminal-plugin)](https://github.com/wbndm1234/trss-akasha-terminal-plugin)
 
 #### 声明📣
 <h2 align="center" color="red">本插件仅供娱乐!</h2>
@@ -13,15 +13,50 @@
 
 ### 简介📖
 
-这是一个- [Yunzai-Bot V3](https://github.com/Le-niao/Yunzai-Bot)插件包，提供群内各种小游戏以及相关管理工具。
+这是一个为[TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
+（二创，我写帮助+建库，[弦塔](https://gitee.com/sczr)改的代码）原仓库[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
 
-### 安装说明🖥️
-<div>
-- 推荐使用git进行安装，以方便后续升级。在BOT根目录夹打开终端，运行
+## 安装🚀
 
-```base
-git clone --depth 1 https://gitee.com/go-farther-and-farther/akasha-terminal-plugin.git ./plugins/akasha-terminal-plugin
+
+在 Yunzai 根目录下，打开终端并执行以下指令：
+
+**1. 选择一个源进行克隆：**
+
+<details>
+<summary><b>① (推荐) 使用 Github</b></summary>
+
+```bash
+git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-Plugin/
 ```
+
+</details>
+
+<details>
+<summary><b>② (国内) 使用 Gitee</b></summary>
+
+```bash
+git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
+```
+
+</details>
+
+<details>
+<summary><b>③ (备用) 使用 Gitcode</b></summary>
+
+```bash
+git clone --depth=1 https://gitcode.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
+```
+
+</details>
+
+**2. 安装依赖：**
+
+```bash
+cd ./plugins/trss-akasha-terminal-plugin/
+pnpm install -P
+```
+
 
 使用`#虚空更新`指令进行更新操作。
 使用`#虚空重置配置`指令进行更配置更新操作。(注,该指令将覆盖本地修改,使用后请重新按需求需求设置)
@@ -103,33 +138,7 @@ git clone --depth 1 https://gitee.com/go-farther-and-farther/akasha-terminal-plu
   - 有人老婆或本人退群导致,使用#虚空清除无效存档,即可
 
   - 上述方法未能解决或我有其他问题!
-  - 联系我们 Q群 906539561
+  - 联系我们 Q群 1017886209
   </details>
 
-#### 参与贡献❤️
-
-1.  @越追越远 提供了plugin框架
-2.  @越追越远 && @尘封 提供了决斗功能
-3.  @越追越远 && @尘封 提供了娶群友功能
-4.  @长楠 && @尘封 提供了娶群友事件资源
-
-#### 发电成员😘
-|爱发电昵称   |发电金额   |爱发电昵称   |发电金额   |
-|---|---|---|---|
-|爱发电用户_QBCp   |¥15.00   |。   |¥5.00   |
-|爱发电用户_YjGT   |¥5.00   |长楠   |¥10.00   |
-|爱发电用户_KAPx   |¥5.00   |冬季巧克力   |¥5.00   |
-|花花   |¥5.00   |维拉   |¥5.00   |
-|七   |¥5.00   |小丑   |¥15.00   |
-|三木East   |¥5.00   |小鳄鱼   |¥5.00   |
-|雨沫   |¥5.00   |yuanxing   |¥20.00   |
-
-### 特别感谢🌱
-
-@FanSky_Qs
-
-### 帮助我们
-[爱发电](https://afdian.net/a/akasha667)
-
-点一个小小的star⭐吧~~球球了ヾ(≧▽≦*)o
 
