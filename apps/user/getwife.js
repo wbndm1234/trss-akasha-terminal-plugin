@@ -1,4 +1,3 @@
-//随便写的,大佬勿喷 初版@鸢:随机娶群友，指定娶群友
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import fs from 'fs'
 import Config from '../../model/Config.js'
