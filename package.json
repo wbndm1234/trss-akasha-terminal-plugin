@@ -1,0 +1,20 @@
+{
+  "name": "trss-akasha-terminal-plugin",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbndm1234/trss-akasha-terminal-plugin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues"
+  },
+  "homepage": "https://github.com/wbndm1234/trss-akasha-terminal-plugin#readme"
+}
