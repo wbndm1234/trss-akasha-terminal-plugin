@@ -1,11 +1,11 @@
 import fs from 'node:fs'
 import YAML from 'yaml'
 
-const _defpath = `./plugins/akasha-terminal-plugin/config/akasha.config.def.yaml`;
+const _defpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.def.yaml`;
 
-const configyamlpath = `./plugins/akasha-terminal-plugin/config/akasha.config.yaml`;
+const configyamlpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.yaml`;
 
-const resourcespath = `./plugins/akasha-terminal-plugin/resources/akasha.resources.yaml`;
+const resourcespath = `./plugins/trss-akasha-terminal-plugin/resources/akasha.resources.yaml`;
 
 const _path = process.cwd().replace(/\\/g, '/');
 

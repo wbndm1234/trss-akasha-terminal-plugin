@@ -2,7 +2,7 @@ import lodash from 'lodash'
 import fs from 'fs'
 
 const _path = process.cwd()
-const plugin = 'akasha-terminal-plugin'
+const plugin = 'trss-akasha-terminal-plugin'
 const getRoot = (root = '') => {
   if (root === 'root' || root === 'yunzai') {
     root = `${_path}/`

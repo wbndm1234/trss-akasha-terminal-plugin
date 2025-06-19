@@ -1,7 +1,7 @@
 import fs from 'fs'
 import lodash from 'lodash'
 import cfg from '../../../lib/config/config.js'
-const Plugin_Path = `${process.cwd()}/plugins/akasha-terminal-plugin`;
+const Plugin_Path = `${process.cwd()}/plugins/trss-akasha-terminal-plugin`;
 const README_path = `${Plugin_Path}/README.md`//帮助
 const CHANGELOG_path = `${Plugin_Path}/CHANGELOG.md`//更新
 const yunzai_ver = `v${cfg.package.version}`;//云崽的版本
@@ -104,7 +104,7 @@ let Version = {
     return changelogs;
   },
   runtime() {
-    logger.error(`未能找到e.runtime，请升级至最新版${isV3 ? 'V3' : 'V2'}-Yunzai以使用akasha-terminal-plugin`)
+    logger.error(`未能找到e.runtime，请升级至最新版${isV3 ? 'V3' : 'V2'}-Yunzai以使用trss-akasha-terminal-plugin`)
     //这个是cv喵佬的，但是我没找到package.json，有点害怕报错
     //现在找到了，这个是云崽根目录的那个
   }

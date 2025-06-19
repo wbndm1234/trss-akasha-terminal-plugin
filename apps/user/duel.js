@@ -4,9 +4,9 @@ import command from '../../components/command.js'
 
 //项目路径
 let duelCD = {};
-//如果报错请删除plugins/akasha-terminal-plugin/data目录中文件battle.json
-const dirpath = "plugins/akasha-terminal-plugin/data";//文件夹路径
-const dirpath2 = "plugins/akasha-terminal-plugin/data/UserData";//文件夹路径
+//如果报错请删除plugins/trss-akasha-terminal-plugin/data目录中文件battle.json
+const dirpath = "plugins/trss-akasha-terminal-plugin/data";//文件夹路径
+const dirpath2 = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
 const filename = `battle.json`;//文件名
 var Template = {//创建该用户
 	"experience": 0,

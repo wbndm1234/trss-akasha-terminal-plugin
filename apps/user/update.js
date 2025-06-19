@@ -2,9 +2,9 @@ import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import fetch from 'node-fetch'
 import fs from "fs";
 import { createRequire } from "module";
-const _defpath = `./plugins/akasha-terminal-plugin/config/akasha.config.def.yaml`;
-const configyamlpath = `./plugins/akasha-terminal-plugin/config/akasha.config.yaml`;
-const configyamlbackpath = `./plugins/akasha-terminal-plugin/config/akasha.config.back.yaml`;
+const _defpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.def.yaml`;
+const configyamlpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.yaml`;
+const configyamlbackpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.back.yaml`;
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -74,7 +74,7 @@ export class update extends plugin {
                             error.code +
                             "\n" +
                             error.stack +
-                            "\n\n本地代码与远程代码存在冲突,上面报错信息中包含冲突文件名称及路径，请尝试处理冲突\n如果不想保存本地修改请使用【#强制更新】\n(注意：强制更新命令会忽略所有本地对akasha-terminal-plugin插件本身文件的修改，本地修改均不会保存，请注意备份)"
+                            "\n\n本地代码与远程代码存在冲突,上面报错信息中包含冲突文件名称及路径，请尝试处理冲突\n如果不想保存本地修改请使用【#强制更新】\n(注意：强制更新命令会忽略所有本地对trss-akasha-terminal-plugin插件本身文件的修改，本地修改均不会保存，请注意备份)"
                         );
                     } else if (isNetwork) {
                         await me.e.reply(
@@ -91,7 +91,7 @@ export class update extends plugin {
                 }
             });
         }
-        var ls = exec(command, { cwd: `${_path}/plugins/akasha-terminal-plugin/` }, async function (error, stdout, stderr) {
+        var ls = exec(command, { cwd: `${_path}/plugins/trss-akasha-terminal-plugin/` }, async function (error, stdout, stderr) {
             if (error) {
                 let isChanges = error.toString().includes("Your local changes to the following files would be overwritten by merge") ? true : false;
 
@@ -105,7 +105,7 @@ export class update extends plugin {
                         error.code +
                         "\n" +
                         error.stack +
-                        "\n\n本地代码与远程代码存在冲突,上面报错信息中包含冲突文件名称及路径，请尝试处理冲突\n如果不想保存本地修改请使用【#强制更新】\n(注意：强制更新命令会忽略所有本地对akasha-terminal-plugin插件本身文件的修改，本地修改均不会保存，请注意备份)"
+                        "\n\n本地代码与远程代码存在冲突,上面报错信息中包含冲突文件名称及路径，请尝试处理冲突\n如果不想保存本地修改请使用【#强制更新】\n(注意：强制更新命令会忽略所有本地对trss-akasha-terminal-plugin插件本身文件的修改，本地修改均不会保存，请注意备份)"
                     );
                 } else if (isNetwork) {
                     await me.e.reply(
@@ -141,7 +141,7 @@ export class update extends plugin {
 
         try {
 
-            await redis.set("Yunzai:akasha-terminal-plugin:restart", data, { EX: 120 });
+            await redis.set("Yunzai:trss-akasha-terminal-plugin:restart", data, { EX: 120 });
 
             let cm = `npm run start`;
             if (process.argv[1].includes("pm2")) {
@@ -151,7 +151,7 @@ export class update extends plugin {
 
             exec(cm, async (error, stdout, stderr) => {
                 if (error) {
-                    redis.del(`Yunzai:akasha-terminal-plugin:restart`);
+                    redis.del(`Yunzai:trss-akasha-terminal-plugin:restart`);
                     await this.e.reply(`操作失败！\n${error.stack}`);
                     Bot.logger.error(`重启失败\n${error.stack}`);
                 } else if (stdout) {
@@ -162,7 +162,7 @@ export class update extends plugin {
 
             });
         } catch (error) {
-            redis.del(`Yunzai:akasha-terminal-plugin:restart`);
+            redis.del(`Yunzai:trss-akasha-terminal-plugin:restart`);
             await this.e.reply(`操作失败！\n${error.stack}`);
         }
 

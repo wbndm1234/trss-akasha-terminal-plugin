@@ -17,7 +17,7 @@ export class MIX extends plugin {
     }
     async mixbox(e){
         var data = {
-            file: './plugins/akasha-terminal-plugin/resources/qylp/mix.html'
+            file: './plugins/trss-akasha-terminal-plugin/resources/qylp/mix.html'
         }
         var img = await puppeteer.screenshot("mixbox", {
             ...data

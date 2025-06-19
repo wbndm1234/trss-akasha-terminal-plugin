@@ -3,7 +3,7 @@ import chokidar from 'chokidar'
 import fs from 'node:fs'
 
 const Path = process.cwd();
-const Plugin_Name = 'akasha-terminal-plugin'
+const Plugin_Name = 'trss-akasha-terminal-plugin'
 const Plugin_Path = `${Path}/plugins/${Plugin_Name}`;
 class Config {
   constructor() {

@@ -4,7 +4,7 @@ import { Data } from '../../components/index.js'
 
 let Theme = {
   async getThemeCfg (theme, exclude) {
-    let dirPath = './plugins/akasha-terminal-plugin/resources/help/theme/'
+    let dirPath = './plugins/trss-akasha-terminal-plugin/resources/help/theme/'
     let ret = []
     let names = []
     let dirs = fs.readdirSync(dirPath)

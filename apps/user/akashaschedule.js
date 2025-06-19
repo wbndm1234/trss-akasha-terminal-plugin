@@ -61,7 +61,7 @@ async function redblueball_start() {
             await common.relpyPrivate(mat, `娶群友小游戏虚空彩球已开奖,快去通知玩家们吧\n数据在本插件resources/qylp/lottery.json`)
         }
      }
-    const lotterypath = `plugins/akasha-terminal-plugin/resources/qylp`
+    const lotterypath = `plugins/trss-akasha-terminal-plugin/resources/qylp`
     let filename = `lottery.json`
     if (!fs.existsSync(lotterypath + "/" + filename)) {//如果文件不存在
         fs.writeFileSync(lotterypath + "/" + filename, JSON.stringify({//创建文件

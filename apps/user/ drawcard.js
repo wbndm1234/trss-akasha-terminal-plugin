@@ -1,7 +1,7 @@
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import fs from "fs";
-const dirpath = "plugins/akasha-terminal-plugin/data/UserData";//文件夹路径
-const dirpath2 = "plugins/akasha-terminal-plugin/resources/weapon/weapon.json";
+const dirpath = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
+const dirpath2 = "plugins/trss-akasha-terminal-plugin/resources/weapon/weapon.json";
 let Template = {//创建该用户
     "money": 5,
 };
@@ -163,14 +163,14 @@ export class drawcard extends plugin {
                 json[Grade][num]++
             }
             if (Grade == 5 || Grade == 4) {
-                msg2 = [`恭喜你抽到了${Grade}星武器,你的第${json[Grade][num]}把${name}`, segment.image(`plugins/akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
+                msg2 = [`恭喜你抽到了${Grade}星武器,你的第${json[Grade][num]}把${name}`, segment.image(`plugins/trss-akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
                 e.reply(msg2)
             } else {
                 if (num_chou > 1)
                     msg = msg + `你已经有${json[Grade][num]}把${name}了,你还有${json['money']}纠缠之缘\n`
                 if (num_chou == 1) {
                     msg = [`你已经有${json[Grade][num]}把三星武器${name}了,你还有${json['money']}纠缠之缘`,
-                    segment.image(`plugins/akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
+                    segment.image(`plugins/trss-akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
                     e.reply(msg)
                 }
             }

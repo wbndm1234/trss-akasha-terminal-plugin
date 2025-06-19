@@ -5,13 +5,13 @@ import Config from '../../model/Config.js'
 import moment from "moment"
 import command from '../../components/command.js'
 import akasha_data from '../../components/akasha_data.js'
-const dirpath2 = "plugins/akasha-terminal-plugin/data/UserData";//文件夹路径
+const dirpath2 = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
 let Magnification = await command.getConfig("duel_cfg", "Magnification");
 
-const giftpath = `plugins/akasha-terminal-plugin/resources/qylp/giftthing.json`
-const housepath = `plugins/akasha-terminal-plugin/resources/qylp/house.json`
-const lotterypath = `plugins/akasha-terminal-plugin/resources/qylp/lottery.json`
-const inpapath = `plugins/akasha-terminal-plugin/resources/qylp/inpa.json`
+const giftpath = `plugins/trss-akasha-terminal-plugin/resources/qylp/giftthing.json`
+const housepath = `plugins/trss-akasha-terminal-plugin/resources/qylp/house.json`
+const lotterypath = `plugins/trss-akasha-terminal-plugin/resources/qylp/lottery.json`
+const inpapath = `plugins/trss-akasha-terminal-plugin/resources/qylp/inpa.json`
 const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 let cdTime = Number(await command.getConfig("wife_cfg", "sjcd")) * 60;//随机娶群友冷却
 let cdTime2 = Number(await command.getConfig("wife_cfg", "qqcd")) * 60;//强娶冷却

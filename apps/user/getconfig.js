@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import YAML from 'yaml'
-const _defpath = `./plugins/akasha-terminal-plugin/config/akasha.config.def.yaml`;
-const configyamlpath = `./plugins/akasha-terminal-plugin/config/akasha.config.yaml`;
-const configyamlbackpath = `./plugins/akasha-terminal-plugin/config/akasha.config.back.yaml`;
+const _defpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.def.yaml`;
+const configyamlpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.yaml`;
+const configyamlbackpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.back.yaml`;
 const _path = process.cwd().replace(/\\/g, '/');
 
 export class getconfig extends plugin {

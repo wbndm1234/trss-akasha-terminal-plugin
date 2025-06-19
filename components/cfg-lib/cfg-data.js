@@ -6,7 +6,7 @@ import fs from 'node:fs'
 let cfgData = {
   async loadOldData () {
     const _path = process.cwd()
-    const _cfgPath = `${_path}/plugins/akasha-terminal-plugin/components/`
+    const _cfgPath = `${_path}/plugins/trss-akasha-terminal-plugin/components/`
     if (!fs.existsSync(_cfgPath + 'cfg.json')) {
       return false
     }
@@ -34,7 +34,7 @@ let cfgData = {
         ret.push(`export const ${cfgKey} = ${val.toString()}`, '')
       })
     })
-    fs.writeFileSync(`${process.cwd()}/plugins/akasha-terminal-plugin/config/cfg.js`, ret.join('\n'), 'utf8')
+    fs.writeFileSync(`${process.cwd()}/plugins/trss-akasha-terminal-plugin/config/cfg.js`, ret.join('\n'), 'utf8')
   },
 
   async getCfg () {
