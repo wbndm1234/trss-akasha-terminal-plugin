@@ -1,10 +1,10 @@
 import fs from "fs";
-const dirpath = "plugins/akasha-terminal-plugin/data"
-const QQYpath = "plugins/akasha-terminal-plugin/data/qylp"
-const QQYhomepath = "plugins/akasha-terminal-plugin/data/qylp/UserHome"
-const QQYincapath = "plugins/akasha-terminal-plugin/data/qylp/UserYinPa"
-const QQYplacepath = "plugins/akasha-terminal-plugin/data/qylp/UserPlace"
-const QQYhousepath = "plugins/akasha-terminal-plugin/data/qylp/UserHouse"
+const dirpath = "plugins/trss-akasha-terminal-plugin/data"
+const QQYpath = "plugins/trss-akasha-terminal-plugin/data/qylp"
+const QQYhomepath = "plugins/trss-akasha-terminal-plugin/data/qylp/UserHome"
+const QQYincapath = "plugins/trss-akasha-terminal-plugin/data/qylp/UserYinPa"
+const QQYplacepath = "plugins/trss-akasha-terminal-plugin/data/qylp/UserPlace"
+const QQYhousepath = "plugins/trss-akasha-terminal-plugin/data/qylp/UserHouse"
 //这两个函数都是用来读取和保存json数据的
 async function getUser(id, json, Template, filename, is_save) {
     /*if (filename.indexOf(".json") == -1) {//如果文件名不包含.json
