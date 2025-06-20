@@ -146,7 +146,7 @@ pnpm install -P
    **提交 Bug 或建议**：
   - 通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
   - 通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
-  - 可以来我群玩玩来提点建议捏[作者QQ群](https://qm.qq.com/q/n0ewaCWIGk)
+  - 可以来[QQ群](https://qm.qq.com/q/n0ewaCWIGk)玩玩来提点建议捏
  
    ## 📜 许可证
   
