@@ -185,6 +185,15 @@ export const helpList = [{
     title: '#虚空彩球开奖',
     desc: '顾名思义'
   }]
+}, {
+  group: '测试功能',
+  auth: 'master',
+  list: [{
+    icon: 40,
+    title: '#cp文生成',
+    desc: '本地生成cp文的（不太确定能不能用）'
+    }, {
 }]
 
+}]
 export const isSys = true
