@@ -4,9 +4,6 @@ import { Data, Version } from './components/index.js'
 //import Ver from './components/Version.js'
 import chalk from 'chalk'//用粉笔写；用白垩粉擦
 
-if (!global.segment) {
-  global.segment = (await import("oicq")).segment
-}
 
 const files = fs.readdirSync('./plugins/trss-akasha-terminal-plugin/apps').filter(file => file.endsWith('.js'))//以js结束的文件被读取
 const apps = await BotApi.Index.toindex({ indexName: 'apps' });
