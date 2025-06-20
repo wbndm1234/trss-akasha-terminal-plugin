@@ -4,7 +4,7 @@ import fs from 'fs'
 const _path = process.cwd()
 const plugin = 'trss-akasha-terminal-plugin'
 const getRoot = (root = '') => {
-  if (root === 'root' || root === 'yunzai') {
+  if (root === 'root' || root === 'TRSS-Yunzai') {
     root = `${_path}/`
   } else if (!root) {
     root = `${_path}/plugins/${plugin}/`

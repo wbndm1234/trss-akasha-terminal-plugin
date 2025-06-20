@@ -27,7 +27,7 @@ export default async function (path, params, cfg) {
     },
     sys: {
       scale: Cfg.scale(cfg.scale || 1),
-      copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & trss-akasha-terminal-plugin<span class="version">${Version.ver}</span>`
+      copyright: `Created By TRSS-Yunzai<span class="version">${Version.yunzai}</span> & trss-akasha-terminal-plugin<span class="version">${Version.ver}</span>`
     },
     quality: 100
   }
