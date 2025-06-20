@@ -1,4 +1,6 @@
-# Trss-Akasha-Terminal-plugin
+<div align="center">
+<img width="200" src="resources/虚空终端.png">
+<h1 align="center">Trss-Akasha-Terminal-plugin</h1>
 
 [![访问量](https://count.kjchmc.cn/get/@:trss-akasha-terminal-plugin)](https://github.com/wbndm1234/trss-akasha-terminal-plugin)
 
