@@ -190,7 +190,7 @@ export const helpList = [{
   auth: 'master',
   list: [{
     icon: 40,
-    title: '#cp文生成',
+    title: '#虚空cp文生成',
     desc: '本地生成cp文的（不太确定能不能用）'
     }, {
 }]
