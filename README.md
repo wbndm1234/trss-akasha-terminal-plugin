@@ -139,8 +139,19 @@ pnpm install -P
 
   - 上述方法未能解决或我有其他问题!
   
-  - 联系我们 Q群 1017886209
-  </details>
+  - 联系我们 Q群 1017886209或PR插件啦，球球了（修不动啊QAQ）
+ 
+ </details> <details><summary>展开</summary>
+  ## ❤️ 贡献
+- **提交 Bug 或建议**：
+    通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
+    通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
+    可以 来我群玩玩[QQ群](https://qm.qq.com/q/n0ewaCWIGk) 嘿嘿
+ 
+  </details> <details><summary>展开</summary>
+  ## 📜 许可证
+  
+   本项目使用 GPL-2.0-license 开源。
 
-本插件开源协议为GPL-2.0-license
+
 
