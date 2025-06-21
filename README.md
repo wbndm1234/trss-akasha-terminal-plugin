@@ -14,7 +14,8 @@
 ### 简介📖
 
 这是一个为[TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
-（二创，[我](https://gitee.com/dmqaq)写帮助+建库，[弦塔](https://gitee.com/sczr)和[我](https://gitee.com/dmqaq)改的代码）原仓库[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
+
+(二创，[我](https://gitee.com/dmqaq)写帮助+建库，[弦塔](https://gitee.com/sczr)和[我](https://gitee.com/dmqaq)改的代码)原仓库[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
 
 ## 安装🚀
 
