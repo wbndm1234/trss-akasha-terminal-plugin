@@ -4,9 +4,6 @@ import { Data, Version } from './components/index.js'
 //import Ver from './components/Version.js'
 import chalk from 'chalk'//用粉笔写；用白垩粉擦
 
-if (!global.segment) {
-  global.segment = (await import("oicq")).segment
-}
 
 const files = fs.readdirSync('./plugins/trss-akasha-terminal-plugin/apps').filter(file => file.endsWith('.js'))//以js结束的文件被读取
 const apps = await BotApi.Index.toindex({ indexName: 'apps' });
@@ -21,8 +18,8 @@ if (Bot?.logger?.info) {
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋        /───\\      ┋      ┠┅┅┅┅┅┅┚ `)+chalk.yellow(`┃`))
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋       /     \\     ┋      ┃        `)+chalk.yellow(`┃`))
     Bot.logger.info(chalk.yellow(`┃`)+chalk.green(`     ┋      /       \\    ┋      ┃        `)+chalk.yellow(`┃`))
-    Bot.logger.info(chalk.yellow(`┖┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┃`))
-    Bot.logger.warn(chalk.blue(`(🍀trss-akasha-terminal-plugin🍀):若出现README.md中未提及的问题,请联系作者!!!`))
+    Bot.logger.info(chalk.yellow(`┖┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┚`))
+    Bot.logger.warn(chalk.blue(`(🍀trss-akasha-terminal-plugin🍀):若出现README.md中未提及的问题,请联系我们!!!`))
     Bot.logger.info(chalk.green('(🍀trss-akasha-terminal-plugin🍀):"初始化完成,祝您游玩愉快!🌴'))
     Bot.logger.info('🌴🌴🌴🌴🌴🌴🌴🌴')
 } else {

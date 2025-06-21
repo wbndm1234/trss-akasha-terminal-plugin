@@ -1,15 +1,15 @@
-import plugin from '../../lib/plugins/plugin.js'
+import{ BotApi, AlemonApi, plugin } from  '../../model/api/api.js'
 /**https://github.com/wbndm1234/trss-akasha-terminal-plugin**/
 export class cp extends plugin {
   constructor () {
     super({
-      name: 'cp短打生成器',
-      dsc: '本地生成cp文',
+      name: '虚空cp文生成器',
+      dsc: '本地生成虚空cp文',
       event: 'message',
       priority: 5000,
       rule: [
         {
-          reg: '^#?cp文生成$',
+          reg: '^#?虚空cp文生成$',
           fnc: 'cp'
         }
       ]
