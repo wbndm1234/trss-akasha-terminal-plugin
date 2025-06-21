@@ -153,7 +153,7 @@ pnpm install -P
   </details>
    
    ## ❤️ 贡献
-  - 这个是原仓库[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin) 我与插件作者二创以适配trss崽（喵崽的ICQQ还是太牢了），我建库加写帮助放武器图，[越追越远](https://gitee.com/go-farther-and-farther)+[尘封](https://gitee.com/tyg211375)+[我](https://gitee.com/dmqaq)来改的代码
+  - 这个是原[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin) 仓库，我与插件作者二创以适配trss崽（喵崽的ICQQ还是太牢了），我建库加写帮助放武器图，[越追越远](https://gitee.com/go-farther-and-farther)+[尘封](https://gitee.com/tyg211375)+[我](https://gitee.com/dmqaq)来改的代码
   
   **提交 Bug 或建议**：
   - 通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
