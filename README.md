@@ -15,7 +15,7 @@
 
 这是一个为[TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
 
-(二创，[我](https://gitee.com/dmqaq)写帮助+建库，[弦塔](https://gitee.com/sczr)和[我](https://gitee.com/dmqaq)改的代码)原仓库[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin)
+
 
 ## 安装🚀
 
@@ -111,6 +111,15 @@ pnpm install -P
 
   </details>
 
+  <h1 align="center"><i>测试插件😜!</i></h1>
+  <details><summary align="center">展开说明</summary>
+
+  |将实现   |描述   |
+  |---|---|
+  |随机生成cp文   |奇妙的cp文？()     |
+
+  </details>
+
   <h1 align="center"><i>面向未来🕰!</i></h1>
   <details><summary align="center">展开说明</summary>
 
@@ -144,7 +153,9 @@ pnpm install -P
   </details>
    
    ## ❤️ 贡献
-   **提交 Bug 或建议**：
+  - 这个是原[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin) 仓库，我与原插件作者二创以适配trss崽（喵崽的ICQQ还是太牢了），我建库加写帮助放武器图，[越追越远](https://gitee.com/go-farther-and-farther)+[尘封](https://gitee.com/tyg211375)+[我](https://gitee.com/dmqaq)来改的代码
+  
+  **提交 Bug 或建议**：
   - 通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
   - 通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
   - 可以来[QQ群](https://qm.qq.com/q/n0ewaCWIGk)玩玩来提点建议捏
