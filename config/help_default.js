@@ -9,14 +9,14 @@
 // 帮助配置
 export const helpCfg = {
   // 帮助标题
-  title: 'akasha帮助',
+  title: '虚空trss版帮助',
 
   // 帮助副标题
-  subTitle: 'Yunzai-Bot & akasha-terminal-plugin',
+  subTitle: 'TRSS-Yunzai & trss-akasha-terminal-plugin',
 
   // 帮助表格列数，可选：2-5，默认3
   // 注意：设置列数过多可能导致阅读困难，请参考实际效果进行设置
-  colCount: 3,
+  colCount: 4,
 
   // 单列宽度，默认265
   // 注意：过窄可能导致文字有较多换行，请根据实际帮助项设定
@@ -132,6 +132,10 @@ export const helpList = [{
     desc: '让对方失去你这个老婆'
   }, {
     icon: 20,
+    title: '退出/踢出银啪@群友',
+    desc: '退出别人的银啪队伍或把别人踢出自己的队伍'
+  }, {
+    icon: 20,
     title: '打工赚钱',
     desc: '有些事,是需要代价的'
   }, {
@@ -152,17 +156,21 @@ export const helpList = [{
     desc: '抱抱增加好感度'
   }, {
     icon: 20,
+    title: '开始银啪',
+    desc: '?'
+  }, {
+    icon: 20,
     title: '群cp',
     desc: '看看本群的cp们'
   }, {
     icon: 20,
     title: '家庭信息',
     desc: '看看家,看看资产'
+  }, {
+    icon: 20,
+    title: '虚空清除无效存档',
+    desc: '部分指令无响应时使用'
   }]
-}, {
-  icon: 20,
-  title: '虚空清除无效存档',
-  desc: '部分指令无响应时使用'
 }, {
   group: '管理命令，仅bot管理员可用',
   auth: 'master',
@@ -179,4 +187,15 @@ export const helpList = [{
     title: '#虚空彩球开奖',
     desc: '顾名思义'
   }]
+}, {
+  group: '测试功能',
+  auth: 'master',
+  list: [{
+    icon: 40,
+    title: '#虚空cp文生成',
+    desc: '本地生成cp文的（不太确定能不能用）'
+    }, {
 }]
+
+}]
+export const isSys = true
