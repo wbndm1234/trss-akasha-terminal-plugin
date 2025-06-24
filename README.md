@@ -64,7 +64,7 @@ pnpm install -P
 </div>
 
 ### 游戏说明🌈
-  使用#虚空帮助 查看具体说明
+  使用#trss虚空帮助 查看具体说明
 
   <h1 align="center"><i>游戏管理⚙</i></h1>
   <details><summary align="center">展开说明</summary>

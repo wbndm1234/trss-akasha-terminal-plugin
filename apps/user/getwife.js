@@ -17,7 +17,9 @@ if (!global.segment) {
         }
     }
 }
+
 const dirpath2 = "plugins/akasha-terminal-plugin/data/UserData";//文件夹路径
+const dirpath2 = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
 let Magnification = await command.getConfig("duel_cfg", "Magnification");
 
 const giftpath = `plugins/akasha-terminal-plugin/resources/qylp/giftthing.json`
@@ -638,6 +640,7 @@ export class qqy extends plugin {
         }
         e.reply([
             global.segment.at(proposer_id), "\n",
+            global.segment.at(id), "\n",
             '天涯何处无芳草，何必单恋一枝花，下次再努力点吧！(˵¯͒〰¯͒˵)',
         ])
         homejson[proposer_id].wait = 0
