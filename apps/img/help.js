@@ -19,7 +19,7 @@ export class akasha_help extends plugin {
       rule: [
         {
           /** 命令正则匹配 */
-          reg: '^#?(TRSS虚空)(帮助|版本)$',
+          reg: '^#?(trss虚空)(帮助|版本)$',
           /** 执行方法 */
           fnc: 'message'
         },
