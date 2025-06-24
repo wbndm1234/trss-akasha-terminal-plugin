@@ -126,6 +126,8 @@ export class cp extends plugin {
       msg = "实习柜员" + segment.at(e.user_id) + "把刚开好的支票递到" + targetUser.nickname + "的手上：“让您久等了，查看一下信息是否有误，没有问题的话给我的服务打个分吧！”" + targetUser.nickname + "看着" + segment.at(e.user_id) + "笑开的脸，忽然一皱眉头：“这里的收款方写错了哦。”" + segment.at(e.user_id) + "接来一脸错愕，心想不会啊明明对过好几遍的，只听见" + targetUser.nickname + "一字一顿：“收款方应该是" + segment.at(e.user_id) + "。”";
     } else if (num <= 38) {
       msg = "今天是" + targetUser.nickname + "和" + segment.at(e.user_id) + "认识的一周年，" + targetUser.nickname + "给了" + segment.at(e.user_id) + "一个特殊的礼物，这也是他一年里最想做的事情，就是吻了挚友的唇。";
+    } else if (num <= 39) {
+      msg = segment.at(e.user_id) + "的工作遇到不顺，但初入职场只能忍气吞声。没过几天，" + targetUser.nickname + "主动送" + segment.at(e.user_id) + "上班。" + targetUser.nickname + "把车开到" + segment.at(e.user_id) + "的公司楼下，却与" + segment.at(e.user_id) + "一起下了车。门口的接待看到二人下车说：\"老板早上好。\"";
     } 
        e.reply(msg);
   }
