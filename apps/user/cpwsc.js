@@ -177,7 +177,6 @@ export class cp extends plugin {
     } else if (num <= 63) {
       msg = segment.at(e.user_id) + "和" + targetUser.nickname + "完全就是两个世界的人啊，为什么他们能走到一起？因为，" + segment.at(e.user_id) + "曾经给" + targetUser.nickname + "带来了光芒。";
     } 
-     
-       e.reply(msg);
+      e.reply(msg);
   }
 }
