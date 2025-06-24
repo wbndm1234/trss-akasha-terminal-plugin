@@ -9,7 +9,7 @@ export class cp extends plugin {
       priority: 5000,
       rule: [
         {
-          reg: '^#?虚空cp文生成(?:\\s+\\@[\\w\\d\\-]+)?$',
+          reg: '^#?虚空cp文生成$',
           fnc: 'cp'
         }
       ]
