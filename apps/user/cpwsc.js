@@ -150,7 +150,34 @@ export class cp extends plugin {
       msg = "有一天" + targetUser.nickname + "发了一条朋友圈，照片上是" + segment.at(e.user_id) + "枕在他的腿上，上面的文字是：'看看我的猫，可爱吧～'";
     } else if (num <= 50) {
       msg = targetUser.nickname + "当了这么多年总裁，万万没想到自己会在多年后这么自我介绍：\"我，" + segment.at(e.user_id) + "粉头，追星贼6。”";
+    } else if (num <= 51) {
+      msg = segment.at(e.user_id) + "拿着一张发黄的拍立得，上面的二人面若桃花，笑逐颜开。照片的右下角，淡淡地写着：'" + targetUser.nickname + "与" + segment.at(e.user_id) + " 2019年1月7日'。";
+    } else if (num <= 52) {
+      msg = segment.at(e.user_id) + "：别装了，不就是觉得我毁了你的清誉吗？我走就是。没人管我倒也自在。\n" + targetUser.nickname + "：［沉默不语看着渐渐远去的背影］";
+    } else if (num <= 53) {
+      msg = targetUser.nickname + "和" + segment.at(e.user_id) + "一路走来，磕磕绊绊终于成为了恋人。\n只是年少意气还是比不过柴米油盐酱醋茶，最终成为了各自成家后不揭开的伤疤。";
+    } else if (num <= 54) {
+      msg = targetUser.nickname + "看见" + segment.at(e.user_id) + "在河边钓鱼，" + segment.at(e.user_id) + "似乎对钓鱼兴趣盎然，" + targetUser.nickname + "悄悄走到" + segment.at(e.user_id) + "的身边，俯身轻轻咬住" + segment.at(e.user_id) + "的耳垂，“钓鱼？不如钓我吧。”";
+    } else if (num <= 55) {
+      msg = "'嘿！你听说了吗？咱年级考了三年第一的那个，叫" + segment.at(e.user_id) + "的，这一次居然没有考第一！' '嗐，这消息早听说了，这一次的年级第一是那个三班的" + targetUser.nickname + "。要不是" + segment.at(e.user_id) + "没来考英语，他可就当不上这个第一咯。'";
+    } else if (num <= 56) {
+      msg = segment.at(e.user_id) + "在笔记本上写满" + targetUser.nickname + "的那页不见了。\n隔天，" + targetUser.nickname + "：「这是回礼」一张写着慢慢" + segment.at(e.user_id) + "的纸被递了过来";
+    } else if (num <= 57) {
+      msg = segment.at(e.user_id) + "不知道怎么的，看到" + targetUser.nickname + "的时候会不自觉的微笑然后跑开。" + targetUser.nickname + "为此很是困扰，因此决定找" + segment.at(e.user_id) + "谈一谈。终于有一天" + targetUser.nickname + "好不容易抓到了" + segment.at(e.user_id) + "，刚想开口，就听到" + segment.at(e.user_id) + "眼泪汪汪的说：那个，你手松一下呗，我，我胳膊痛.... " + targetUser.nickname + "愣了一下，还没反应过来，就看到" + segment.at(e.user_id) + "捂着脸跑开了....";
+    } else if (num <= 58) {
+      msg = segment.at(e.user_id) + "在满场的欢呼声中、在炙热的聚光灯下坚定不移地看着一排一座的位置。他的爱人，" + targetUser.nickname + "就坐在那里，同样坚定不移地看着他。";
+    } else if (num <= 59) {
+      msg = targetUser.nickname + "有时觉得，他对" + segment.at(e.user_id) + "，不能说没感情，但不是爱，就像虎养着伥。";
+    } else if (num <= 60) {
+      msg = "海风之中，邮轮上的灯火将他们的脸庞照亮，听到" + segment.at(e.user_id) + "在他耳畔轻声哼起“Every night in my dreams”，" + targetUser.nickname + "一边应和着一边将人搂进了怀里。"
+    } else if (num <= 61) {
+      msg = targetUser.nickname + "不知道在世界的另一头有一个人依旧偷偷爱着他，每天都在念叨他的名字，饭桌上总是两副碗筷，连睡觉的时候都只枕着一半的枕头。\n" + segment.at(e.user_id) + "也不知道，世界的另一端有一个洁白无瑕的小身影，每天飘来飘去，就为了看到一张总是在梦里出现的脸。";
+    } else if (num <= 62) {
+      msg = segment.at(e.user_id) + "，我喜欢你。”" + targetUser.nickname + "轻声说着，用颤抖的手轻轻抚摸过黑白的相片，“这句话我藏了十几年，终于有勇气说出来了。但是...你已经听不到了啊。”“" + segment.at(e.user_id) + "，带我走吧。”";
+    } else if (num <= 63) {
+      msg = segment.at(e.user_id) + "和" + targetUser.nickname + "完全就是两个世界的人啊，为什么他们能走到一起？因为，" + segment.at(e.user_id) + "曾经给" + targetUser.nickname + "带来了光芒。";
     } 
+     
        e.reply(msg);
   }
 }
