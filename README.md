@@ -160,5 +160,9 @@ pnpm install -P
   - 通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
   - 可以来[QQ群](https://qm.qq.com/q/n0ewaCWIGk)玩玩来提点建议捏
  
+## 📜 许可证
 
+本项目使用 MIT 开源。
+
+---
 
