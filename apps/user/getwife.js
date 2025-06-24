@@ -614,9 +614,10 @@ export class qqy extends plugin {
    
     //拒绝
     async jj(e) {
-        var id = e.at
+        var proposer_id = e.at  // （求婚者）
+        var responder_id = e.user_id  // （被求婚者）
         var filename = e.group_id + `.json`
-        var homejson = await akasha_data.getQQYUserHome(id, homejson, filename, false)
+        var homejson = await akasha_data.getQQYUserHome(proposer_id, homejson, filename, false)
         if (await this.is_killed(e, `jj`, false) == true) return
         if (e.atme || e.atall) {
             e.reply(`6🙂`)
@@ -626,20 +627,21 @@ export class qqy extends plugin {
             e.reply(`请at你想拒绝的人哦(˵¯͒〰¯͒˵)`)
             return
         }
-        if (homejson[id].wait == 0) {
+        // 检查被at的人是否向当前用户求过婚
+        if (!homejson[proposer_id] || homejson[proposer_id].wait == 0) {
             e.reply(`对方还未向任何人求婚呢,就不要捣乱了`)
             return
         }
-        if (homejson[id].wait !== e.user_id) {
-            e.reply(`你不是${homejson[id].wait},就不要捣乱了`)
+        if (homejson[proposer_id].wait != responder_id) {
+            e.reply(`你不是${homejson[proposer_id].wait},就不要捣乱了`)
             return
         }
         e.reply([
-            global.segment.at(id), "\n",
+            global.segment.at(proposer_id), "\n",
             '天涯何处无芳草，何必单恋一枝花，下次再努力点吧！(˵¯͒〰¯͒˵)',
         ])
-        homejson[id].wait = 0
-        await akasha_data.getQQYUserHome(id, homejson, filename, true)
+        homejson[proposer_id].wait = 0
+        await akasha_data.getQQYUserHome(proposer_id, homejson, filename, true)
         return true;
     }
     //随机娶
