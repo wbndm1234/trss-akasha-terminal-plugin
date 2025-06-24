@@ -17,15 +17,13 @@ if (!global.segment) {
         }
     }
 }
-
-const dirpath2 = "plugins/akasha-terminal-plugin/data/UserData";//文件夹路径
 const dirpath2 = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
 let Magnification = await command.getConfig("duel_cfg", "Magnification");
 
-const giftpath = `plugins/akasha-terminal-plugin/resources/qylp/giftthing.json`
-const housepath = `plugins/akasha-terminal-plugin/resources/qylp/house.json`
-const lotterypath = `plugins/akasha-terminal-plugin/resources/qylp/lottery.json`
-const inpapath = `plugins/akasha-terminal-plugin/resources/qylp/inpa.json`
+const giftpath = `plugins/trss-akasha-terminal-plugin/resources/qylp/giftthing.json`
+const housepath = `plugins/trss-akasha-terminal-plugin/resources/qylp/house.json`
+const lotterypath = `plugins/trss-akasha-terminal-plugin/resources/qylp/lottery.json`
+const inpapath = `plugins/trss-akasha-terminal-plugin/resources/qylp/inpa.json`
 const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 let cdTime = Number(await command.getConfig("wife_cfg", "sjcd")) * 60;//随机娶群友冷却
 let cdTime2 = Number(await command.getConfig("wife_cfg", "qqcd")) * 60;//强娶冷却
@@ -640,7 +638,6 @@ export class qqy extends plugin {
         }
         e.reply([
             global.segment.at(proposer_id), "\n",
-            global.segment.at(id), "\n",
             '天涯何处无芳草，何必单恋一枝花，下次再努力点吧！(˵¯͒〰¯͒˵)',
         ])
         homejson[proposer_id].wait = 0
