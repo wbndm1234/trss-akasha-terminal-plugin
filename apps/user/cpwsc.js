@@ -128,6 +128,28 @@ export class cp extends plugin {
       msg = "今天是" + targetUser.nickname + "和" + segment.at(e.user_id) + "认识的一周年，" + targetUser.nickname + "给了" + segment.at(e.user_id) + "一个特殊的礼物，这也是他一年里最想做的事情，就是吻了挚友的唇。";
     } else if (num <= 39) {
       msg = segment.at(e.user_id) + "的工作遇到不顺，但初入职场只能忍气吞声。没过几天，" + targetUser.nickname + "主动送" + segment.at(e.user_id) + "上班。" + targetUser.nickname + "把车开到" + segment.at(e.user_id) + "的公司楼下，却与" + segment.at(e.user_id) + "一起下了车。门口的接待看到二人下车说：\"老板早上好。\"";
+    } else if (num <= 40) {
+      msg = "那是" + segment.at(e.user_id) + "死去的一个月，" + targetUser.nickname + "却在后悔，如果我相信你该有多好？你就不会走了......";
+    } else if (num <= 41) {
+      msg = targetUser.nickname + "与" + segment.at(e.user_id) + "约定下次出游要定于秋际之时。简单而具代表性的勾指起誓，这是仅仅属于" + targetUser.nickname + "和" + segment.at(e.user_id) + "的小约定。";
+    } else if (num <= 42) {
+      msg = "是天气正好，是你真好。 " + targetUser.nickname + "将吻印在" + segment.at(e.user_id) + "的唇上，低着声、弯着眸，轻轻悄悄的说着情话。\n「喜欢你的人是我，嗯，只能是我。」";
+    } else if (num <= 43) {
+      msg = targetUser.nickname + "紧牵" + segment.at(e.user_id) + "的手。在洁白的雪地留下了俩人的脚印。\n" + segment.at(e.user_id) + "伸手，一片雪花落于手心。\n手心温度化了雪花，而" + targetUser.nickname + "也宛如雪花一现而逝。";
+    } else if (num <= 44) {
+      msg = targetUser.nickname + "抱住" + segment.at(e.user_id) + "，贴着他的脖子蹭啊蹭。\n“你干什么。”" + segment.at(e.user_id) + "问。\n他答：“想染上你的味道。”";
+    } else if (num <= 45) {
+      msg = segment.at(e.user_id) + "：“我觉得这样不行。”\n" + targetUser.nickname + "：“怎么不行？”\n" + segment.at(e.user_id) + "：“我觉得我太喜欢你了，这样不行”" + targetUser.nickname + "：“那你喜欢我什么？”\n" + segment.at(e.user_id) + "：“喜欢你所有的样子。”\n" + targetUser.nickname + "：“那就行了。”";
+    } else if (num <= 46) {
+      msg = targetUser.nickname + "和" + segment.at(e.user_id) + "曾是这个班里最不看好会成为朋友的人，后来他们成为了全校最受羡慕的挚友。";
+    } else if (num <= 47) {
+      msg = targetUser.nickname + " 和" + segment.at(e.user_id) + "从小是一对很要好的兄弟，直到" + targetUser.nickname + "打破约定撇下受出国留学。\n当" + targetUser.nickname + "重新回到国内，想要好好对待" + segment.at(e.user_id) + "时，" + segment.at(e.user_id) + "变得一点也不信任" + targetUser.nickname + " 。\n说是不信任， 更多的还是赌气撒娇多一些。\n" + targetUser.nickname + "就这么哄到" + segment.at(e.user_id) + "高三毕业。在" + segment.at(e.user_id) + "18的成人礼时，将" + segment.at(e.user_id) + "带到他两年都没踏入过的房间。\n" + targetUser.nickname + "凑到受的耳边说:“" + segment.at(e.user_id) + "，你可让我等了你两年啊。”";
+    } else if (num <= 48) {
+      msg = segment.at(e.user_id) + "确是在" + targetUser.nickname + "心里的贫瘠旷野燎起过一片炽盛滚烫的名为爱的烈火，只不过燃到最后只剩一片荒芜破败的焦土。";
+    } else if (num <= 49) {
+      msg = "有一天" + targetUser.nickname + "发了一条朋友圈，照片上是" + segment.at(e.user_id) + "枕在他的腿上，上面的文字是：'看看我的猫，可爱吧～'";
+    } else if (num <= 50) {
+      msg = targetUser.nickname + "当了这么多年总裁，万万没想到自己会在多年后这么自我介绍：\"我，" + segment.at(e.user_id) + "粉头，追星贼6。”";
     } 
        e.reply(msg);
   }
