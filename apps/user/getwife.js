@@ -1,9 +1,22 @@
+//随便写的,大佬勿喷 初版@鸢:随机娶群友，指定娶群友
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import fs from 'fs'
 import Config from '../../model/Config.js'
 import moment from "moment"
 import command from '../../components/command.js'
 import akasha_data from '../../components/akasha_data.js'
+
+// 兼容
+if (!global.segment) {
+    try {
+        global.segment = (await import("icqq")).segment
+    } catch {
+        global.segment = {
+            at: (qq) => `[CQ:at,qq=${qq}]`,
+            image: (url) => `[CQ:image,file=${url}]`
+        }
+    }
+}
 const dirpath2 = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
 let Magnification = await command.getConfig("duel_cfg", "Magnification");
 
@@ -194,14 +207,27 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:whois-my-wife2-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分钟cd`
             ]);
             return
         }
         if (await this.is_killed(e, `wife2`, true) == true) return
-        let sex = await Bot.pickFriend(e.user_id).sex
+        // 兼容性处理：获取用户性别
+        let sex = 'unknown'
+        try {
+            if (Bot && Bot.pickFriend) {
+                sex = await Bot.pickFriend(e.user_id).sex || 'unknown'
+            } else {
+                // 从群成员信息获取性别
+                const memberInfo = await e.group?.pickMember(e.user_id)?.getInfo?.()
+                sex = memberInfo?.sex || 'unknown'
+            }
+        } catch (err) {
+            console.log('获取用户性别失败:', err)
+            sex = 'unknown'
+        }
         let ex = ''
         if (sex == 'male') {
             ex = '小姐'
@@ -219,20 +245,20 @@ export class qqy extends plugin {
             var gailv = Math.round(Math.random() * 9);
             if (gailv < qqwife || UserPAF) {
                 e.reply([
-                    segment.at(id), "\n",
-                    segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${id}`), "\n",
+                    global.segment.at(id), "\n",
+                    global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${id}`), "\n",
                     `恭喜你！`, "\n",
                     `在茫茫人海中，你成功强娶到了${name}!`,
-                    "\n", segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.at}`), "\n",
+                    "\n", global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.at}`), "\n",
                 ])
                 await redis.set(`akasha:whois-my-wife2-cd:${e.group_id}:${e.user_id}`, currentTime, {
                     EX: cdTime2
                 });
-                if (!homejson[id].s == 0) {
+                if (homejson[id].s && homejson[id].s != 0) {
                     e.reply(`你已经有老婆了,你可以纳妾!?,这位${name}就成功被你纳入了!`)
                     inpajson[id].fuck.push(e.at)
                 }
-                else if(!homejson[id].s){
+                else {
                   homejson[id].s = e.at
                   homejson[id].love = Math.round(Math.random() * (40 - 10) + 10)
                 }
@@ -251,13 +277,13 @@ export class qqy extends plugin {
             return
         }
         e.reply([
-            segment.at(e.at), "\n",
-            segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.at}`), "\n",
-            segment.at(id), "\n",
-            segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${id}`), "\n",
+            global.segment.at(e.at), "\n",
+            global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${e.at}`), "\n",
+            global.segment.at(id), "\n",
+            global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${id}`), "\n",
             `向你求婚：‘亲爱的${ex}您好！`, "\n",
             `在茫茫人海中，能够与${ex}相遇相知相恋，我深感幸福，守护你是我今生的选择，我想有个自己的家，一个有你的家,嫁给我好吗？’`, "\n",
-            segment.at(e.at), "\n",
+            global.segment.at(e.at), "\n",
             `那么这位${ex}，你愿意嫁给ta吗？at并发送【我愿意】或者【我拒绝】，回应${she_he}哦！`,
         ])
         homejson[id].wait = e.at
@@ -328,7 +354,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-ntr-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -410,7 +436,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-Robbery-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -456,7 +482,7 @@ export class qqy extends plugin {
             var pcj = Math.round((homejson[yi].love / 10) + (homejson[jia].money / 3) + 100)//赔偿金
             setTimeout(() => {
                 e.reply([
-                    segment.at(jia), "\n",
+                    global.segment.at(jia), "\n",
                     `对方报警,你需要赔偿${pcj}金币,;金币不足将会被关禁闭`, "\n",
                 ])
             }, 4000);
@@ -465,7 +491,7 @@ export class qqy extends plugin {
             var pcj = Math.round(100 + Math.random() * 100)
             setTimeout(() => {
                 e.reply([
-                    segment.at(jia), "\n",
+                    global.segment.at(jia), "\n",
                     `你抢劫被抓到,你需要赔偿${pcj}金币,;金币不足将会被关禁闭`, "\n",
                 ])
             }, 4000);
@@ -499,12 +525,12 @@ export class qqy extends plugin {
         if (key == 'ntr') {
             if ((homejson[jia].money > (homejson[yi].love * 1.5)) && (homejson[jia].money > homejson[yi].money))
                 e.reply([
-                    segment.at(yi), "\n",
+                    global.segment.at(yi), "\n",
                     `很遗憾!由于你老婆对你的好感并不是很高,对方又太有钱了!你的老婆被人抢走了!!!`
                 ])
             else {
                 e.reply([
-                    segment.at(yi), "\n",
+                    global.segment.at(yi), "\n",
                     `很遗憾!由于你的疏忽,你的老婆被人抢走了!!!`
                 ])
             }
@@ -515,7 +541,7 @@ export class qqy extends plugin {
         }
         if (key == 'Robbery') {
             e.reply([
-                segment.at(yi), "\n",
+                global.segment.at(yi), "\n",
                 `很遗憾!由于你的疏忽,你的钱抢走了!!!`
             ])
             money = 100 + 100 * Math.random()
@@ -540,41 +566,52 @@ export class qqy extends plugin {
             e.reply(`请at你愿意嫁给的人哦(˵¯͒〰¯͒˵)`)
             return
         }
-        id = e.at
-        if (homejson[id].wait == 0) {
+        var proposer_id = e.at  // 求婚者
+        var responder_id = e.user_id  // 被求婚者
+        
+        if (!homejson[proposer_id] || homejson[proposer_id].wait == 0) {
             e.reply(`对方还未向任何人求婚呢,就不要捣乱了`)
             return
         }
-        if (homejson[id].wait !== e.user_id) {
-            e.reply(`你不是${homejson[id].wait},就不要捣乱了`)
+        if (homejson[proposer_id].wait != responder_id) {
+            e.reply(`你不是${homejson[proposer_id].wait},就不要捣乱了`)
             return
         }
-        if (!homejson[id].s == 0) {
+        
+        id = proposer_id  // 继续使用求婚者的ID进行后续操作
+        if (!homejson[proposer_id].s == 0) {
             e.reply(`对方已经有老婆了,所以你成为了对方的小妾!!!`)
-            inpajson[id].fuck.push(e.user_id)
-            homejson[id].wait = 0
+            inpajson[proposer_id].fuck.push(responder_id)
+            homejson[proposer_id].wait = 0
         }
-        else if(!homejson[id].s){
+        else if(!homejson[proposer_id].s){
           e.reply([
-              segment.at(e.user_id), "\n",
-              segment.at(id), "\n",
+              global.segment.at(responder_id), "\n",
+              global.segment.at(proposer_id), "\n",
               '相亲相爱幸福永，同德同心幸福长。愿你俩情比海深！祝福你们新婚愉快，幸福美满，激情永在，白头偕老！',
           ])
-          homejson[id].s = e.user_id
-          homejson[id].wait = 0
-          homejson[id].money += 20
-          homejson[id].love = Math.round(Math.random() * (100 - 60) + 60)
-          id = e.user_id
-          homejson[id].s = e.at
-          homejson[id].wait = 0
-          homejson[id].money += 20
-          homejson[id].love = Math.round(Math.random() * (100 - 60) + 60)
+         
+          homejson[proposer_id].s = responder_id
+          homejson[proposer_id].wait = 0
+          homejson[proposer_id].money += 20
+          homejson[proposer_id].love = Math.round(Math.random() * (100 - 60) + 60)
+          
+          
+          homejson[responder_id].s = proposer_id
+          homejson[responder_id].wait = 0
+          homejson[responder_id].money += 20
+          homejson[responder_id].love = Math.round(Math.random() * (100 - 60) + 60)
+          
           e.reply(`既然你们是两情相愿,你们现在的老婆就是彼此啦,给你们发了红包哦`)
         }
-        await akasha_data.getQQYUserHome(id, homejson, filename, true)
-        await akasha_data.getQQYUserxiaoqie(id, inpajson, filename, true)
+        await akasha_data.getQQYUserHome(proposer_id, homejson, filename, true)
+        await akasha_data.getQQYUserxiaoqie(proposer_id, inpajson, filename, true)
+        await akasha_data.getQQYUserHome(responder_id, homejson, filename, true)
+        await akasha_data.getQQYUserxiaoqie(responder_id, inpajson, filename, true)
         return true;
     }
+    //测试数据保存
+   
     //拒绝
     async jj(e) {
         var id = e.at
@@ -598,7 +635,7 @@ export class qqy extends plugin {
             return
         }
         e.reply([
-            segment.at(id), "\n",
+            global.segment.at(id), "\n",
             '天涯何处无芳草，何必单恋一枝花，下次再努力点吧！(˵¯͒〰¯͒˵)',
         ])
         homejson[id].wait = 0
@@ -622,7 +659,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:whois-my-wife-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -630,7 +667,21 @@ export class qqy extends plugin {
         }
         let sex = 'female'
         let msg1 = ''
-        if (await Bot.pickFriend(e.user_id).sex == 'female') {
+        // 兼容性处理：获取用户性别
+        let userSex = 'unknown'
+        try {
+            if (Bot && Bot.pickFriend) {
+                userSex = await Bot.pickFriend(e.user_id).sex || 'unknown'
+            } else {
+                const memberInfo = await e.group?.pickMember(e.user_id)?.getInfo?.()
+                userSex = memberInfo?.sex || 'unknown'
+            }
+        } catch (err) {
+            console.log('获取用户性别失败:', err)
+            userSex = 'unknown'
+        }
+        
+        if (userSex == 'female') {
             msg1 = '系统检测到您为男性，'
         }
         else {
@@ -664,7 +715,11 @@ export class qqy extends plugin {
         }
         //写个过滤器删掉bot和发起人
         femaleList = femaleList.filter(item => { return item.user_id != e.user_id })
-        femaleList = femaleList.filter(item => { return item.user_id != Bot.uin })
+        // 兼容性处理：过滤机器人
+        const botUin = Bot?.uin || Bot?.account?.uin || e.self_id
+        if (botUin) {
+            femaleList = femaleList.filter(item => { return item.user_id != botUin })
+        }
         var gailv = Math.round(Math.random() * 9);
         let wife = {}
 
@@ -686,10 +741,10 @@ export class qqy extends plugin {
             let she_he = await this.people(e, 'sex', wife.user_id)//用people函数获取性别称呼
             let name = await this.people(e, 'nickname', wife.user_id)//用people函数获取昵称
             msg = [
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `${name}答应了你哦！(*/ω＼*)`, "\n",
                 `今天你的${sexStr}朋友是`, "\n",
-                segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${wife.user_id}`), "\n",
+                global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${wife.user_id}`), "\n",
                 `【${name}}】 (${wife.user_id}) `, "\n",
                 `来自【${e.group_name}】`, "\n",
                 `要好好对待${she_he}哦！`,
@@ -710,7 +765,7 @@ export class qqy extends plugin {
         else if (gailv >= sjwife) {
             var dsp = Math.round(Math.random() * (20 - 10) + 10)
             msg = [
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `好遗憾，你谁也没娶到,${dsp}金币打水漂了!`
             ]
             homejson[id].money -= dsp
@@ -863,10 +918,10 @@ export class qqy extends plugin {
         //最后回复信息
         if (homejson[id].s !== 0) {
             msg.push([
-                segment.at(id), "\n",
-                segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[id]}`), "\n",
+                global.segment.at(id), "\n",
+                global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[id]}`), "\n",
                 msgstart,
-                segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[homejson[id].s]}`), "\n",
+                global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[homejson[id].s]}`), "\n",
                 msg_love2,
                 msg_love3,
             ])
@@ -877,8 +932,8 @@ export class qqy extends plugin {
         }
         else {
             msg.push([
-                segment.at(id), "\n",
-                segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[id]}`), "\n",
+                global.segment.at(id), "\n",
+                global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[id]}`), "\n",
                 msgstart,
             ])
             msg.push(msg_love)
@@ -899,7 +954,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-getmoney-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -990,7 +1045,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-gift-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -998,7 +1053,7 @@ export class qqy extends plugin {
         }
         if (placejson[id].place !== "home") {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你不在家,不能进行逛街,当前位置为：${placejson[id].place}`
             ])
             return
@@ -1007,7 +1062,7 @@ export class qqy extends plugin {
         var placeid = Math.round(Math.random() * (Object.keys(giftthing.placename).length - 1))//随机获取一个位置id
         var placemsg = giftthing.start[placeid + 1]//获取消息
         e.reply([
-            segment.at(id), "\n",
+            global.segment.at(id), "\n",
             `${placemsg}\n`,
             `你选择[进去看看]还是[去下一个地方]?`
         ])
@@ -1034,7 +1089,7 @@ export class qqy extends plugin {
         var giftthing = JSON.parse(fs.readFileSync(giftpath, "utf8"));//读取位置资源文件
         if (placejson[id].place == "home") {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你在家,先逛街出去吧`
             ])
             return
@@ -1057,7 +1112,7 @@ export class qqy extends plugin {
         homejson[id].love += Math.round(placemodle[placeid].love * housejson[id].loveup)
         setTimeout(() => {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `恭喜你,你本次的行动结果为,金币至${homejson[id].money},好感度至${homejson[id].love}\n你可以选择[去下一个地方]或者[回家]\n当前剩余行动点${gifttime - placejson[id].placetime}`
             ])
         }, 2000)
@@ -1076,7 +1131,7 @@ export class qqy extends plugin {
         var giftthing = JSON.parse(fs.readFileSync(giftpath, "utf8"));//读取位置资源文件
         if (placejson[id].place == "home") {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你在家,先逛街出去吧`
             ])
             return
@@ -1085,7 +1140,7 @@ export class qqy extends plugin {
         var placeid = Math.round(Math.random() * (Object.keys(giftthing.placename).length - 1))//随机获取一个位置id
         var placemsg = giftthing.start[placeid + 1]//获取消息
         e.reply([
-            segment.at(id), "\n",
+            global.segment.at(id), "\n",
             `${placemsg}\n`,
             `你选择[进去看看]还是[去下一个地方]?`
         ])
@@ -1101,14 +1156,14 @@ export class qqy extends plugin {
         var placejson = await akasha_data.getQQYUserPlace(id, placejson, filename, false)
         if (placejson[id].place == "home") {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你已经在家了`
             ])
             return
         }
         if (await this.is_killed(e, 'gohome', true) == true) { return }
         e.reply([
-            segment.at(id), "\n",
+            global.segment.at(id), "\n",
             `你回到了家`
         ])
         placejson[id].place = "home"
@@ -1123,7 +1178,7 @@ export class qqy extends plugin {
         myRBB = myRBB.toString().split(":")
         if (myRBB.length == 7) {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你买过了`
             ])
             return
@@ -1133,7 +1188,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-lottery1-cd:${e.group_id}:${id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -1144,7 +1199,7 @@ export class qqy extends plugin {
         var placejson = await akasha_data.getQQYUserPlace(id, placejson, filename, false)
         if (placejson[id].place !== "SportsLottery") {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你不在游乐场店周围,当前位置为：${placejson[id].place}`
             ])
             return
@@ -1330,7 +1385,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-touch-cd:${e.group_id}:${e.user_id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -1366,9 +1421,9 @@ export class qqy extends plugin {
                 var she_he = await this.people(e, 'sex', Number(i))
                 msg.push([
                     `[${namelist[i]}]`,
-                    segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[i]}`),
+                    global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[i]}`),
                     `和${she_he}的老婆[${namelist[homejson[i].s]}]`,
-                    segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[homejson[i].s]}`)
+                    global.segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${[homejson[i].s]}`)
                 ])
             }
         }
@@ -1385,7 +1440,7 @@ export class qqy extends plugin {
         let lastTime = await redis.ttl(`akasha:wife-poor-cd:${e.group_id}:${id}`);
         if (lastTime !== -2 && !UserPAF) {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `等会儿哦！(*/ω＼*)`, "\n",
                 `该命令还有${lastTime / 60}分cd`
             ]);
@@ -1415,14 +1470,14 @@ export class qqy extends plugin {
         var housejson = await akasha_data.getQQYUserHouse(id, housejson, filename, false)
         if (homejson[id].s == 0) {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你暂时在这里没有老婆哦,不用上交了`
             ])
             return
         }
         if (homejson[id].money <= 0) {
             e.reply([
-                segment.at(id), "\n",
+                global.segment.at(id), "\n",
                 `你自己已经很穷了,上交个啥?`
             ])
             return
@@ -1433,20 +1488,20 @@ export class qqy extends plugin {
         var yingfu = Math.round(msg)
         var shifu = Math.round(yingfu * 1.1)
         e.reply([
-            segment.at(id), "\n",
+            global.segment.at(id), "\n",
             `您本次应付需要${yingfu}金币,实付需要${shifu}`
         ])
         setTimeout(() => {
             if (homejson[id].money < shifu) {
                 e.reply([
-                    segment.at(id), "\n",
+                    global.segment.at(id), "\n",
                     `你的金币不足,上交失败`
                 ])
                 return
             }
             else if (homejson[id].money >= shifu) {
                 e.reply([
-                    segment.at(id), "\n",
+                    global.segment.at(id), "\n",
                     `上交成功\n`,
                     `老婆对你的好感上升了${Math.round(yingfu / 10)}`,
                 ])
@@ -1495,38 +1550,35 @@ export class qqy extends plugin {
         }
         return wifelist
     }
-    
-    // [MODIFIED] 优化群成员资料函数
+    //群成员资料函数
     async people(e, keys, id) {
-        // 使用 getMemberMap().get(id) 是最高效、正确的方式
-        const memberMap = await e.group.getMemberMap();
-        const lp = memberMap.get(Number(id)); // 确保id是number类型，因为map的key可能是number
-
-        if (!lp) {
-            // 如果找不到成员（可能已退群），返回一个默认值以避免后续代码崩溃
-            console.log(`[娶群友-people] 在群 ${e.group_id} 中找不到成员: ${id}`);
-            if (keys == 'sex') return 'Ta';
-            if (keys == 'nickname') return `[退群用户:${id}]`; // 提供更清晰的提示
-            return null;
-        }
-
+        let memberMap = await e.group.getMemberMap();
+        let arrMember = Array.from(memberMap.values());
+        var this_one = arrMember.filter(item => {
+            return item.user_id == id
+            //用过滤器返回了user_id==id的人
+        })
+        var lp = this_one[0]
         if (keys == 'sex') {
-            // 如果性别是 male，返回'他'，否则（female, unknown）都返回'她'
-            return lp.sex === 'male' ? '他' : '她';
+            var she_he = '她'
+            if (lp.sex == 'male')
+                she_he = '他'
+            return she_he
         }
-
         if (keys == 'nickname') {
-            // 优先使用群名片，否则使用昵称
-            return lp.card || lp.nickname;
+            var name = lp.nickname
+            if (lp.card !== '')
+                name = lp.card
+            return name
         }
-    }
 
+    }
     //看看你是不是在关禁闭
     async is_jinbi(e) {
         let jinbi = await redis.ttl(`akasha:wife-jinbi-cd:${e.group_id}:${e.user_id}`);
         if (jinbi !== -2) {
             e.reply([
-                segment.at(e.user_id), "\n",
+                global.segment.at(e.user_id), "\n",
                 `你已经被关进禁闭室了!!!时间到了自然放你出来\n你还需要被关${jinbi / 60}分钟`
             ])
             return true
@@ -1668,7 +1720,7 @@ export class qqy extends plugin {
         let win = 50 + Magnification * win_level + num13 + num14 * 2 + num15 * 3 - num23 - num24 * 2 - num25 * 3
         let random = Math.random() * 100//禁言随机数
         //提示
-        e.reply([segment.at(e.user_id),
+        e.reply([global.segment.at(e.user_id),
         `你的境界为${battlejson[user_id].levelname}\n${user_id2_nickname}的境界为${battlejson[user_id2].levelname}\n决斗开始!战斗力意义系数${Magnification},境界差${win_level},你的获胜概率是${win}`]);//发送消息
         //判断
         let is_win = false
@@ -1677,56 +1729,47 @@ export class qqy extends plugin {
         }
         return is_win;
     }
-    
-    // [MODIFIED] 优化删除错误存档函数
+    //删除错误存档
     async delerrdata(e) {
         var id = e.user_id
         var filename = e.group_id + `.json`
         var homejson = await akasha_data.getQQYUserHome(id, homejson, filename, false)
-        let wifearr = [] //所有人的的老婆
-        
-        // 找出所有人的老婆, 并进行安全检查
+        let wifearr = []//所有人的的老婆
+        //找出所有人的老婆,转为String型
         for (let data of Object.keys(homejson)) {
-            if (homejson[data] && homejson[data].s) {
-                wifearr.push(String(homejson[data].s));
-            }
+            if (await homejson[data].s !== 0)
+                wifearr.push(String(homejson[data].s))
         }
-        console.log(`[娶群友-清理] 本群存档中所有老婆ID:`, wifearr);
-
-        // 直接获取memberMap，后续使用.has()判断，效率更高
-        const memberMap = await e.group.getMemberMap();
-        console.log(`[娶群友-清理] 当前群成员数量: ${memberMap.size}`);
-
-        // 找出不在群的老婆 (老婆ID不在当前群成员Map中)
-        const deadwife = wifearr.filter(item => !memberMap.has(Number(item)));
-        console.log(`[娶群友-清理] 已退群的老婆ID:`, deadwife);
-
-        // 找出这些已退群老婆的拥有者
-        const widedeadid = Object.keys(homejson).filter(item => homejson[item] && deadwife.includes(String(homejson[item].s)));
-        console.log(`[娶群友-清理] 拥有已退群老婆的用户ID:`, widedeadid);
-
-        // 找出不在群的用户 (存档用户ID不在当前群成员Map中)
-        const deadid = Object.keys(homejson).filter(item => !memberMap.has(Number(item)));
-        console.log(`[娶群友-清理] 已退群的用户ID:`, deadid);
-        
-        let chick = 0;
-        // 把老婆跑了的用户，其老婆字段置0
+        console.log(`所有人的老婆`, wifearr)
+        let memberMap = await e.group.getMemberMap();
+        let arrMember = []
+        for (let aaa of memberMap) {
+            arrMember.push(String(aaa[1].user_id))
+        }
+        console.log(`群成员`, arrMember)
+        //找出不在群的老婆
+        let deadwife = wifearr.filter(item => !arrMember.includes(item))
+        console.log(`不在的老婆`, deadwife)
+        //找出这些已退群的老婆的拥有者
+        let widedeadid = Object.keys(homejson).filter(item => deadwife.includes(String(homejson[item].s)))
+        console.log(`这些老婆的拥有者`, widedeadid)
+        //找出不在群的用户
+        let deadid = Object.keys(homejson).filter(item => !arrMember.includes(item))
+        console.log(`不在群的用户`, deadid)
+        let chick = 0
+        //把老婆跑了的用户老婆删除
         for (let shit of widedeadid) {
-            if (homejson[shit]) {
-                homejson[shit].s = 0;
-                chick++;
-            }
+            homejson[shit].s = 0
+            chick++
         }
-
-        // 删掉已退群用户的整个存档
-        let ikun = 0;
+        //删掉不在群的用户
+        let ikun = 0
         for (let errid of deadid) {
-            delete homejson[errid];
-            ikun++;
+            delete (homejson[errid])
+            ikun++
         }
-
-        await akasha_data.getQQYUserHome(id, homejson, filename, true);
-        e.reply(`清除本群无效/错误存档成功,\n本次共处理无效老婆${chick}位,\n删除退群用户存档${ikun}个。`);
-        return true;
+        await akasha_data.getQQYUserHome(id, homejson, filename, true)
+        e.reply(`清除本群无效/错误存档成功,\n本次共错误退群存档${ikun}个,\n删除错误的老婆${chick}位`)
+        return true
     }
 }
