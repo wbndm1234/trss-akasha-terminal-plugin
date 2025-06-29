@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "author": "dmqaq",
   "description": "trss-akasha-terminal-plugin",
-  "type": "module"
+  "type": "module",
+  "imports": {
+    "#guoba.platform": "./components/guoba-platform.js"
+  }
 }
