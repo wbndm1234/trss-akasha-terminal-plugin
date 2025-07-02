@@ -2,7 +2,7 @@
   "name": "trss-akasha-terminal-plugin",
   "version": "1.0.0",
   "author": "dmqaq,nahida22",
-  "description": "trss-akasha-terminal-plugin",
+  "description": "Yunzai-Bot for trss-akasha-terminal-plugin",
   "type": "module",
    "imports": {
     "#guoba.platform": "./components/guoba-platform.js"
