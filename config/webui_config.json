@@ -1,0 +1,8 @@
+{
+  "autoStart": true,
+  "sleepMode": true,
+  "sleepTimeout": 86400000,
+  "port": 3000,
+  "theme": "kawaii",
+  "animations": true
+}

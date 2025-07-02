@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../common/common.css">
+    <link rel="stylesheet" type="text/css" href="./shop_inventory.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="inventory-logo">🎒✨</div>
+            <div class="title">我的背包</div>
+            <div class="subtitle">管理你的珍贵物品</div>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">
+                <img src="{{userAvatar}}" alt="{{username}}">
+            </div>
+            <div class="user-details">
+                <div class="username">{{username}}</div>
+                <div class="user-level">等级 {{userLevel}}</div>
+                <div class="user-wealth">
+                    <span class="wealth-item">
+                        <span class="wealth-icon">💰</span>
+                        <span class="wealth-amount">{{money}}</span>
+                    </span>
+                    <span class="wealth-item">
+                        <span class="wealth-icon">💎</span>
+                        <span class="wealth-amount">{{gems}}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="inventory-stats">
+                <div class="stat-item">
+                    <div class="stat-number">{{usedSlots}}</div>
+                    <div class="stat-label">已用</div>
+                </div>
+                <div class="stat-divider">/</div>
+                <div class="stat-item">
+                    <div class="stat-number">{{totalSlots}}</div>
+                    <div class="stat-label">总计</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inventory-controls">
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <div class="filter-tab active" data-filter="all">全部</div>
+                    <div class="filter-tab" data-filter="weapon">武器</div>
+                    <div class="filter-tab" data-filter="armor">防具</div>
+                    <div class="filter-tab" data-filter="consumable">消耗品</div>
+                    <div class="filter-tab" data-filter="material">材料</div>
+                    <div class="filter-tab" data-filter="special">特殊</div>
+                </div>
+                
+                <div class="sort-section">
+                    <select class="sort-select">
+                        <option value="name">按名称排序</option>
+                        <option value="rarity">按稀有度排序</option>
+                        <option value="quantity">按数量排序</option>
+                        <option value="value">按价值排序</option>
+                        <option value="recent">按获得时间排序</option>
+                    </select>
+                </div>
+                
+                <div class="search-section">
+                    <div class="search-box">
+                        <input type="text" placeholder="搜索物品..." value="{{searchQuery}}">
+                        <div class="search-icon">🔍</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn organize-btn">📦 整理背包</button>
+                <button class="action-btn expand-btn">📈 扩展背包</button>
+                <button class="action-btn sell-btn">💰 批量出售</button>
+            </div>
+        </div>
+
+        <div class="inventory-grid">
+            {{#each inventoryItems}}
+            <div class="inventory-slot {{#if item}}filled{{else}}empty{{/if}} {{#if item}}{{item.rarity}}{{/if}}" data-slot="{{slotIndex}}">
+                {{#if item}}
+                <div class="item-container">
+                    <div class="item-icon">
+                        <img src="{{item.icon}}" alt="{{item.name}}">
+                        {{#if item.enchanted}}
+                        <div class="enchant-glow"></div>
+                        {{/if}}
+                    </div>
+                    
+                    {{#if (gt item.quantity 1)}}
+                    <div class="item-quantity">{{item.quantity}}</div>
+                    {{/if}}
+                    
+                    {{#if item.level}}
+                    <div class="item-level">+{{item.level}}</div>
+                    {{/if}}
+                    
+                    <div class="item-rarity-border {{item.rarity}}"></div>
+                    
+                    <div class="item-tooltip">
+                        <div class="tooltip-header">
+                            <div class="tooltip-name {{item.rarity}}">{{item.name}}</div>
+                            <div class="tooltip-type">{{item.type}}</div>
+                        </div>
+                        
+                        <div class="tooltip-content">
+                            {{#if item.description}}
+                            <div class="tooltip-description">{{item.description}}</div>
+                            {{/if}}
+                            
+                            {{#if item.stats}}
+                            <div class="tooltip-stats">
+                                {{#each item.stats}}
+                                <div class="stat-line">
+                                    <span class="stat-name">{{name}}:</span>
+                                    <span class="stat-value {{#if positive}}positive{{else}}negative{{/if}}">{{value}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+                            
+                            {{#if item.effects}}
+                            <div class="tooltip-effects">
+                                {{#each item.effects}}
+                                <div class="effect-line">{{icon}} {{description}}</div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+                            
+                            <div class="tooltip-footer">
+                                <div class="tooltip-value">价值: {{item.value}} 💰</div>
+                                {{#if item.obtainedTime}}
+                                <div class="tooltip-time">获得: {{item.obtainedTime}}</div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        
+                        <div class="tooltip-actions">
+                            {{#if item.usable}}
+                            <button class="tooltip-btn use-btn">使用</button>
+                            {{/if}}
+                            {{#if item.equippable}}
+                            <button class="tooltip-btn equip-btn">装备</button>
+                            {{/if}}
+                            <button class="tooltip-btn gift-btn">赠送</button>
+                            <button class="tooltip-btn sell-btn">出售</button>
+                            <button class="tooltip-btn drop-btn">丢弃</button>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="empty-slot-icon">+</div>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="inventory-summary">
+            <div class="summary-section">
+                <div class="summary-title">📊 背包统计</div>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="summary-icon">⚔️</div>
+                        <div class="summary-info">
+                            <div class="summary-number">{{weaponCount}}</div>
+                            <div class="summary-label">武器</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stat">
+                        <div class="summary-icon">🛡️</div>
+                        <div class="summary-info">
+                            <div class="summary-number">{{armorCount}}</div>
+                            <div class="summary-label">防具</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stat">
+                        <div class="summary-icon">🧪</div>
+                        <div class="summary-info">
+                            <div class="summary-number">{{consumableCount}}</div>
+                            <div class="summary-label">消耗品</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stat">
+                        <div class="summary-icon">🔧</div>
+                        <div class="summary-info">
+                            <div class="summary-number">{{materialCount}}</div>
+                            <div class="summary-label">材料</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stat">
+                        <div class="summary-icon">✨</div>
+                        <div class="summary-info">
+                            <div class="summary-number">{{specialCount}}</div>
+                            <div class="summary-label">特殊</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="value-section">
+                <div class="value-title">💰 总价值</div>
+                <div class="total-value">{{totalValue}} 金币</div>
+                <div class="value-breakdown">
+                    <div class="value-item">
+                        <span class="value-label">装备价值:</span>
+                        <span class="value-amount">{{equipmentValue}}</span>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-label">材料价值:</span>
+                        <span class="value-amount">{{materialValue}}</span>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-label">其他价值:</span>
+                        <span class="value-amount">{{otherValue}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="quick-title">⚡ 快捷操作</div>
+            <div class="quick-buttons">
+                <button class="quick-btn" data-action="use-all-potions">
+                    <div class="quick-icon">🧪</div>
+                    <div class="quick-text">使用所有药水</div>
+                </button>
+                
+                <button class="quick-btn" data-action="sell-junk">
+                    <div class="quick-icon">🗑️</div>
+                    <div class="quick-text">出售垃圾物品</div>
+                </button>
+                
+                <button class="quick-btn" data-action="auto-equip">
+                    <div class="quick-icon">⚡</div>
+                    <div class="quick-text">自动装备最佳</div>
+                </button>
+                
+                <button class="quick-btn" data-action="sort-by-type">
+                    <div class="quick-icon">📋</div>
+                    <div class="quick-text">按类型整理</div>
+                </button>
+                
+                <button class="quick-btn" data-action="compress-stacks">
+                    <div class="quick-icon">📦</div>
+                    <div class="quick-text">压缩堆叠</div>
+                </button>
+                
+                <button class="quick-btn" data-action="backup-items">
+                    <div class="quick-icon">💾</div>
+                    <div class="quick-text">备份物品</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <div class="activity-title">📝 最近活动</div>
+            <div class="activity-list">
+                {{#each recentActivities}}
+                <div class="activity-item {{type}}">
+                    <div class="activity-icon">{{icon}}</div>
+                    <div class="activity-details">
+                        <div class="activity-text">{{description}}</div>
+                        <div class="activity-time">{{time}}</div>
+                    </div>
+                    {{#if item}}
+                    <div class="activity-item-icon">
+                        <img src="{{item.icon}}" alt="{{item.name}}">
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="info-text">💡 提示: 定期整理背包可以提高游戏体验</div>
+                <div class="update-time">最后更新: {{updateTime}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,100 +1,120 @@
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import cfg from '../../../../lib/config/config.js'
-import moment from "moment"
-import akasha_data from '../../components/akasha_data.js'
+import moment from 'moment'
 
-const cdTime = 60 // 冷却时间，单位：秒
+/**
+ * 用户身份信息查询功能
+ * 提供群成员身份信息的查询和展示
+ */
 
-export class idcard extends plugin {
+export class UserIdentityCard extends plugin {
     constructor() {
         super({
-            name: '查水表',
-            dsc: '查水表',
+            name: '用户身份证',
+            dsc: '查询群成员身份信息',
             event: 'message',
-            priority: 66,
-            rule: [{
-                /** 命令正则匹配 */
-                reg: "^#?(查水表|查户口|查身份证)(.*)$",
-                /** 执行方法 */
-                fnc: 'idcard'
-            }]
+            priority: 1,
+            rule: [
+                {
+                    reg: '^#?(身份证|查看身份证)$',
+                    fnc: 'showIdentityCard'
+                }
+            ]
         })
+        
+        // 冷却时间管理
+        this.cooldowns = new Map()
+        this.COOLDOWN_TIME = 10000 // 10秒冷却
     }
-    
-    async idcard(e) {
-        // 1. 检查 at
-        if (!e.at) { // 简化判断
-            e.reply(`请@你想要查看的群成员`);
-            return true;
-        }
-        if (e.atme || e.atall) {
-            e.reply(`不可以这样！`);
-            return true;
-        }
-        
-        // 2. 检查CD
-        const lastTime = await redis.ttl(`lql:idcard-cd:${e.user_id}`);
-        const masterList = cfg.masterQQ || []; // 确保 masterQQ 存在
-        
-        // 确保 akasha_data 和 battlejson 正确加载
-        let UserPAF = false;
-        try {
-            const battlejson = await akasha_data.getQQYUserBattle(e.user_id, undefined, false);
-            if (battlejson && battlejson[e.user_id]) {
-                UserPAF = battlejson[e.user_id].Privilege === 1;
-            }
-        } catch (err) {
-            console.error('[查水表] 获取用户特权信息失败:', err);
-        }
 
-        if (lastTime > 0 && !UserPAF && !masterList.includes(e.user_id)) {
-            e.reply([
-                segment.at(e.user_id), "\n",
-                `等会儿哦！(*/ω＼*)`, "\n",
-                `冷却中：还有 ${Math.ceil(lastTime / 60)} 分钟`
-            ]);
-            return true;
+    /**
+     * 检查冷却时间
+     * @param {string} userId 用户ID
+     * @returns {boolean} 是否在冷却中
+     */
+    checkCooldown(userId) {
+        const now = Date.now()
+        const lastUse = this.cooldowns.get(userId)
+        
+        if (lastUse && now - lastUse < this.COOLDOWN_TIME) {
+            return true
         }
         
-        // 3. 获取成员信息
-        const memberInfo = await Bot.getGroupMemberInfo(e.group_id, e.at).catch(() => null);
-        
-        if (!memberInfo) {
-            e.reply("哎呀，查不到这个人的信息，他/她可能已经不在这个群里了。");
-            return true;
+        this.cooldowns.set(userId, now)
+        return false
+    }
+
+    /**
+     * 显示用户身份证信息
+     * @param {Object} e 消息事件对象
+     */
+    async showIdentityCard(e) {
+        try {
+            // 检查是否为群聊
+            if (!e.isGroup) {
+                await e.reply('此功能仅在群聊中可用')
+                return true
+            }
+
+            // 检查冷却时间
+            if (this.checkCooldown(e.user_id)) {
+                const remainingTime = Math.ceil((this.COOLDOWN_TIME - (Date.now() - this.cooldowns.get(e.user_id))) / 1000)
+                await e.reply(`请等待 ${remainingTime} 秒后再使用此功能`)
+                return true
+            }
+
+            const userId = e.user_id
+            const groupId = e.group_id
+            const member = e.group.pickMember(userId)
+            
+            if (!member) {
+                await e.reply('无法获取用户信息，请稍后重试')
+                return true
+            }
+
+            // 获取用户信息
+            const nickname = e.sender.card || e.sender.nickname || '未知'
+            const joinTime = member.join_time 
+                ? moment(member.join_time * 1000).format('YYYY-MM-DD HH:mm:ss')
+                : '未知'
+            const level = member.level || 0
+            const title = member.title || '无'
+            const role = this.getRoleText(member.role)
+
+            // 构建身份证信息
+            const identityInfo = [
+                '═══════ 身份证 ═══════',
+                `👤 用户ID：${userId}`,
+                `📝 昵称：${nickname}`,
+                `🏠 群号：${groupId}`,
+                `📅 入群时间：${joinTime}`,
+                `⭐ 群等级：${level}`,
+                `🏆 群头衔：${title}`,
+                `👑 群身份：${role}`,
+                '═══════════════════'
+            ]
+
+            await e.reply(identityInfo.join('\n'))
+        } catch (error) {
+            console.error('[身份证] 查询失败:', error)
+            await e.reply('查询身份信息失败，请稍后重试')
         }
-        
-        // 4. 格式化并发送信息
-        const joinTime = moment.unix(memberInfo.join_time).format('YYYY-MM-DD HH:mm:ss');
-        const lastSentTime = moment.unix(memberInfo.last_sent_time).format('YYYY-MM-DD HH:mm:ss');
-        const titleExpireTime = memberInfo.title_expire_time == -1 ? "永久" : moment.unix(memberInfo.title_expire_time).format('YYYY-MM-DD HH:mm:ss');
-        const shutupTime = memberInfo.shutup_time > 0 ? `禁言中，还剩 ${moment.duration(memberInfo.shutup_time - moment().unix(), 'seconds').humanize()}` : "未被禁言";
-        
-        let msg = [
-            `我帮你查到了哦！(*/ω＼*)`,
-            `--------------------`,
-            `群号: ${memberInfo.group_id}`,
-            `QQ号: ${memberInfo.user_id}`,
-            `昵称: ${memberInfo.nickname}`,
-            `群名片: ${memberInfo.card || '无'}`,
-            `性别: ${memberInfo.sex}`,
-            `年龄: ${memberInfo.age}`,
-            `地区: ${memberInfo.area || '未知'}`,
-            `入群时间: ${joinTime}`,
-            `最后发言: ${lastSentTime}`,
-            `等级: ${memberInfo.level}`,
-            `头衔: ${memberInfo.title || '无'}`,
-            `头衔有效期: ${titleExpireTime}`,
-            `群身份: ${memberInfo.role}`, // owner, admin, member
-            `禁言状态: ${shutupTime}`
-        ].join('\n');
-        
-        // 5. 设置CD
-        await redis.set(`lql:idcard-cd:${e.user_id}`, '1', { // value设为1即可，不用存时间
-            EX: cdTime
-        });
-        
-        e.reply(msg);
-        return true;
+        return true
+    }
+
+    /**
+     * 获取角色文本描述
+     * @param {string} role 角色代码
+     * @returns {string} 角色描述
+     */
+    getRoleText(role) {
+        const roleMap = {
+            'owner': '群主',
+            'admin': '管理员',
+            'member': '群员'
+        }
+        return roleMap[role] || '未知'
     }
 }
+
+export default UserIdentityCard

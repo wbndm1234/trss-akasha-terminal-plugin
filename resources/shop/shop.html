@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="shop.css">
+    <title>商城系统</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 虚空商城</h1>
+            <div class="user-info">
+                <div class="money">💰 金币: {{money}}</div>
+                <div class="points">🏆 积分: {{points}}</div>
+            </div>
+        </div>
+        
+        <div class="shop-section">
+            <h2>📦 商品列表</h2>
+            <div class="items-grid">
+                {{#each items}}
+                <div class="item-card {{rarity}}">
+                    <div class="item-icon">{{icon}}</div>
+                    <div class="item-name">{{name}}</div>
+                    <div class="item-description">{{description}}</div>
+                    <div class="item-price">💰 {{price}}</div>
+                    <div class="item-stock">库存: {{stock}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="inventory-section">
+            <h2>🎒 我的背包</h2>
+            <div class="inventory-grid">
+                {{#each inventory}}
+                <div class="inventory-item">
+                    <div class="item-icon">{{icon}}</div>
+                    <div class="item-name">{{name}}</div>
+                    <div class="item-count">×{{count}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="signin-section">
+            <h2>📅 每日签到</h2>
+            <div class="signin-calendar">
+                {{#each signinDays}}
+                <div class="signin-day {{status}}">
+                    <div class="day-number">{{day}}</div>
+                    <div class="day-reward">{{reward}}</div>
+                </div>
+                {{/each}}
+            </div>
+            <div class="signin-info">
+                <div class="consecutive-days">连续签到: {{consecutiveDays}} 天</div>
+                <div class="next-reward">明日奖励: {{nextReward}}</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By trss-akasha-terminal-plugin</p>
+        </div>
+    </div>
+</body>
+</html>

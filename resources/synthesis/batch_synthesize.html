@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量合成</title>
+    <link rel="stylesheet" href="./batch_synthesize.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="batch-logo">⚗️</div>
+            <h1 class="title">批量合成工坊</h1>
+            <p class="subtitle">高效合成，批量生产</p>
+        </div>
+
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="{{userAvatar}}" alt="用户头像" class="user-avatar">
+                <div class="user-details">
+                    <div class="user-name">{{userName}}</div>
+                    <div class="user-level">工匠等级 {{userLevel}}</div>
+                </div>
+            </div>
+            <div class="user-resources">
+                <div class="resource-item">
+                    <span class="resource-icon">💰</span>
+                    <span class="resource-amount">{{userMoney}}</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">💎</span>
+                    <span class="resource-amount">{{userGems}}</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">⚡</span>
+                    <span class="resource-amount">{{userEnergy}}</span>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="batch-config">
+            <div class="config-header">
+                <h2 class="config-title">批量合成配置</h2>
+                <div class="quick-actions">
+                    <button class="quick-btn" data-action="save-template">💾 保存模板</button>
+                    <button class="quick-btn" data-action="load-template">📁 加载模板</button>
+                    <button class="quick-btn" data-action="clear-all">🗑️ 清空配置</button>
+                </div>
+            </div>
+
+           
+            <div class="recipe-selection">
+                <div class="selection-header">
+                    <h3 class="selection-title">选择配方</h3>
+                    <div class="recipe-filters">
+                        <select class="filter-category">
+                            <option value="all">全部分类</option>
+                            <option value="weapon">武器</option>
+                            <option value="armor">防具</option>
+                            <option value="accessory">饰品</option>
+                            <option value="consumable">消耗品</option>
+                            <option value="material">材料</option>
+                        </select>
+                        <select class="filter-rarity">
+                            <option value="all">全部稀有度</option>
+                            <option value="common">普通</option>
+                            <option value="uncommon">优秀</option>
+                            <option value="rare">稀有</option>
+                            <option value="epic">史诗</option>
+                            <option value="legendary">传说</option>
+                        </select>
+                        <input type="text" class="search-recipe" placeholder="搜索配方...">
+                    </div>
+                </div>
+
+                <div class="recipe-grid">
+                    {{#each availableRecipes}}
+                    <div class="recipe-card {{rarity}}" data-recipe-id="{{id}}">
+                        <div class="recipe-image">
+                            <img src="{{image}}" alt="{{name}}">
+                            <div class="recipe-rarity-badge">{{rarityText}}</div>
+                        </div>
+                        <div class="recipe-info">
+                            <div class="recipe-name">{{name}}</div>
+                            <div class="recipe-category">{{category}}</div>
+                            <div class="recipe-level">需要等级: {{requiredLevel}}</div>
+                        </div>
+                        <div class="recipe-materials">
+                            {{#each materials}}
+                            <div class="material-item {{#if insufficient}}insufficient{{/if}}">
+                                <img src="{{icon}}" alt="{{name}}" class="material-icon">
+                                <span class="material-count">{{required}}/{{available}}</span>
+                            </div>
+                            {{/each}}
+                        </div>
+                        <div class="recipe-actions">
+                            <button class="add-recipe-btn" {{#unless canCraft}}disabled{{/unless}}>添加到队列</button>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="synthesis-queue">
+            <div class="queue-header">
+                <h3 class="queue-title">合成队列</h3>
+                <div class="queue-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">队列数量:</span>
+                        <span class="stat-value">{{queueCount}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">预计时间:</span>
+                        <span class="stat-value">{{estimatedTime}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">总成本:</span>
+                        <span class="stat-value">{{totalCost}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="queue-content">
+                {{#if queueItems.length}}
+                <div class="queue-list">
+                    {{#each queueItems}}
+                    <div class="queue-item" data-queue-id="{{id}}">
+                        <div class="item-order">{{@index}}</div>
+                        <div class="item-image">
+                            <img src="{{recipe.image}}" alt="{{recipe.name}}">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name">{{recipe.name}}</div>
+                            <div class="item-quantity">数量: {{quantity}}</div>
+                            <div class="item-time">时间: {{craftTime}}</div>
+                        </div>
+                        <div class="item-materials">
+                            {{#each materials}}
+                            <div class="material-summary">
+                                <img src="{{icon}}" alt="{{name}}" class="material-icon">
+                                <span class="material-need">{{totalNeeded}}</span>
+                            </div>
+                            {{/each}}
+                        </div>
+                        <div class="item-controls">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" data-action="decrease">-</button>
+                                <input type="number" class="quantity-input" value="{{quantity}}" min="1" max="{{maxQuantity}}">
+                                <button class="quantity-btn" data-action="increase">+</button>
+                            </div>
+                            <button class="remove-btn" data-action="remove">🗑️</button>
+                            <button class="move-up-btn" data-action="move-up" {{#if @first}}disabled{{/if}}>↑</button>
+                            <button class="move-down-btn" data-action="move-down" {{#if @last}}disabled{{/if}}>↓</button>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <div class="empty-queue">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-text">合成队列为空</div>
+                    <div class="empty-desc">请从上方选择配方添加到队列中</div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- 资源需求总览 -->
+        <div class="resource-overview">
+            <div class="overview-header">
+                <h3 class="overview-title">资源需求总览</h3>
+                <div class="overview-actions">
+                    <button class="auto-buy-btn" {{#unless canAutoBuy}}disabled{{/unless}}>🛒 自动购买缺失材料</button>
+                    <button class="optimize-btn">⚡ 优化合成顺序</button>
+                </div>
+            </div>
+
+            <div class="resource-grid">
+                {{#each totalResources}}
+                <div class="resource-card {{#if insufficient}}insufficient{{/if}}">
+                    <div class="resource-image">
+                        <img src="{{icon}}" alt="{{name}}">
+                        {{#if insufficient}}
+                        <div class="insufficient-badge">不足</div>
+                        {{/if}}
+                    </div>
+                    <div class="resource-details">
+                        <div class="resource-name">{{name}}</div>
+                        <div class="resource-need">需要: {{needed}}</div>
+                        <div class="resource-have">拥有: {{available}}</div>
+                        {{#if insufficient}}
+                        <div class="resource-missing">缺少: {{missing}}</div>
+                        <div class="resource-cost">购买费用: {{buyCost}}</div>
+                        {{/if}}
+                    </div>
+                    {{#if insufficient}}
+                    <div class="resource-actions">
+                        <button class="buy-resource-btn">购买</button>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- 合成设置 -->
+        <div class="synthesis-settings">
+            <div class="settings-header">
+                <h3 class="settings-title">合成设置</h3>
+            </div>
+
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <label class="setting-label">合成模式</label>
+                    <select class="setting-select" name="synthesisMode">
+                        <option value="sequential">顺序合成</option>
+                        <option value="parallel">并行合成</option>
+                        <option value="optimized">智能优化</option>
+                    </select>
+                    <div class="setting-desc">选择合成执行方式</div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">失败处理</label>
+                    <select class="setting-select" name="failureHandling">
+                        <option value="continue">继续合成</option>
+                        <option value="pause">暂停队列</option>
+                        <option value="retry">自动重试</option>
+                    </select>
+                    <div class="setting-desc">合成失败时的处理方式</div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">成功率加成</label>
+                    <div class="bonus-options">
+                        <label class="bonus-option">
+                            <input type="checkbox" name="useBonus" value="workshop">
+                            <span class="bonus-text">工坊加成 (+{{workshopBonus}}%)</span>
+                        </label>
+                        <label class="bonus-option">
+                            <input type="checkbox" name="useBonus" value="skill">
+                            <span class="bonus-text">技能加成 (+{{skillBonus}}%)</span>
+                        </label>
+                        <label class="bonus-option">
+                            <input type="checkbox" name="useBonus" value="item">
+                            <span class="bonus-text">道具加成 (+{{itemBonus}}%)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">通知设置</label>
+                    <div class="notification-options">
+                        <label class="notification-option">
+                            <input type="checkbox" name="notification" value="completion">
+                            <span class="notification-text">完成通知</span>
+                        </label>
+                        <label class="notification-option">
+                            <input type="checkbox" name="notification" value="failure">
+                            <span class="notification-text">失败通知</span>
+                        </label>
+                        <label class="notification-option">
+                            <input type="checkbox" name="notification" value="milestone">
+                            <span class="notification-text">里程碑通知</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 执行控制 -->
+        <div class="execution-control">
+            <div class="control-header">
+                <h3 class="control-title">执行控制</h3>
+                <div class="execution-status">
+                    <div class="status-indicator {{executionStatus}}"></div>
+                    <span class="status-text">{{executionStatusText}}</span>
+                </div>
+            </div>
+
+            <div class="control-actions">
+                <button class="control-btn start-btn" {{#if isExecuting}}disabled{{/if}}>▶️ 开始批量合成</button>
+                <button class="control-btn pause-btn" {{#unless isExecuting}}disabled{{/unless}}>⏸️ 暂停合成</button>
+                <button class="control-btn stop-btn" {{#unless isExecuting}}disabled{{/unless}}>⏹️ 停止合成</button>
+                <button class="control-btn preview-btn">👁️ 预览结果</button>
+            </div>
+
+            {{#if isExecuting}}
+            <div class="execution-progress">
+                <div class="progress-header">
+                    <span class="progress-text">当前进度</span>
+                    <span class="progress-percentage">{{progressPercentage}}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{progressPercentage}}%"></div>
+                </div>
+                <div class="progress-details">
+                    <div class="current-item">正在合成: {{currentItem}}</div>
+                    <div class="remaining-time">剩余时间: {{remainingTime}}</div>
+                    <div class="completed-count">已完成: {{completedCount}}/{{totalCount}}</div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- 合成历史 -->
+        <div class="synthesis-history">
+            <div class="history-header">
+                <h3 class="history-title">最近批量合成</h3>
+                <button class="view-all-btn">查看全部历史</button>
+            </div>
+
+            <div class="history-list">
+                {{#each recentBatches}}
+                <div class="history-item">
+                    <div class="history-time">{{time}}</div>
+                    <div class="history-summary">
+                        <div class="summary-text">批量合成 {{itemCount}} 种物品</div>
+                        <div class="summary-stats">
+                            <span class="success-count">成功: {{successCount}}</span>
+                            <span class="failure-count">失败: {{failureCount}}</span>
+                            <span class="total-time">耗时: {{duration}}</span>
+                        </div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="repeat-btn">🔄 重复执行</button>
+                        <button class="details-btn">📋 查看详情</button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <div class="footer-info">
+                <p class="info-text">批量合成可以大幅提升生产效率，合理规划资源使用</p>
+                <p class="update-time">最后更新: {{updateTime}}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+         
+            const filterCategory = document.querySelector('.filter-category');
+            const filterRarity = document.querySelector('.filter-rarity');
+            const searchInput = document.querySelector('.search-recipe');
+            
+            function filterRecipes() {
+                const category = filterCategory.value;
+                const rarity = filterRarity.value;
+                const search = searchInput.value.toLowerCase();
+                
+                document.querySelectorAll('.recipe-card').forEach(card => {
+                    const cardCategory = card.dataset.category;
+                    const cardRarity = card.dataset.rarity;
+                    const cardName = card.querySelector('.recipe-name').textContent.toLowerCase();
+                    
+                    const categoryMatch = category === 'all' || cardCategory === category;
+                    const rarityMatch = rarity === 'all' || cardRarity === rarity;
+                    const searchMatch = search === '' || cardName.includes(search);
+                    
+                    card.style.display = categoryMatch && rarityMatch && searchMatch ? 'block' : 'none';
+                });
+            }
+            
+            filterCategory.addEventListener('change', filterRecipes);
+            filterRarity.addEventListener('change', filterRecipes);
+            searchInput.addEventListener('input', filterRecipes);
+            document.querySelectorAll('.add-recipe-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const recipeCard = this.closest('.recipe-card');
+                    const recipeId = recipeCard.dataset.recipeId;
+                    console.log('添加配方到队列:', recipeId);
+                });
+            });
+            
+            
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.dataset.action;
+                    const input = this.parentNode.querySelector('.quantity-input');
+                    let value = parseInt(input.value);
+                    
+                    if (action === 'increase') {
+                        value = Math.min(value + 1, parseInt(input.max));
+                    } else if (action === 'decrease') {
+                        value = Math.max(value - 1, 1);
+                    }
+                    
+                    input.value = value;
+                    
+                });
+            });
+            
+           
+            document.querySelector('.start-btn').addEventListener('click', function() {
+                console.log('开始批量合成');
+            });
+            
+            document.querySelector('.pause-btn').addEventListener('click', function() {
+                console.log('暂停合成');
+            });
+            
+            document.querySelector('.stop-btn').addEventListener('click', function() {
+                console.log('停止合成');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="couple_duel.css">
+    <title>情侣决斗</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ 情侣决斗竞技场</h1>
+            <div class="arena-info">
+                <div class="arena-name">虚空竞技场</div>
+                <div class="arena-status">战斗进行中</div>
+            </div>
+        </div>
+        
+        <div class="duel-arena">
+            <div class="fighter left-fighter">
+                <div class="fighter-avatar">{{challengerAvatar}}</div>
+                <div class="fighter-info">
+                    <div class="fighter-name">{{challengerName}}</div>
+                    <div class="fighter-title">挑战者</div>
+                    <div class="fighter-stats">
+                        <div class="stat">
+                            <span class="stat-label">战斗力</span>
+                            <span class="stat-value">{{challengerPower}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">金币</span>
+                            <span class="stat-value">{{challengerMoney}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">爱意值</span>
+                            <span class="stat-value">{{challengerLove}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vs-section">
+                <div class="vs-icon">⚡</div>
+                <div class="vs-text">VS</div>
+                <div class="battle-effects">
+                    <div class="effect-spark"></div>
+                    <div class="effect-spark"></div>
+                    <div class="effect-spark"></div>
+                </div>
+            </div>
+            
+            <div class="fighter right-fighter">
+                <div class="fighter-avatar">{{defenderAvatar}}</div>
+                <div class="fighter-info">
+                    <div class="fighter-name">{{defenderName}}</div>
+                    <div class="fighter-title">应战者</div>
+                    <div class="fighter-stats">
+                        <div class="stat">
+                            <span class="stat-label">战斗力</span>
+                            <span class="stat-value">{{defenderPower}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">金币</span>
+                            <span class="stat-value">{{defenderMoney}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">爱意值</span>
+                            <span class="stat-value">{{defenderLove}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="battle-result">
+            <div class="result-header">
+                <h2>🏆 决斗结果</h2>
+            </div>
+            <div class="winner-section">
+                <div class="winner-crown">👑</div>
+                <div class="winner-name">{{winnerName}}</div>
+                <div class="winner-title">胜利者</div>
+            </div>
+            <div class="battle-details">
+                <div class="detail-item">
+                    <span class="detail-label">战斗回合:</span>
+                    <span class="detail-value">{{battleRounds}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">伤害差值:</span>
+                    <span class="detail-value">{{damageDiff}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">获得金币:</span>
+                    <span class="detail-value">+{{rewardMoney}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">爱意变化:</span>
+                    <span class="detail-value">{{loveChange}}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cooldown-info">
+            <div class="cooldown-icon">⏰</div>
+            <div class="cooldown-text">下次决斗冷却时间: {{cooldownTime}}</div>
+        </div>
+        
+        <div class="footer">
+            <div class="tips">
+                <h3>💡 决斗小贴士</h3>
+                <ul>
+                    <li>战斗力由金币和爱意值综合计算</li>
+                    <li>胜利者获得对方10%的金币</li>
+                    <li>失败者爱意值会有所下降</li>
+                    <li>每次决斗后有2小时冷却时间</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

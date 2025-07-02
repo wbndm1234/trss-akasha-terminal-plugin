@@ -1,0 +1,488 @@
+/* 求婚模板样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    z-index: 10;
+}
+
+/* 背景装饰 */
+.background-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 2rem;
+    animation: float 6s ease-in-out infinite;
+}
+
+.heart-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.heart-2 {
+    top: 20%;
+    right: 15%;
+    animation-delay: 1s;
+}
+
+.heart-3 {
+    bottom: 30%;
+    left: 20%;
+    animation-delay: 2s;
+}
+
+.heart-4 {
+    bottom: 20%;
+    right: 10%;
+    animation-delay: 3s;
+}
+
+.heart-5 {
+    top: 50%;
+    left: 5%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+        opacity: 0.6;
+    }
+}
+
+/* 主卡片 */
+.proposal-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.8s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 标题部分 */
+.proposal-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.proposal-title {
+    font-size: 2rem;
+    color: #e91e63;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.proposal-subtitle {
+    font-size: 1rem;
+    color: #666;
+    font-style: italic;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* 求婚者信息 */
+.proposer-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffeef0 0%, #fff5f7 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(233, 30, 99, 0.2);
+}
+
+.proposer-avatar {
+    position: relative;
+    margin-right: 20px;
+}
+
+.avatar-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #e91e63;
+    object-fit: cover;
+    animation: rotate 10s linear infinite;
+}
+
+.avatar-ring {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 90px;
+    height: 90px;
+    border: 2px solid transparent;
+    border-top: 2px solid #ff6b9d;
+    border-radius: 50%;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.proposer-info {
+    flex: 1;
+}
+
+.proposer-name {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.proposer-level {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.proposer-money {
+    font-size: 1rem;
+    color: #ff9800;
+    font-weight: bold;
+}
+
+/* 求婚消息 */
+.proposal-message-section {
+    margin-bottom: 25px;
+}
+
+.message-label {
+    font-size: 1.1rem;
+    color: #e91e63;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.proposal-message {
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 4px solid #ffc107;
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    text-align: center;
+    font-style: italic;
+    position: relative;
+}
+
+.proposal-message::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-size: 3rem;
+    color: #ffc107;
+    opacity: 0.3;
+}
+
+.proposal-message::after {
+    content: '"';
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    font-size: 3rem;
+    color: #ffc107;
+    opacity: 0.3;
+}
+
+/* 被求婚者信息 */
+.target-section {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(156, 39, 176, 0.2);
+}
+
+.target-label {
+    font-size: 1.1rem;
+    color: #9c27b0;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.target-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.target-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #9c27b0;
+    object-fit: cover;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.target-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 求婚花费 */
+.proposal-cost-section {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.cost-label {
+    font-size: 1rem;
+    color: #4caf50;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.proposal-cost {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.cost-amount {
+    color: #ff9800;
+}
+
+.cost-unit {
+    color: #666;
+    font-size: 1.2rem;
+}
+
+/* 操作按钮 */
+.proposal-actions {
+    text-align: center;
+}
+
+.actions-title {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.action-button {
+    flex: 1;
+    max-width: 150px;
+    padding: 15px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.action-button.accept {
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+    color: white;
+}
+
+.action-button.accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+}
+
+.action-button.reject {
+    background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+    color: white;
+}
+
+.action-button.reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.3);
+}
+
+.button-icon {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.button-text {
+    font-size: 1rem;
+}
+
+.actions-note {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* 装饰戒指 */
+.decoration-rings {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.ring {
+    position: absolute;
+    font-size: 1.5rem;
+    color: rgba(255, 193, 7, 0.3);
+    animation: float 8s ease-in-out infinite;
+}
+
+.ring-1 {
+    top: 20px;
+    right: 20px;
+    animation-delay: 0s;
+}
+
+.ring-2 {
+    bottom: 20px;
+    left: 20px;
+    animation-delay: 4s;
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-text {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .proposal-card {
+        padding: 20px;
+    }
+    
+    .proposal-title {
+        font-size: 1.5rem;
+    }
+    
+    .proposer-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .proposer-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .action-button {
+        max-width: none;
+    }
+    
+    .target-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

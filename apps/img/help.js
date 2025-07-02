@@ -103,3 +103,5 @@ const rodom = async function () {
   var imgs = list_img.length == 1 ? list_img[0] : list_img[lodash.random(0, list_img.length - 1)];
   return imgs;
 }
+
+export default akasha_help

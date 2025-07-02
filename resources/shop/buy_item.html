@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>购买成功</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            padding: 25px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.3"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.4"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.2"/></svg>');
+        }
+
+        .success-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+        }
+
+        .username {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .timestamp {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .item-showcase {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .item-showcase.common {
+            border-color: #95a5a6;
+        }
+
+        .item-showcase.uncommon {
+            border-color: #27ae60;
+        }
+
+        .item-showcase.rare {
+            border-color: #3498db;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+        }
+
+        .item-showcase.epic {
+            border-color: #9b59b6;
+            background: linear-gradient(45deg, #fff, #f8f0ff);
+        }
+
+        .item-showcase.legendary {
+            border-color: #f39c12;
+            background: linear-gradient(45deg, #fff, #fff8e1);
+        }
+
+        .item-showcase.mythic {
+            border-color: #e74c3c;
+            background: linear-gradient(45deg, #fff, #ffe6e6);
+        }
+
+        .item-rarity {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .item-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .item-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .purchase-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .price-value {
+            color: #e74c3c;
+        }
+
+        .money-value {
+            color: #27ae60;
+        }
+
+        .tips {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tips-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .tips-content {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                max-width: 90vw;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .success-icon {
+                font-size: 3em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">🛒</div>
+            <h1>{{title}}</h1>
+        </div>
+        
+        <div class="content">
+            <div class="user-info">
+                <div class="username">{{username}}</div>
+                <div class="timestamp">{{timestamp}}</div>
+            </div>
+
+            <div class="item-showcase {{item.rarity}}">
+                <div class="item-rarity">{{item.rarity}}</div>
+                <div class="item-name">{{item.name}}</div>
+                <div class="item-description">{{item.description}}</div>
+            </div>
+
+            <div class="purchase-details">
+                <div class="detail-row">
+                    <span class="detail-label">💰 消费金额</span>
+                    <span class="detail-value price-value">{{item.price}} 金币</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">💳 剩余金币</span>
+                    <span class="detail-value money-value">{{money}} 金币</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">📦 道具状态</span>
+                    <span class="detail-value">已添加到背包</span>
+                </div>
+            </div>
+
+            <div class="tips">
+                <div class="tips-title">💡 使用提示</div>
+                <div class="tips-content">
+                    使用 #使用道具{{item.id}} 来使用这个道具<br>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By trss-akasha-terminal-plugin</p>
+        </div>
+    </div>
+</body>
+</html>

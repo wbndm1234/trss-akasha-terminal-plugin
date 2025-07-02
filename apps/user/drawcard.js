@@ -1,225 +1,459 @@
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
-import fs from "fs";
-const dirpath = "plugins/trss-akasha-terminal-plugin/data/UserData";//文件夹路径
-const dirpath2 = "plugins/trss-akasha-terminal-plugin/resources/weapon/weapon.json";
-let Template = {//创建该用户
-    "money": 5,
-};
-let exerciseCD = {};
-let Cool_time = 5;
-var weapon = JSON.parse(fs.readFileSync(dirpath2, "utf8"));
-let num3 = weapon[`3星数量`]
-let num4 = weapon[`4星数量`]
-let num5 = weapon[`5星数量`]
-export class drawcard extends plugin {
+import fs from 'fs'
+import path from 'path'
+import dataManager from '../../components/data_manager.js'
+import mysqlManager from '../../components/mysql_manager.js'
+
+const DATA_DIR = path.join(process.cwd(), 'plugins/trss-akasha-terminal-plugin/data/UserData')
+const WEAPON_DATA_PATH = path.join(process.cwd(), 'plugins/trss-akasha-terminal-plugin/resources/weapon/weapon.json')
+const WEAPON_IMAGE_DIR = path.join(process.cwd(), 'plugins/trss-akasha-terminal-plugin/resources/weapon')
+
+const USER_TEMPLATE = {
+    money: 5,
+    weapons: { 3: {}, 4: {}, 5: {} }
+}
+
+const COOLDOWN_TIME = 5 * 60 * 1000 // 5分钟
+const GACHA_RATES = {
+    5: 16,   // 1.6%
+    4: 150,  // 15%
+    3: 1000  // 其余为3星
+}
+
+class WeaponGachaSystem {
+    constructor() {
+        this.cooldowns = new Map()
+        this.weaponData = null
+        this.loadWeaponData()
+    }
+
+    async loadWeaponData() {
+        try {
+            if (fs.existsSync(WEAPON_DATA_PATH)) {
+                this.weaponData = await dataManager.loadJsonData(WEAPON_DATA_PATH)
+            } else {
+                console.error('武器数据文件不存在:', WEAPON_DATA_PATH)
+                this.weaponData = { 3: {}, 4: {}, 5: {}, '3星数量': 0, '4星数量': 0, '5星数量': 0 }
+            }
+        } catch (error) {
+            console.error('加载武器数据失败:', error)
+            this.weaponData = { 3: {}, 4: {}, 5: {}, '3星数量': 0, '4星数量': 0, '5星数量': 0 }
+        }
+    }
+
+    isOnCooldown(userId) {
+        const cooldownEnd = this.cooldowns.get(userId)
+        if (cooldownEnd && Date.now() < cooldownEnd) {
+            return Math.ceil((cooldownEnd - Date.now()) / 60000) // 返回剩余分钟数
+        }
+        return false
+    }
+
+    setCooldown(userId) {
+        this.cooldowns.set(userId, Date.now() + COOLDOWN_TIME)
+    }
+
+    async getUserData(userId) {
+        const userFile = path.join(DATA_DIR, `${userId}.json`)
+        
+        // 确保目录存在
+        if (!fs.existsSync(DATA_DIR)) {
+            fs.mkdirSync(DATA_DIR, { recursive: true })
+        }
+
+        // 如果用户文件不存在，创建新用户
+        if (!fs.existsSync(userFile)) {
+            const newUser = { ...USER_TEMPLATE }
+            await dataManager.saveJsonData(userFile, newUser)
+            return newUser
+        }
+
+        try {
+            const userData = await dataManager.loadJsonData(userFile)
+            // 确保用户数据结构完整
+            if (!userData.weapons) {
+                userData.weapons = { 3: {}, 4: {}, 5: {} }
+            }
+            return userData
+        } catch (error) {
+            console.error(`读取用户数据失败 ${userId}:`, error)
+            return { ...USER_TEMPLATE }
+        }
+    }
+
+    async saveUserData(userId, userData) {
+        const userFile = path.join(DATA_DIR, `${userId}.json`)
+        try {
+            await dataManager.saveJsonData(userFile, userData)
+        } catch (error) {
+            console.error(`保存用户数据失败 ${userId}:`, error)
+        }
+    }
+
+    drawWeapon() {
+        const random = Math.floor(Math.random() * 1000)
+        let rarity
+        
+        if (random < GACHA_RATES[5]) {
+            rarity = 5
+        } else if (random < GACHA_RATES[4]) {
+            rarity = 4
+        } else {
+            rarity = 3
+        }
+
+        const weaponCount = this.weaponData[`${rarity}星数量`] || 0
+        if (weaponCount === 0) {
+            console.error(`${rarity}星武器数据为空`)
+            return null
+        }
+
+        const weaponIndex = Math.floor(Math.random() * weaponCount) + 1
+        const weaponName = this.weaponData[rarity]?.[weaponIndex]
+        
+        if (!weaponName) {
+            console.error(`获取${rarity}星武器失败，索引:${weaponIndex}`)
+            return null
+        }
+
+        return { rarity, index: weaponIndex, name: weaponName }
+    }
+
+    getWeaponImagePath(rarity, weaponName) {
+        const imagePath = path.join(WEAPON_IMAGE_DIR, `${rarity}`, `${weaponName}.png`)
+        return fs.existsSync(imagePath) ? imagePath : null
+    }
+}
+
+const gachaSystem = new WeaponGachaSystem()
+
+export class VoidWeaponGacha extends plugin {
     constructor() {
         super({
-            /** 功能名称 */
             name: '虚空武器抽卡',
-            /** 功能描述 */
-            dsc: '',
+            dsc: '武器抽卡系统',
             event: 'message',
-            /** 优先级，数字越小等级越高 */
-            priority: 1000,
+            priority: 1,
             rule: [
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#(决斗|虚空|抽卡)?(签到|做委托|开挂)$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'signin'
+                    reg: '^#(决斗|虚空|抽卡)?(签到|做委托|开挂)$',
+                    fnc: 'dailySignIn'
                 },
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#(决斗|虚空|抽卡)?(抽武器|祈愿|十连抽武器)$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'weapon'
+                    reg: '^#(决斗|虚空|抽卡)?(抽武器|祈愿|十连抽武器)$',
+                    fnc: 'drawWeapon'
                 },
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#武器库$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'weaponWarehouse'
+                    reg: '^#武器库$',
+                    fnc: 'showWeaponLibrary'
                 },
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#我的武器$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'myweapon'
+                    reg: '^#我的武器$',
+                    fnc: 'showMyWeapons'
                 }
             ]
         })
     }
-    /**
-     * 
-     */
-    async weaponWarehouse(e) {
-        var weapon = JSON.parse(fs.readFileSync(dirpath2, "utf8"));
-        let num3 = weapon[`3星数量`]
-        let num4 = weapon[`4星数量`]
-        let num5 = weapon[`5星数量`]
-        let msg = `武器库总量三星${num3}四星${num4}五星${num5}`
-        msg = msg + `\n五星武器:`;
-        if (weapon.hasOwnProperty(5)) {
-            for (let i = 1; i <= num5; i++) {
-                msg = msg + `\n${weapon[5][i]}`
+
+    async showWeaponLibrary(e) {
+        const userId = e.user_id
+        const commandName = '武器库'
+        
+        try {
+            // 记录命令使用统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
+            const weaponData = gachaSystem.weaponData
+            const counts = {
+                3: weaponData['3星数量'] || 0,
+                4: weaponData['4星数量'] || 0,
+                5: weaponData['5星数量'] || 0
             }
-        }
-        msg = msg + `\n四星武器:`
-        if (weapon.hasOwnProperty(4)) {
-            for (let i = 1; i <= num4; i++) {
-                msg = msg + `\n${weapon[4][i]}`
-            }
-        }
-        msg = msg + `\n三星武器:`
-        if (weapon.hasOwnProperty(3)) {
-            for (let i = 1; i <= num3; i++) {
-                msg = msg + `\n${weapon[3][i]}`
-            }
-            e.reply(msg)
-        }
-    }
-    async signin(e) {
-        let user_id = e.user_id;
-        let filename = `${user_id}.json`;
-        //判断冷却
-        if (exerciseCD[user_id]) { //判定是否在冷却中
-            e.reply(`你刚刚进行了签到，等待${Cool_time}分钟后再次签到吧！`);
-            return;
-        }
-        if (!fs.existsSync(dirpath)) {//如果文件夹不存在
-            fs.mkdirSync(dirpath);//创建文件夹
-        }
-        //如果文件不存在，创建文件
-        if (!fs.existsSync(dirpath + "/" + filename)) {
-            fs.writeFileSync(dirpath + "/" + filename, JSON.stringify({
-            }));
-        }
-        //读取文件
-        var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));
-        if (!json.hasOwnProperty("money")) {//如果这个用户现在没有钱
-            json = Template
-            e.reply(`恭喜你注册成功，你现在的纠缠之缘数量是${json['money']}`)
-        }
-        else {
-            if (e.msg.includes('开挂') && e.isMaster) {
-                json['money'] += 100
-                e.reply(`你获得了100颗纠缠之缘，你现在的纠缠之缘数量是${json['money']}`)
-            }
-            json['money']++
-            e.reply(`获得了一颗纠缠之缘，你还有${json['money']}颗纠缠之缘`)
-        }
-        //下面是添加冷却
-        exerciseCD[user_id] = true;
-        exerciseCD[user_id] = setTimeout(() => {//冷却时间
-            if (exerciseCD[user_id]) {
-                delete exerciseCD[user_id];
-            }
-        }, Cool_time * 1000 * 60);
-        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
-        return
-    }
-    async weapon(e) {
-        let user_id = e.user_id;
-        let filename = `${user_id}.json`;
-        //判断冷却
-        //如果文件不存在，创建文件
-        if (!fs.existsSync(dirpath + "/" + filename)) {
-            e.reply('你还没有注册呢，请使用 #虚空签到 注册')
-            return
-        }
-        //读取文件
-        var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));
-        var weapon = JSON.parse(fs.readFileSync(dirpath2, "utf8"));
-        let num_chou = 1
-        if (e.msg.includes("十连抽武器")) num_chou = 10
-        if (json['money'] < num_chou) { //判定是否有钱
-            e.reply(`需要${num_chou}纠缠之缘，你没有纠缠之缘了！`);
-            return;
-        }
-        if (user_id == '2859167710' || e.isMaster) { json['money'] += num_chou }//开发者开挂
-        else { json['money'] = json['money'] - num_chou }
-        //获取随机数，判断武器等级
-        let msg = '你抽到的三星武器：\n'
-        let msg2
-        for (let i = 1; i <= num_chou; i++) {
-            let Grade = Math.floor(1000 * Math.random())
-            if (Grade < 16) { Grade = 5 }
-            else if (Grade < 150) { Grade = 4 }
-            else { Grade = 3 }
-            if (Grade == 5)
-                var num = Math.floor(1 + num5 * Math.random())
-            else if (Grade == 4)
-                var num = Math.floor(1 + num4 * Math.random())
-            else if (Grade == 3)
-                var num = Math.floor(1 + num3 * Math.random())
-            let name = weapon[Grade][num];
-            if (!json.hasOwnProperty(Grade)) {//如果json中不存在该用户
-                json[Grade] = { num: 1 }//数量1
-            }
-            if (!json[Grade].hasOwnProperty(num)) {
-                json[Grade][num] = 1
-            }
-            else {
-                json[Grade][num]++
-            }
-            if (Grade == 5 || Grade == 4) {
-                msg2 = [`恭喜你抽到了${Grade}星武器,你的第${json[Grade][num]}把${name}`, segment.image(`plugins/trss-akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
-                e.reply(msg2)
+
+            let message = `武器库总量：三星${counts[3]} 四星${counts[4]} 五星${counts[5]}\n\n`
+
+            // 显示五星武器
+            message += '★★★★★ 五星武器:\n'
+            if (weaponData[5] && counts[5] > 0) {
+                for (let i = 1; i <= counts[5]; i++) {
+                    if (weaponData[5][i]) {
+                        message += `${weaponData[5][i]}\n`
+                    }
+                }
             } else {
-                if (num_chou > 1)
-                    msg = msg + `你已经有${json[Grade][num]}把${name}了,你还有${json['money']}纠缠之缘\n`
-                if (num_chou == 1) {
-                    msg = [`你已经有${json[Grade][num]}把三星武器${name}了,你还有${json['money']}纠缠之缘`,
-                    segment.image(`plugins/trss-akasha-terminal-plugin/resources/weapon/${Grade}/${name}.png`)]
-                    e.reply(msg)
+                message += '暂无五星武器\n'
+            }
+
+            // 显示四星武器
+            message += '\n★★★★ 四星武器:\n'
+            if (weaponData[4] && counts[4] > 0) {
+                for (let i = 1; i <= counts[4]; i++) {
+                    if (weaponData[4][i]) {
+                        message += `${weaponData[4][i]}\n`
+                    }
+                }
+            } else {
+                message += '暂无四星武器\n'
+            }
+
+            // 显示三星武器（限制显示数量避免消息过长）
+            message += '\n★★★ 三星武器（部分）:\n'
+            if (weaponData[3] && counts[3] > 0) {
+                const maxShow = Math.min(10, counts[3])
+                for (let i = 1; i <= maxShow; i++) {
+                    if (weaponData[3][i]) {
+                        message += `${weaponData[3][i]}\n`
+                    }
+                }
+                if (counts[3] > 10) {
+                    message += `...还有${counts[3] - 10}把三星武器\n`
+                }
+            } else {
+                message += '暂无三星武器\n'
+            }
+
+            return e.reply(message.trim())
+        } catch (error) {
+            console.error('显示武器库失败:', error)
+            // 记录命令失败统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+            return e.reply('武器库数据加载失败，请稍后再试')
+        }
+    }
+    async dailySignIn(e) {
+        const userId = e.user_id
+        const commandName = '签到'
+        
+        try {
+            // 记录命令使用统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
+            // 检查冷却时间
+            const remainingTime = gachaSystem.isOnCooldown(userId)
+            if (remainingTime) {
+                return e.reply(`你刚刚进行了签到，请等待${remainingTime}分钟后再次签到！`)
+            }
+
+            // 获取用户数据
+            const userData = await gachaSystem.getUserData(userId)
+            const isNewUser = !userData.money || userData.money === 5
+
+            // 处理开挂命令（仅主人可用）
+            if (e.msg.includes('开挂') && e.isMaster) {
+                userData.money = (userData.money || 0) + 100
+                await gachaSystem.saveUserData(userId, userData)
+                
+                // 更新金币相关特殊任务（纠缠之缘也算货币）
+                const { QuestSystem } = await import('./quest_system.js')
+                 const questSystem = new QuestSystem()
+                 await questSystem.updateQuestProgress(userId, e.group_id, 'max_money', userData.money)
+                
+                return e.reply(`开挂成功！获得了100颗纠缠之缘，当前拥有${userData.money}颗纠缠之缘`)
+            }
+
+            // 正常签到
+            if (isNewUser) {
+                userData.money = 5
+                await gachaSystem.saveUserData(userId, userData)
+                return e.reply(`欢迎来到虚空武器抽卡系统！\n注册成功，获得初始纠缠之缘${userData.money}颗`)
+            } else {
+                userData.money = (userData.money || 0) + 1
+                await gachaSystem.saveUserData(userId, userData)
+                gachaSystem.setCooldown(userId)
+                
+                // 更新金币相关特殊任务（纠缠之缘也算货币）
+                const { QuestSystem } = await import('./quest_system.js')
+                 const questSystem = new QuestSystem()
+                 await questSystem.updateQuestProgress(userId, e.group_id, 'max_money', userData.money)
+                
+                return e.reply(`签到成功！获得1颗纠缠之缘，当前拥有${userData.money}颗纠缠之缘`)
+            }
+        } catch (error) {
+            console.error('签到失败:', error)
+            // 记录命令失败统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+            return e.reply('签到失败，请稍后再试')
+        }
+    }
+    async drawWeapon(e) {
+        const userId = e.user_id
+        const commandName = e.msg.includes('十连') ? '十连抽武器' : '抽武器'
+        
+        try {
+            // 记录命令使用统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
+            // 获取用户数据
+            const userData = gachaSystem.getUserData(userId)
+            
+            if (!userData.money && userData.money !== 0) {
+                return e.reply('你还没有注册呢，请使用 #虚空签到 注册')
+            }
+
+            // 确定抽卡次数
+            const drawCount = e.msg.includes('十连') ? 10 : 1
+            
+            // 检查纠缠之缘是否足够
+            if (userData.money < drawCount) {
+                return e.reply(`需要${drawCount}颗纠缠之缘，你当前只有${userData.money}颗！`)
+            }
+
+            // 扣除纠缠之缘（主人和特定用户免费）
+            if (!(e.isMaster || userId === '2859167710')) {
+                userData.money -= drawCount
+            }
+
+            const results = []
+            const threeStarResults = []
+
+            // 执行抽卡
+            for (let i = 0; i < drawCount; i++) {
+                const weapon = gachaSystem.drawWeapon()
+                if (!weapon) {
+                    console.error('抽卡失败，武器数据异常')
+                    continue
+                }
+
+                // 更新用户武器数据
+                if (!userData.weapons) {
+                    userData.weapons = { 3: {}, 4: {}, 5: {} }
+                }
+                if (!userData.weapons[weapon.rarity]) {
+                    userData.weapons[weapon.rarity] = {}
+                }
+                
+                const weaponKey = weapon.index.toString()
+                userData.weapons[weapon.rarity][weaponKey] = (userData.weapons[weapon.rarity][weaponKey] || 0) + 1
+                
+                const weaponCount = userData.weapons[weapon.rarity][weaponKey]
+                const imagePath = gachaSystem.getWeaponImagePath(weapon.rarity, weapon.name)
+
+                if (weapon.rarity >= 4) {
+                    // 四星及以上立即发送
+                    const message = [
+                        `${'★'.repeat(weapon.rarity)} 恭喜获得${weapon.rarity}星武器！\n${weapon.name}\n这是你的第${weaponCount}把`,
+                        imagePath ? segment.image(imagePath) : ''
+                    ].filter(Boolean)
+                    
+                    await e.reply(message)
+                    await new Promise(resolve => setTimeout(resolve, 500)) // 延迟避免刷屏
+                } else {
+                    // 三星武器收集起来
+                    threeStarResults.push({
+                        name: weapon.name,
+                        count: weaponCount,
+                        imagePath
+                    })
                 }
             }
+
+            // 批量发送三星武器结果
+            if (threeStarResults.length > 0) {
+                if (drawCount === 1) {
+                    const weapon = threeStarResults[0]
+                    const message = [
+                        `★★★ 获得三星武器：${weapon.name}\n这是你的第${weapon.count}把\n剩余纠缠之缘：${userData.money}`,
+                        weapon.imagePath ? segment.image(weapon.imagePath) : ''
+                    ].filter(Boolean)
+                    await e.reply(message)
+                } else {
+                    let threeStarMsg = '★★★ 三星武器：\n'
+                    threeStarResults.forEach(weapon => {
+                        threeStarMsg += `${weapon.name} (第${weapon.count}把)\n`
+                    })
+                    threeStarMsg += `\n剩余纠缠之缘：${userData.money}`
+                    await e.reply(threeStarMsg)
+                }
+            }
+
+            // 保存用户数据
+            gachaSystem.saveUserData(userId, userData)
+            
+        } catch (error) {
+            console.error('抽卡失败:', error)
+            // 记录命令失败统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+            return e.reply('抽卡系统出现错误，请稍后再试')
         }
-        if (num_chou > 1)
-            e.reply(msg)
-        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
-        return
     }
-    async myweapon(e) {
-        let user_id = e.user_id;
-        let filename = `${user_id}.json`;
-        //判断冷却
-        //如果文件不存在，创建文件
-        if (!fs.existsSync(dirpath + "/" + filename)) {
-            e.reply('你还没有注册呢，请使用 #虚空签到 注册')
-            return
-        }
-        //读取文件
-        var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));
-        var weapon = JSON.parse(fs.readFileSync(dirpath2, "utf8"));
-        let msg = `五星武器：`;
-        if (json.hasOwnProperty(5)) {
-            console.log(json[5])
-            for (let i of Object.keys(json[5])) {
-                console.log(i)
-                if (weapon[5][i])
-                    msg = msg + `\n${weapon[5][i]} 数量：${json[5][i]}`
+    async showMyWeapons(e) {
+        const userId = e.user_id
+        const commandName = '我的武器'
+        
+        try {
+            // 记录命令使用统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
+            // 获取用户数据
+            const userData = gachaSystem.getUserData(userId)
+            
+            if (!userData.money && userData.money !== 0) {
+                return e.reply('你还没有注册呢，请使用 #虚空签到 注册')
             }
-        }
-        msg = msg + `\n四星武器:`
-        if (json.hasOwnProperty(4)) {
-            console.log(json[4])
-            for (let i of Object.keys(json[4])) {
-                console.log(i)
-                if (weapon[4][i])
-                    msg = msg + `\n${weapon[4][i]} 数量：${json[4][i]}`
+
+            const weaponData = gachaSystem.weaponData
+            let message = `💰 纠缠之缘：${userData.money}颗\n\n`
+            let hasWeapons = false
+
+            // 显示五星武器
+            message += '★★★★★ 五星武器：\n'
+            if (userData.weapons && userData.weapons[5] && Object.keys(userData.weapons[5]).length > 0) {
+                hasWeapons = true
+                for (const [index, count] of Object.entries(userData.weapons[5])) {
+                    const weaponName = weaponData[5]?.[index]
+                    if (weaponName) {
+                        message += `${weaponName} ×${count}\n`
+                    }
+                }
+            } else {
+                message += '暂无五星武器\n'
             }
-        }
-        msg = msg + `\n三星武器:`
-        if (json.hasOwnProperty(3)) {
-            console.log(json[3])
-            for (let i of Object.keys(json[3])) {
-                console.log(i)
-                if (weapon[3][i])
-                    msg = msg + `\n${weapon[3][i]} 数量：${json[3][i]}`
+
+            // 显示四星武器
+            message += '\n★★★★ 四星武器：\n'
+            if (userData.weapons && userData.weapons[4] && Object.keys(userData.weapons[4]).length > 0) {
+                hasWeapons = true
+                for (const [index, count] of Object.entries(userData.weapons[4])) {
+                    const weaponName = weaponData[4]?.[index]
+                    if (weaponName) {
+                        message += `${weaponName} ×${count}\n`
+                    }
+                }
+            } else {
+                message += '暂无四星武器\n'
             }
-            e.reply(msg)
+
+            // 显示三星武器（限制显示数量）
+            message += '\n★★★ 三星武器（部分）：\n'
+            if (userData.weapons && userData.weapons[3] && Object.keys(userData.weapons[3]).length > 0) {
+                hasWeapons = true
+                const threeStarWeapons = Object.entries(userData.weapons[3])
+                const maxShow = Math.min(10, threeStarWeapons.length)
+                
+                for (let i = 0; i < maxShow; i++) {
+                    const [index, count] = threeStarWeapons[i]
+                    const weaponName = weaponData[3]?.[index]
+                    if (weaponName) {
+                        message += `${weaponName} ×${count}\n`
+                    }
+                }
+                
+                if (threeStarWeapons.length > 10) {
+                    message += `...还有${threeStarWeapons.length - 10}种三星武器\n`
+                }
+            } else {
+                message += '暂无三星武器\n'
+            }
+
+            if (!hasWeapons) {
+                message += '\n🎯 快去抽卡获得你的第一把武器吧！'
+            }
+
+            return e.reply(message.trim())
+            
+        } catch (error) {
+            console.error('查看武器失败:', error)
+            // 记录命令失败统计
+            await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+            return e.reply('武器数据加载失败，请稍后再试')
         }
-        return
     }
 }
+
+export default VoidWeaponGacha

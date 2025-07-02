@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情侣任务仪表盘</title>
+    <link rel="stylesheet" href="./couple_task.css">
+</head>
+<body>
+    <div class="dashboard-container">
+       
+        <div class="dashboard-header">
+            <h1>仪表盘</h1>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-content">
+                    <div class="stat-label">总用户数</div>
+                    <div class="stat-value">{{totalUsers || 0}}</div>
+                </div>
+            </div>
+          
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-content">
+                    <div class="stat-label">总命令数</div>
+                    <div class="stat-value">{{totalCommands || 0}}</div>
+                </div>
+            </div>
+            
+            <!-- 成功率 -->
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <div class="stat-label">成功率</div>
+                    <div class="stat-value">{{successRate || 0}}%</div>
+                </div>
+            </div>
+        </div>
+        
+       
+        <div class="user-info-section">
+            <div class="user-card">
+                <div class="user-avatar">{{userAvatar}}</div>
+                <div class="user-details">
+                    <h3>{{username}}</h3>
+                    <p>等级: {{level}}</p>
+                    <p>金币: {{money}}</p>
+                </div>
+            </div>
+            
+            {{#if hasWife}}
+            <div class="wife-card">
+                <div class="wife-avatar">{{wifeAvatar}}</div>
+                <div class="wife-details">
+                    <h3>{{wifeName}}</h3>
+                    <p>恋爱天数: {{loveDays}}天</p>
+                    <p>亲密度: {{intimacy}}</p>
+                    <p>关系状态: {{relationshipStatus}}</p>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        
+        
+        {{#if coupleTask}}
+        <div class="task-section">
+            <h2>当前任务</h2>
+            <div class="task-card {{#if coupleTask.completed}}completed{{/if}}">
+                <div class="task-header">
+                    <h3>{{coupleTask.name}}</h3>
+                    <span class="task-status">{{#if coupleTask.completed}}✅ 已完成{{else}}⏳ 进行中{{/if}}</span>
+                </div>
+                <p class="task-description">{{coupleTask.description}}</p>
+                <p class="task-requirement">要求: {{coupleTask.requirement}}</p>
+                <div class="task-rewards">
+                    <span class="reward-money">💰 {{coupleTask.rewardMoney}}</span>
+                    <span class="reward-love">💕 {{coupleTask.rewardLove}}</span>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        
+       
+        <div class="love-bank-section">
+            <h2>CP银行</h2>
+            <div class="bank-info">
+                <p>当前余额: <span class="balance">{{loveBalance}}</span> 爱心币</p>
+                <p>利率: <span class="interest-rate">{{interestRate}}%</span></p>
+            </div>
+        </div>
+        
+        
+        {{#if rankings.length}}
+        <div class="rankings-section">
+            <h2>排行榜</h2>
+            <div class="rankings-list">
+                {{#each rankings}}
+                <div class="ranking-item">
+                    <span class="rank">{{@index + 1}}</span>
+                    <span class="name">{{name}}</span>
+                    <span class="score">{{score}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>

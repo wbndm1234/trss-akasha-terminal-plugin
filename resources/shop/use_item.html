@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>使用道具</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: magicAppear 0.8s ease-out;
+        }
+
+        @keyframes magicAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) rotate(-5deg);
+            }
+            50% {
+                transform: scale(1.05) rotate(2deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .header {
+            background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+            padding: 25px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: sparkle 3s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .magic-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: float 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+        }
+
+        .username {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .timestamp {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .item-showcase {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .item-showcase.common {
+            border-color: #95a5a6;
+        }
+
+        .item-showcase.uncommon {
+            border-color: #27ae60;
+        }
+
+        .item-showcase.rare {
+            border-color: #3498db;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+        }
+
+        .item-showcase.epic {
+            border-color: #9b59b6;
+            background: linear-gradient(45deg, #fff, #f8f0ff);
+        }
+
+        .item-showcase.legendary {
+            border-color: #f39c12;
+            background: linear-gradient(45deg, #fff, #fff8e1);
+        }
+
+        .item-showcase.mythic {
+            border-color: #e74c3c;
+            background: linear-gradient(45deg, #fff, #ffe6e6);
+        }
+
+        .item-rarity {
+            font-size: 2em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .item-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .item-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .effect-result {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .effect-result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="white" opacity="0.3"/><circle cx="75" cy="35" r="1" fill="white" opacity="0.4"/><circle cx="45" cy="75" r="1.5" fill="white" opacity="0.2"/><circle cx="65" cy="65" r="1" fill="white" opacity="0.3"/></svg>');
+        }
+
+        .effect-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .effect-description {
+            font-size: 1.1em;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .status-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .tips {
+            background: linear-gradient(45deg, #fd79a8, #e84393);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tips-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .tips-content {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                max-width: 90vw;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .magic-icon {
+                font-size: 3em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="magic-icon">✨</div>
+            <h1>{{title}}</h1>
+        </div>
+        
+        <div class="content">
+            <div class="user-info">
+                <div class="username">{{username}}</div>
+                <div class="timestamp">{{timestamp}}</div>
+            </div>
+
+            <div class="item-showcase {{item.rarity}}">
+                <div class="item-rarity">{{item.rarity}}</div>
+                <div class="item-name">{{item.name}}</div>
+                <div class="item-description">{{item.description}}</div>
+            </div>
+
+            <div class="effect-result">
+                <div class="effect-title">🎯 道具效果</div>
+                <div class="effect-description">{{result}}</div>
+            </div>
+
+            <div class="status-info">
+                <div class="status-row">
+                    <span class="status-label">📦 道具状态</span>
+                    <span class="status-value">已使用</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">⏰ 使用时间</span>
+                    <span class="status-value">{{timestamp}}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">✅ 效果状态</span>
+                    <span class="status-value">已生效</span>
+                </div>
+            </div>
+
+            <div class="tips">
+                <div class="tips-title">💡 温馨提示</div>
+                <div class="tips-content">
+                    道具已成功使用，效果已生效！<br>
+                    使用 #我的背包 查看剩余道具
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By trss-akasha-terminal-plugin</p>
+        </div>
+    </div>
+</body>
+</html>

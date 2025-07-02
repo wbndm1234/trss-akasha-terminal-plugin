@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合成列表</title>
+    <link rel="stylesheet" href="recipes_list.css">
+</head>
+<body>
+    <div class="recipes-list-container">
+        <div class="recipes-main">
+            <!-- 头部信息 -->
+            <div class="recipes-header">
+                <h1 class="recipes-title">🔨 合成配方大全</h1>
+                <div class="workshop-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">工坊等级</span>
+                        <span class="summary-value">5</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">经验值</span>
+                        <span class="summary-value">350/500</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">成功率加成</span>
+                        <span class="summary-value">+20%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipes-content">
+                <!-- 筛选区域 -->
+                <div class="filter-section">
+                    <div class="filter-title">🔍 配方筛选</div>
+                    <div class="filter-options">
+                        <div class="filter-tag active">全部</div>
+                        <div class="filter-tag">武器</div>
+                        <div class="filter-tag">防具</div>
+                        <div class="filter-tag">消耗品</div>
+                        <div class="filter-tag">材料</div>
+                    </div>
+                </div>
+
+                <!-- 武器分类 -->
+                <div class="category-section">
+                    <div class="category-header">
+                        ⚔️ 武器
+                    </div>
+                    <div class="recipes-grid">
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon">⭐</span>
+                                <span class="item-name">铁剑</span>
+                            </div>
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📦 材料</span>
+                                    <div class="materials-list">铁锭×3, 木棍×1</div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original">60%</span>
+                                        <span class="rate-final">80%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🏭 等级需求</span>
+                                    <span class="level-requirement available">Lv.1</span>
+                                </div>
+                            </div>
+                            <div class="recipe-description">
+                                基础的铁制武器，适合新手使用。
+                            </div>
+                        </div>
+
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon">⭐⭐</span>
+                                <span class="item-name">钢剑</span>
+                            </div>
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📦 材料</span>
+                                    <div class="materials-list">钢锭×2, 铁剑×1, 磨刀石×1</div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original">45%</span>
+                                        <span class="rate-final">65%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🏭 等级需求</span>
+                                    <span class="level-requirement available">Lv.3</span>
+                                </div>
+                            </div>
+                            <div class="recipe-description">
+                                经过强化的钢制武器，攻击力更强。
+                            </div>
+                        </div>
+
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon">⭐⭐⭐</span>
+                                <span class="item-name">魔法剑</span>
+                            </div>
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📦 材料</span>
+                                    <div class="materials-list">秘银锭×3, 魔法水晶×2, 钢剑×1</div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original">30%</span>
+                                        <span class="rate-final">50%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🏭 等级需求</span>
+                                    <span class="level-requirement unavailable">Lv.8</span>
+                                </div>
+                            </div>
+                            <div class="recipe-description">
+                                注入魔法力量的高级武器，具有特殊效果。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 防具分类 -->
+                <div class="category-section">
+                    <div class="category-header">
+                        🛡️ 防具
+                    </div>
+                    <div class="recipes-grid">
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon">⭐</span>
+                                <span class="item-name">皮甲</span>
+                            </div>
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📦 材料</span>
+                                    <div class="materials-list">兽皮×4, 线×2</div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original">70%</span>
+                                        <span class="rate-final">90%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🏭 等级需求</span>
+                                    <span class="level-requirement available">Lv.1</span>
+                                </div>
+                            </div>
+                            <div class="recipe-description">
+                                基础的皮制防具，提供基本防护。
+                            </div>
+                        </div>
+
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon">⭐⭐</span>
+                                <span class="item-name">铁甲</span>
+                            </div>
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📦 材料</span>
+                                    <div class="materials-list">铁锭×5, 皮甲×1, 铁环×3</div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original">50%</span>
+                                        <span class="rate-final">70%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🏭 等级需求</span>
+                                    <span class="level-requirement available">Lv.2</span>
+                                </div>
+                            </div>
+                            <div class="recipe-description">
+                                坚固的铁制防具，防御力显著提升。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="stats-summary">
+                    <h3 style="text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 1.5em;">📊 合成统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">156</span>
+                            <span class="stat-label">总合成次数</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">98</span>
+                            <span class="stat-label">成功次数</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">63%</span>
+                            <span class="stat-label">成功率</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">24</span>
+                            <span class="stat-label">可制作配方</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的筛选功能
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                // 这里可以添加实际的筛选逻辑
+                console.log('筛选:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

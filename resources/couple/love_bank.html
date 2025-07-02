@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../common/common.css">
+    <link rel="stylesheet" type="text/css" href="./love_bank.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="bank-logo">🏦💕</div>
+            <div class="title">爱情银行</div>
+            <div class="subtitle">Love Bank - 储存你们的甜蜜时光</div>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">
+                <img src="{{userAvatar}}" alt="{{username}}">
+            </div>
+            <div class="user-details">
+                <div class="username">{{username}}</div>
+                <div class="user-status">{{relationshipStatus}}</div>
+                <div class="partner-info">💕 与 {{partnerName}} 的爱情账户</div>
+            </div>
+        </div>
+
+        <div class="account-overview">
+            <div class="balance-card">
+                <div class="card-header">
+                    <div class="card-icon">💖</div>
+                    <div class="card-title">爱心余额</div>
+                </div>
+                <div class="balance-amount">{{loveBalance}}</div>
+                <div class="balance-change {{balanceChangeType}}">
+                    {{balanceChangeIcon}} {{balanceChange}}
+                </div>
+            </div>
+            
+            <div class="interest-card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <div class="card-title">年化收益率</div>
+                </div>
+                <div class="interest-rate">{{interestRate}}%</div>
+                <div class="interest-info">每日收益: {{dailyInterest}} 爱心</div>
+            </div>
+            
+            <div class="level-card">
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div class="card-title">VIP等级</div>
+                </div>
+                <div class="vip-level">{{vipLevel}}</div>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{levelProgress}}%"></div>
+                    </div>
+                    <div class="progress-text">{{currentExp}}/{{nextLevelExp}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="operations">
+            <div class="operation-tabs">
+                <div class="tab active" data-type="deposit">💰 存款</div>
+                <div class="tab" data-type="withdraw">💸 取款</div>
+                <div class="tab" data-type="transfer">💕 转账</div>
+            </div>
+            
+            <div class="operation-content">
+                <div class="operation-form">
+                    <div class="amount-input">
+                        <label>金额</label>
+                        <div class="input-group">
+                            <input type="number" placeholder="请输入金额" value="{{inputAmount}}">
+                            <div class="currency">爱心</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-amounts">
+                        <div class="quick-amount" data-amount="100">100</div>
+                        <div class="quick-amount" data-amount="500">500</div>
+                        <div class="quick-amount" data-amount="1000">1K</div>
+                        <div class="quick-amount" data-amount="5000">5K</div>
+                        <div class="quick-amount" data-amount="all">全部</div>
+                    </div>
+                    
+                    <div class="operation-info">
+                        <div class="info-item">
+                            <span class="info-label">手续费:</span>
+                            <span class="info-value">{{fee}} 爱心</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">实际到账:</span>
+                            <span class="info-value">{{actualAmount}} 爱心</span>
+                        </div>
+                    </div>
+                    
+                    <button class="operation-btn">{{operationText}}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-history">
+            <div class="history-header">
+                <div class="history-title">📋 交易记录</div>
+                <div class="history-filter">
+                    <select class="filter-select">
+                        <option value="all">全部记录</option>
+                        <option value="deposit">存款记录</option>
+                        <option value="withdraw">取款记录</option>
+                        <option value="transfer">转账记录</option>
+                        <option value="interest">利息收入</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="history-list">
+                {{#each transactions}}
+                <div class="transaction-item {{type}}">
+                    <div class="transaction-icon">
+                        {{#if (eq type 'deposit')}}💰{{/if}}
+                        {{#if (eq type 'withdraw')}}💸{{/if}}
+                        {{#if (eq type 'transfer')}}💕{{/if}}
+                        {{#if (eq type 'interest')}}📈{{/if}}
+                    </div>
+                    
+                    <div class="transaction-details">
+                        <div class="transaction-title">{{title}}</div>
+                        <div class="transaction-time">{{time}}</div>
+                        {{#if description}}
+                        <div class="transaction-desc">{{description}}</div>
+                        {{/if}}
+                    </div>
+                    
+                    <div class="transaction-amount {{amountType}}">
+                        {{amountPrefix}}{{amount}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            
+            <div class="history-pagination">
+                <button class="page-btn" {{#unless hasPrev}}disabled{{/unless}}>上一页</button>
+                <span class="page-info">第 {{currentPage}} 页，共 {{totalPages}} 页</span>
+                <button class="page-btn" {{#unless hasNext}}disabled{{/unless}}>下一页</button>
+            </div>
+        </div>
+
+        <div class="bank-services">
+            <div class="service-title">🎁 银行服务</div>
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">💎</div>
+                    <div class="service-name">定期存款</div>
+                    <div class="service-desc">锁定期限，获得更高收益</div>
+                    <div class="service-rate">年化 {{fixedRate}}%</div>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">🎯</div>
+                    <div class="service-name">爱情基金</div>
+                    <div class="service-desc">专为情侣设计的理财产品</div>
+                    <div class="service-rate">年化 {{fundRate}}%</div>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">🏆</div>
+                    <div class="service-name">VIP专享</div>
+                    <div class="service-desc">专属客户经理服务</div>
+                    <div class="service-rate">专享特权</div>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">🎊</div>
+                    <div class="service-name">节日福利</div>
+                    <div class="service-desc">节日期间额外收益加成</div>
+                    <div class="service-rate">限时活动</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="info-text">💡 CP银行让你们的感情保值增值</div>
+                <div class="update-time">最后更新: {{updateTime}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

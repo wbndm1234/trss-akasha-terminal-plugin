@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="wife.css">
+    <title>娶群友系统</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💕 娶群友系统</h1>
+            <div class="user-status">
+                <div class="avatar">{{userAvatar}}</div>
+                <div class="user-info">
+                    <div class="username">{{username}}</div>
+                    <div class="level">等级: {{level}}</div>
+                    <div class="money">💰 {{money}}</div>
+                </div>
+            </div>
+        </div>
+        
+        {{#if hasWife}}
+        <div class="couple-section">
+            <h2>💑 我的伴侣</h2>
+            <div class="couple-card">
+                <div class="couple-avatars">
+                    <div class="avatar-container">
+                        <div class="avatar">{{userAvatar}}</div>
+                        <div class="username">{{username}}</div>
+                    </div>
+                    <div class="heart-icon">💖</div>
+                    <div class="avatar-container">
+                        <div class="avatar">{{wifeAvatar}}</div>
+                        <div class="username">{{wifeName}}</div>
+                    </div>
+                </div>
+                <div class="couple-stats">
+                    <div class="stat">
+                        <div class="stat-label">恋爱天数</div>
+                        <div class="stat-value">{{loveDays}} 天</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">亲密度</div>
+                        <div class="stat-value">{{intimacy}}/100</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">关系状态</div>
+                        <div class="stat-value">{{relationshipStatus}}</div>
+                    </div>
+                </div>
+                <div class="intimacy-bar">
+                    <div class="intimacy-fill" style="width: {{intimacy}}%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="activities-section">
+            <h2>💝 情侣活动</h2>
+            <div class="activities-grid">
+                {{#each activities}}
+                <div class="activity-card {{status}}">
+                    <div class="activity-icon">{{icon}}</div>
+                    <div class="activity-name">{{name}}</div>
+                    <div class="activity-description">{{description}}</div>
+                    <div class="activity-reward">奖励: {{reward}}</div>
+                    {{#if available}}
+                    <div class="activity-status available">可进行</div>
+                    {{else}}
+                    <div class="activity-status cooldown">冷却中 ({{cooldown}})</div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="business-section">
+            <h2>🏪 情侣商店</h2>
+            <div class="business-info">
+                <div class="shop-level">
+                    <div class="level-icon">🏪</div>
+                    <div class="level-text">商店等级: {{shopLevel}}</div>
+                </div>
+                <div class="daily-income">
+                    <div class="income-icon">💰</div>
+                    <div class="income-text">日收入: {{dailyIncome}}</div>
+                </div>
+                <div class="shop-reputation">
+                    <div class="reputation-icon">⭐</div>
+                    <div class="reputation-text">声望: {{reputation}}</div>
+                </div>
+            </div>
+            <div class="upgrade-section">
+                <div class="upgrade-card">
+                    <div class="upgrade-title">商店升级</div>
+                    <div class="upgrade-cost">升级费用: {{upgradeCost}} 金币</div>
+                    <div class="upgrade-benefit">收入提升: +{{incomeIncrease}}/天</div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        
+        {{#unless hasWife}}
+        <div class="single-section">
+            <h2>💔 单身状态</h2>
+            <div class="single-card">
+                <div class="single-icon">😢</div>
+                <div class="single-text">你还没有伴侣，快去寻找你的真爱吧！</div>
+                <div class="single-actions">
+                    <div class="action-item">
+                        <div class="action-icon">💕</div>
+                        <div class="action-text">使用 #娶群友 寻找伴侣</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">💌</div>
+                        <div class="action-text">使用 #表白 向心仪对象表白</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/unless}}
+        
+        <div class="ranking-section">
+            <h2>🏆 情侣排行榜</h2>
+            <div class="ranking-list">
+                {{#each rankings}}
+                <div class="ranking-item rank-{{@index}}">
+                    <div class="rank-number">{{rank}}</div>
+                    <div class="couple-info">
+                        <div class="couple-names">{{user1}} ❤️ {{user2}}</div>
+                        <div class="couple-score">亲密度: {{intimacy}}</div>
+                    </div>
+                    <div class="rank-badge">
+                        {{#if (eq @index 0)}}🥇{{/if}}
+                        {{#if (eq @index 1)}}🥈{{/if}}
+                        {{#if (eq @index 2)}}🥉{{/if}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="bank-section">
+            <h2>🏦 爱情银行</h2>
+            <div class="bank-info">
+                <div class="bank-balance">
+                    <div class="balance-icon">💖</div>
+                    <div class="balance-text">爱心余额: {{loveBalance}}</div>
+                </div>
+                <div class="interest-rate">
+                    <div class="rate-icon">📈</div>
+                    <div class="rate-text">日利率: {{interestRate}}%</div>
+                </div>
+            </div>
+            <div class="bank-operations">
+                <div class="operation-card">
+                    <div class="operation-title">存入爱心</div>
+                    <div class="operation-description">将金币转换为爱心存入银行</div>
+                </div>
+                <div class="operation-card">
+                    <div class="operation-title">提取爱心</div>
+                    <div class="operation-description">提取爱心并获得利息收益</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By trss-akasha-terminal-plugin</p>
+        </div>
+    </div>
+</body>
+</html>

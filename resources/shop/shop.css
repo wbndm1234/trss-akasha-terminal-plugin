@@ -1,0 +1,261 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(45deg, #ff6b6b, #feca57);
+    padding: 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.money, .points {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.shop-section, .inventory-section, .signin-section {
+    padding: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.shop-section h2, .inventory-section h2, .signin-section h2 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.item-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.item-card.common {
+    border-color: #95a5a6;
+}
+
+.item-card.uncommon {
+    border-color: #27ae60;
+}
+
+.item-card.rare {
+    border-color: #3498db;
+}
+
+.item-card.epic {
+    border-color: #9b59b6;
+}
+
+.item-card.legendary {
+    border-color: #f39c12;
+}
+
+.item-card.mythic {
+    border-color: #e74c3c;
+    background: linear-gradient(45deg, #fff, #ffe6e6);
+}
+
+.item-icon {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.item-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.item-description {
+    color: #7f8c8d;
+    margin-bottom: 12px;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.item-price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #f39c12;
+    margin-bottom: 8px;
+}
+
+.item-stock {
+    color: #27ae60;
+    font-size: 0.9em;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.inventory-item {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ecf0f1;
+}
+
+.inventory-item .item-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+}
+
+.inventory-item .item-name {
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.item-count {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.signin-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.signin-day {
+    background: white;
+    border-radius: 8px;
+    padding: 15px 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ecf0f1;
+}
+
+.signin-day.completed {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    border-color: #27ae60;
+}
+
+.signin-day.today {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border-color: #2980b9;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.day-number {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.day-reward {
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.signin-info {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.consecutive-days, .next-reward {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+    background: #f8f9fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 10px;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .items-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .signin-calendar {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .signin-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -1,0 +1,654 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.header {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.bank-logo {
+    font-size: 3em;
+    margin-bottom: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-size: 1.1em;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 25px 30px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.user-avatar {
+    margin-right: 20px;
+}
+
+.user-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid #ff6b6b;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+    flex: 1;
+}
+
+.username {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.user-status {
+    color: #7f8c8d;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.partner-info {
+    color: #e74c3c;
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.account-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    background: #f8f9fa;
+}
+
+.balance-card, .interest-card, .level-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.balance-card:hover, .interest-card:hover, .level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-icon {
+    font-size: 1.8em;
+    margin-right: 10px;
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.balance-amount {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+.balance-change {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.balance-change.positive {
+    color: #27ae60;
+}
+
+.balance-change.negative {
+    color: #e74c3c;
+}
+
+.interest-rate {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 8px;
+}
+
+.interest-info {
+    color: #7f8c8d;
+    font-size: 1em;
+}
+
+.vip-level {
+    font-size: 2em;
+    font-weight: bold;
+    color: #f39c12;
+    margin-bottom: 15px;
+}
+
+.level-progress {
+    margin-top: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #ecf0f1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    text-align: center;
+}
+
+.operations {
+    padding: 30px;
+    background: white;
+}
+
+.operation-tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.tab {
+    flex: 1;
+    padding: 15px 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: #7f8c8d;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab:hover {
+    color: #2c3e50;
+    background: #f8f9fa;
+}
+
+.tab.active {
+    color: #e74c3c;
+    border-bottom-color: #e74c3c;
+    background: #fff5f5;
+}
+
+.operation-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.amount-input {
+    margin-bottom: 20px;
+}
+
+.amount-input label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.input-group {
+    display: flex;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.input-group:focus-within {
+    border-color: #e74c3c;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    outline: none;
+    font-size: 1.1em;
+}
+
+.currency {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    color: #7f8c8d;
+    font-weight: 500;
+    border-left: 1px solid #ecf0f1;
+}
+
+.quick-amounts {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.quick-amount {
+    padding: 10px 20px;
+    background: #ecf0f1;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    min-width: 60px;
+}
+
+.quick-amount:hover {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.operation-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.info-label {
+    color: #7f8c8d;
+}
+
+.info-value {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.operation-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.operation-btn:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+}
+
+.transaction-history {
+    padding: 30px;
+    background: #f8f9fa;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.history-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    background: white;
+    color: #2c3e50;
+    font-size: 1em;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+    border-color: #e74c3c;
+}
+
+.history-list {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ecf0f1;
+    transition: background 0.3s ease;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-item:hover {
+    background: #f8f9fa;
+}
+
+.transaction-icon {
+    font-size: 1.8em;
+    margin-right: 15px;
+    width: 50px;
+    text-align: center;
+}
+
+.transaction-details {
+    flex: 1;
+}
+
+.transaction-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.transaction-time {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin-bottom: 3px;
+}
+
+.transaction-desc {
+    color: #95a5a6;
+    font-size: 0.9em;
+}
+
+.transaction-amount {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: right;
+}
+
+.transaction-amount.positive {
+    color: #27ae60;
+}
+
+.transaction-amount.negative {
+    color: #e74c3c;
+}
+
+.history-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.page-btn {
+    padding: 10px 20px;
+    background: white;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    color: #2c3e50;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.bank-services {
+    padding: 30px;
+    background: white;
+}
+
+.service-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.service-item {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    border-color: #e74c3c;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.service-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.service-desc {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.service-rate {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #e74c3c;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.footer {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 25px 30px;
+    text-align: center;
+}
+
+.footer-info {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.info-text {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.update-time {
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        border-radius: 15px;
+    }
+    
+    .header {
+        padding: 20px;
+    }
+    
+    .title {
+        font-size: 2em;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .user-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .account-overview {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .operations, .transaction-history, .bank-services {
+        padding: 20px;
+    }
+    
+    .operation-tabs {
+        flex-direction: column;
+    }
+    
+    .tab {
+        margin-bottom: 5px;
+        border-radius: 8px;
+        border-bottom: none;
+    }
+    
+    .quick-amounts {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .history-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    .transaction-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .transaction-details {
+        order: 2;
+    }
+    
+    .transaction-amount {
+        order: 3;
+        text-align: center;
+    }
+    
+    .transaction-icon {
+        order: 1;
+        margin-right: 0;
+    }
+}

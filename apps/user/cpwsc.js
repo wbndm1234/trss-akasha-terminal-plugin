@@ -1,3 +1,5 @@
+import { plugin } from '../../model/api/api.js'
+
 /**
  * 虚空CP文生成器
  * 随机生成用户与群成员的CP故事
@@ -153,3 +155,5 @@ export class VoidCPGenerator extends plugin {
         return true
     }
 }
+
+export default VoidCPGenerator

@@ -1,6 +1,8 @@
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
 import fs from "fs";
 import command from '../../components/command.js'
+import mysqlManager from '../../components/mysql_manager.js'
+import dataManager from '../../components/data_manager.js'
 
 //项目路径
 let duelCD = {};
@@ -26,7 +28,7 @@ export class duel extends plugin {//决斗
 			dsc: '',
 			event: 'message',
 			/** 优先级，数字越小等级越高 */
-			priority: 1000,
+			priority: 1,
 			rule: [
 				{
 					/** 命令正则匹配 */
@@ -45,6 +47,13 @@ export class duel extends plugin {//决斗
 	}
 
 	async Magnification_(e) {
+		const userId = e.user_id
+		const commandName = '设置战斗力意义系数'
+		
+		try {
+			// 记录命令使用统计
+			await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
+		
 		if (!e.isMaster) {
 			e.reply('凡人，休得僭越!')
 			return true; // 增加返回
@@ -64,10 +73,23 @@ export class duel extends plugin {//决斗
 			e.reply('请输入有效的数字系数');
 		}
 		return true; // 增加返回
+		} catch (error) {
+			console.error('设置战斗力系数失败:', error)
+			// 记录命令失败统计
+			await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+			e.reply('设置失败，请稍后再试')
+			return true
+		}
 	}
 
 	async duel(e) {
 		console.log("用户命令：", e.msg);
+		const userId = e.user_id
+		const commandName = '决斗'
+		
+		try {
+			// 记录命令使用统计
+			await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, true)
 		
 		// 1. 检查基本条件
 		if (!e.group.is_admin) {
@@ -115,9 +137,9 @@ export class duel extends plugin {//决斗
 
 		// 5. 初始化用户数据
 		if (!fs.existsSync(dirpath)) fs.mkdirSync(dirpath);
-		if (!fs.existsSync(dirpath + "/" + filename)) fs.writeFileSync(dirpath + "/" + filename, "{}");
+		if (!fs.existsSync(dirpath + "/" + filename)) await dataManager.saveJsonData(dirpath + "/" + filename, {});
 		
-		let json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));
+		let json = await dataManager.loadJsonData(dirpath + "/" + filename);
 		if (!json[user_id]) json[user_id] = { ...Template }; // 使用扩展运算符防止引用污染
 		if (!json[user_id2]) json[user_id2] = { ...Template };
 
@@ -148,7 +170,7 @@ export class duel extends plugin {//决斗
 
 		if (fs.existsSync(dirpath2 + "/" + filename1)) {
 			try {
-				let json1 = JSON.parse(fs.readFileSync(dirpath2 + "/" + filename1, "utf8"));
+				let json1 = await dataManager.loadJsonData(dirpath2 + "/" + filename1);
 				if (json1[3]) num13 = Object.keys(json1[3]).length;
 				if (json1[4]) num14 = Object.keys(json1[4]).length;
 				if (json1[5]) num15 = Object.keys(json1[5]).length;
@@ -156,7 +178,7 @@ export class duel extends plugin {//决斗
 		}
 		if (fs.existsSync(dirpath2 + "/" + filename2)) {
 			try {
-				let json2 = JSON.parse(fs.readFileSync(dirpath2 + "/" + filename2, "utf8"));
+				let json2 = await dataManager.loadJsonData(dirpath2 + "/" + filename2);
 				if (json2[3]) num23 = Object.keys(json2[3]).length;
 				if (json2[4]) num24 = Object.keys(json2[4]).length;
 				if (json2[5]) num25 = Object.keys(json2[5]).length;
@@ -203,9 +225,18 @@ export class duel extends plugin {//决斗
 			}
 
 			console.log(`发起者：${user_id} 被动者：${user_id2}`);
-			fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));
+			await dataManager.saveJsonData(dirpath + "/" + filename, json);
 		}, 3000);
 
 		return true;
+		} catch (error) {
+			console.error('决斗命令执行失败:', error)
+			// 记录命令失败统计
+			await mysqlManager.logCommandUsage(userId, e.group_id, commandName, e.msg, false, error.message)
+			e.reply('决斗系统出现错误，请稍后再试')
+			return true
+		}
 	}
 }
+
+export default duel

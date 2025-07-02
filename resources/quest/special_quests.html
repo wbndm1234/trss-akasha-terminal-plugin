@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特殊任务</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #8e44ad, #3498db, #e74c3c);
+            background-size: 300% 300%;
+            animation: gradientShift 6s ease infinite;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .header h1 {
+            margin: 0 0 20px 0;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .player-stats {
+            text-align: left;
+        }
+
+        .player-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .player-level, .quest-points {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .special-info {
+            background: linear-gradient(45deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 5px solid #ff9800;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .special-info::before {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5em;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
+        }
+
+        .info-text {
+            color: #e65100;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .rarity-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px;
+            flex-wrap: wrap;
+        }
+
+        .rarity-button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        .rarity-button.common {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .rarity-button.rare {
+            background: #3498db;
+            color: white;
+        }
+
+        .rarity-button.epic {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .rarity-button.legendary {
+            background: #f39c12;
+            color: white;
+        }
+
+        .rarity-button.mythic {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .rarity-button.active {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .quest-list {
+            padding: 20px;
+            display: grid;
+            gap: 25px;
+        }
+
+        .quest-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quest-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8e44ad, #3498db, #e74c3c);
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        .quest-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-card.common {
+            border-left: 5px solid #95a5a6;
+        }
+
+        .quest-card.rare {
+            border-left: 5px solid #3498db;
+            background: linear-gradient(135deg, #ffffff, #f8fbff);
+        }
+
+        .quest-card.epic {
+            border-left: 5px solid #9b59b6;
+            background: linear-gradient(135deg, #ffffff, #faf8ff);
+        }
+
+        .quest-card.legendary {
+            border-left: 5px solid #f39c12;
+            background: linear-gradient(135deg, #ffffff, #fffbf0);
+        }
+
+        .quest-card.mythic {
+            border-left: 5px solid #e74c3c;
+            background: linear-gradient(135deg, #ffffff, #fff8f8);
+            box-shadow: 0 5px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .quest-card.completed {
+            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+        }
+
+        .quest-card.claimed {
+            opacity: 0.7;
+            filter: grayscale(0.3);
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .quest-rarity {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quest-rarity.common {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .quest-rarity.rare {
+            background: #3498db;
+            color: white;
+        }
+
+        .quest-rarity.epic {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .quest-rarity.legendary {
+            background: #f39c12;
+            color: white;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .quest-rarity.mythic {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .quest-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .quest-lore {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+
+        .quest-status {
+            font-size: 2.5em;
+            margin-left: 15px;
+        }
+
+        .quest-status.pending {
+            color: #f39c12;
+        }
+
+        .quest-status.completed {
+            color: #27ae60;
+        }
+
+        .quest-status.claimed {
+            color: #95a5a6;
+        }
+
+        .quest-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 12px;
+            height: 14px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill.common {
+            background: linear-gradient(90deg, #95a5a6, #bdc3c7);
+        }
+
+        .progress-fill.rare {
+            background: linear-gradient(90deg, #3498db, #5dade2);
+        }
+
+        .progress-fill.epic {
+            background: linear-gradient(90deg, #9b59b6, #bb8fce);
+        }
+
+        .progress-fill.legendary {
+            background: linear-gradient(90deg, #f39c12, #f8c471);
+        }
+
+        .progress-fill.mythic {
+            background: linear-gradient(90deg, #e74c3c, #ec7063);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: bold;
+            color: #8e44ad;
+            font-size: 1em;
+        }
+
+        .quest-rewards {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+        }
+
+        .rewards-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reward-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .reward-item {
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reward-item.common {
+            background: linear-gradient(45deg, #95a5a6, #bdc3c7);
+            color: white;
+        }
+
+        .reward-item.rare {
+            background: linear-gradient(45deg, #3498db, #5dade2);
+            color: white;
+        }
+
+        .reward-item.epic {
+            background: linear-gradient(45deg, #9b59b6, #bb8fce);
+            color: white;
+        }
+
+        .reward-item.legendary {
+            background: linear-gradient(45deg, #f39c12, #f8c471);
+            color: white;
+        }
+
+        .reward-item.mythic {
+            background: linear-gradient(45deg, #e74c3c, #ec7063);
+            color: white;
+        }
+
+        .claim-button {
+            background: linear-gradient(45deg, #8e44ad, #3498db, #e74c3c);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.05em;
+        }
+
+        .claim-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .requirement {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            margin-top: 12px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .tips {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .player-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .rarity-filter {
+                gap: 10px;
+            }
+
+            .rarity-button {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+
+            .quest-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .quest-status {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+
+            .tips {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⭐ 特殊任务</h1>
+            <div class="player-info">
+                <div class="player-stats">
+                    <div class="player-name">{{username}}</div>
+                    <div class="player-level">等级: {{userLevel}}</div>
+                    <div class="quest-points">🏆 任务点数: {{questPoints}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="special-info">
+            <div class="info-text">🌟 特殊任务不会自动刷新，完成后将永久消失，奖励丰厚且独一无二</div>
+        </div>
+
+        <div class="rarity-filter">
+            <div class="rarity-button common active" data-rarity="all">全部</div>
+            <div class="rarity-button rare" data-rarity="rare">稀有</div>
+            <div class="rarity-button epic" data-rarity="epic">史诗</div>
+            <div class="rarity-button legendary" data-rarity="legendary">传说</div>
+            <div class="rarity-button mythic" data-rarity="mythic">神话</div>
+        </div>
+
+        <div class="quest-list">
+            {{#each quests}}
+            <div class="quest-card {{status}} {{rarity}}" data-rarity="{{rarity}}">
+                <div class="quest-header">
+                    <div class="quest-info">
+                        <div class="quest-title">{{name}}</div>
+                        <div class="quest-rarity {{rarity}}">{{rarityText}}</div>
+                        <div class="quest-description">{{description}}</div>
+                        {{#if lore}}
+                        <div class="quest-lore">"{{lore}}"</div>
+                        {{/if}}
+                        {{#if requirement}}
+                        <div class="requirement">⚠️ {{requirement}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="quest-status {{status}}">{{statusIcon}}</div>
+                </div>
+
+                <div class="quest-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill {{rarity}}" style="width: {{progressPercent}}%"></div>
+                    </div>
+                    <div class="progress-text">{{progress}}/{{target}} ({{progressPercent}}%)</div>
+                </div>
+
+                <div class="quest-rewards">
+                    <div class="rewards-title">
+                        <span>🌟</span>
+                        <span>特殊奖励</span>
+                    </div>
+                    <div class="reward-items">
+                        {{#each rewards}}
+                        <div class="reward-item {{../rarity}}">
+                            <span>{{icon}}</span>
+                            <span>{{text}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                {{#if canClaim}}
+                <button class="claim-button">🌟 领取特殊奖励</button>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="footer">
+            <div class="tips">
+                <div class="tip-item">
+                    <span>💡</span>
+                    <span>#领取奖励 [任务ID] - 领取已完成的任务奖励</span>
+                </div>
+                <div class="tip-item">
+                    <span>🏪</span>
+                    <span>#任务商店 - 使用任务点数兑换奖励</span>
+                </div>
+                <div class="tip-item">
+                    <span>📊</span>
+                    <span>#任务进度 - 查看详细进度</span>
+                </div>
+                <div class="tip-item">
+                    <span>📅</span>
+                    <span>#每日任务 - 查看每日任务</span>
+                </div>
+                <div class="tip-item">
+                    <span>📆</span>
+                    <span>#周常任务 - 查看周常任务</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

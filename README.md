@@ -1,67 +1,204 @@
-<div align="center">
+# TRSS Akasha Terminal Plugin
 
-<img width="200" src="resources/虚空终端.png">
+一个功能丰富的Yunzai-Bot插件（trss版本单独开发版），提供完整的游戏系统、MySQL数据库支持和Web管理界面。
 
-<h1 align="center">Trss-Akasha-Terminal-plugin</h1>
+## 🌟 主要功能
 
-[![访问量](https://count.kjchmc.cn/get/@:trss-akasha-terminal-plugin)](https://github.com/wbndm1234/trss-akasha-terminal-plugin)
+### 游戏系统
+- **战斗系统**: 经验获取、等级提升、特权系统
+- **情侣系统**: 表白、结婚、情侣任务、约会、决斗
+- **商店系统**: 物品购买、背包管理
+- **任务系统**: 每日任务、冒险任务
+- **合成系统**: 物品合成、分解、工坊升级
+- **家园系统**: 房屋建设、装饰
 
-#### 声明📣
-<h2 align="center" color="red">本插件仅供娱乐!</h2>
-有bug请重新拉取或者更新版本，重新拉取不能解决可以直接PR! 谢谢！
-</div>
+### 数据存储
+- **JSON存储**: 传统文件存储方式
+- **MySQL存储**: 高性能数据库存储
+- **数据同步**: JSON与MySQL双向同步
 
-### 简介📖
+### Web管理界面
+- **用户管理**: 查看、编辑、删除用户数据
+- **MySQL管理**: 数据库连接、配置管理
+- **数据同步**: 一键同步JSON和MySQL数据
+- **统计分析**: 命令使用统计、用户活跃度
+- **配置管理**: 在线编辑插件配置
+- **数据库查询**: 直接执行SQL查询
 
-这是一个为[TRSS崽](https://github.com/TimeRainStarSky/Yunzai)适配插件包，提供群内各种小游戏以及相关管理工具。
+## 🚀 快速开始
 
+### 安装插件
 
-
-## 安装🚀
-
-
-在 Yunzai 根目录下，打开终端并执行以下指令：
-
-**1. 选择一个源进行克隆：**
-
-<details>
-<summary><b>① (推荐) 使用 Github</b></summary>
-
-```bash
-git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-Plugin/
-```
-
-</details>
-
-<details>
-<summary><b>② (国内) 使用 Gitee</b></summary>
+使用 git 进行安装（推荐）
 
 ```bash
 git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
 ```
 
-</details>
+或者直接下载并解压到 plugins 目录
 
-<details>
-<summary><b>③ (备用) 使用 Gitcode</b></summary>
-
-```bash
-git clone --depth=1 https://gitcode.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
-```
-
-</details>
-
-**2. 安装依赖：**
+### 初始化环境
 
 ```bash
 cd ./plugins/trss-akasha-terminal-plugin/
-pnpm install -P
+node install.js
 ```
 
+### 启动服务
 
-使用`#虚空更新`指令进行更新操作。
-使用`#虚空重置配置`指令进行更配置更新操作。(注,该指令将覆盖本地修改,使用后请重新按需求需求设置)
-</div>
+```bash
+# 启动Web管理界面
+#启动webui
+
+# 启动MySQL数据库连接
+#启动mysql
+
+# 查看服务状态
+#webui状态
+#mysql状态
+```
+
+## 📋 命令列表
+
+### 管理命令
+| 命令 | 说明 |
+|------|------|
+| `#启动webui` | 启动Web管理界面 |
+| `#停止webui` | 停止Web管理界面 |
+| `#webui状态` | 查看WebUI运行状态 |
+| `#启动mysql` | 连接MySQL数据库 |
+| `#停止mysql` | 断开MySQL连接 |
+| `#mysql状态` | 查看MySQL连接状态 |
+| `#同步json到mysql` | 将JSON数据同步到MySQL |
+| `#同步mysql到json` | 将MySQL数据同步到JSON |
+
+### 游戏命令
+| 命令 | 说明 |
+|------|------|
+| `#战斗` | 进行战斗获取经验 |
+| `#我的信息` | 查看个人信息 |
+| `#表白 @用户` | 向其他用户表白 |
+| `#结婚 @用户` | 与其他用户结婚 |
+| `#离婚` | 解除婚姻关系 |
+| `#商店` | 查看商店物品 |
+| `#购买 物品名` | 购买物品 |
+| `#背包` | 查看背包物品 |
+| `#任务` | 查看可用任务 |
+| `#冒险` | 进行冒险任务 |
+| `#合成 物品名` | 合成物品 |
+| `#分解 物品名` | 分解物品 |
+
+## 🗄️ MySQL配置
+
+### 1. 安装MySQL
+确保系统已安装MySQL 5.7+或MariaDB 10.3+
+
+### 2. 创建数据库
+```sql
+CREATE DATABASE akasha_terminal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'akasha'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON akasha_terminal.* TO 'akasha'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+### 3. 配置连接
+访问WebUI管理界面 (http://localhost:3000)，在MySQL管理页面配置数据库连接信息：
+- 主机地址: localhost
+- 端口: 3306
+- 用户名: akasha
+- 密码: your_password
+- 数据库名: akasha_terminal
+
+## 🌐 Web管理界面
+
+访问地址: http://localhost:3000
+
+### 功能模块
+
+#### 1. 仪表板
+- 总用户数统计
+- 命令使用统计
+- 成功率分析
+- MySQL连接状态
+
+#### 2. MySQL管理
+- 数据库连接配置
+- 连接状态监控
+- 连接测试功能
+
+#### 3. 用户管理
+- 用户列表查看
+- 用户数据编辑
+- 用户数据删除
+- 支持多种数据类型：战斗数据、家园数据、商店数据等
+
+#### 4. 数据同步
+- JSON → MySQL: 将JSON文件数据导入MySQL
+- MySQL → JSON: 将MySQL数据导出到JSON文件
+
+#### 5. 统计信息
+- 命令使用频率
+- 用户活跃度
+- 成功/失败统计
+
+#### 6. 数据库查询
+- 在线SQL查询工具
+- 表结构查看
+- 数据预览
+
+#### 7. 插件配置
+- 在线编辑配置文件
+- 实时配置更新
+
+## 🔧 配置说明
+
+### 主配置 (config/cfg.js)
+```javascript
+export const cfg = {
+  // WebUI配置
+  webui: {
+    enabled: true,
+    port: 3000,
+    host: 'localhost'
+  },
+  
+  // MySQL配置
+  mysql: {
+    enabled: false,
+    autoConnect: false
+  },
+  
+  // 游戏配置
+  game: {
+    maxLevel: 100,
+    expMultiplier: 1.0,
+    cooldownEnabled: true
+  }
+}
+```
+
+## 🚨 注意事项
+
+1. **安全性**
+   - WebUI默认只监听localhost，生产环境请配置防火墙
+   - MySQL密码请使用强密码
+   - 定期备份数据库数据
+
+2. **性能优化**
+   - 大量用户时建议使用MySQL存储
+   - 定期清理过期的统计数据
+
+3. **数据备份**
+   - 定期备份JSON文件和MySQL数据
+   - 重要操作前建议先备份
+
+## 📞 支持与反馈
+
+如果遇到问题或有功能建议，请：
+1. 检查日志文件获取详细错误信息
+2. 确认MySQL连接配置正确
+3. 验证依赖包是否正确安装
+4. 查看WebUI控制台错误信息
 
 ### 游戏说明🌈
   使用#trss虚空帮助 查看具体说明
@@ -160,9 +297,5 @@ pnpm install -P
   - 通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
   - 可以来[QQ群](https://qm.qq.com/q/n0ewaCWIGk)玩玩来提点建议捏
  
-## 📜 许可证
 
-本项目使用 GPL-3.0 开源。
-
----
 

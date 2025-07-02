@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务商店</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            margin: 0 0 25px 0;
+            font-size: 3.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .shop-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .player-stats {
+            text-align: left;
+        }
+
+        .player-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .player-level, .quest-points {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .shop-stats {
+            text-align: center;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+            padding-left: 30px;
+        }
+
+        .shop-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .shop-subtitle {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px;
+            flex-wrap: wrap;
+        }
+
+        .category-button {
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            color: #495057;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-button.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .category-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 30px;
+        }
+
+        .shop-item {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .shop-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 300% 300%;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .shop-item.limited {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border: 2px solid #ffc107;
+        }
+
+        .shop-item.limited::after {
+            content: '限时';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff5722;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .item-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-category.consumable {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+
+        .item-category.equipment {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #2196f3;
+        }
+
+        .item-category.material {
+            background: #fff3e0;
+            color: #ef6c00;
+            border: 1px solid #ff9800;
+        }
+
+        .item-category.special {
+            background: #fce4ec;
+            color: #c2185b;
+            border: 1px solid #e91e63;
+        }
+
+        .item-description {
+            color: #6c757d;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .item-effect {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #495057;
+            margin-bottom: 15px;
+            border-left: 4px solid #6c757d;
+        }
+
+        .item-icon {
+            font-size: 3em;
+            margin-left: 15px;
+            opacity: 0.8;
+        }
+
+        .item-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .price-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .price-currency {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .stock-info {
+            text-align: right;
+        }
+
+        .stock-label {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-bottom: 2px;
+        }
+
+        .stock-value {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .stock-value.low {
+            color: #ffc107;
+        }
+
+        .stock-value.out {
+            color: #dc3545;
+        }
+
+        .buy-button {
+            width: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: none;
+            font-size: 1.05em;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .buy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .buy-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .shop-stats-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .quest-points-guide {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #4caf50;
+        }
+
+        .guide-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .method-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .method-name {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        .method-points {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .footer-tips {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .shop-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .shop-stats {
+                border-left: none;
+                border-top: 2px solid rgba(255, 255, 255, 0.3);
+                padding-left: 0;
+                padding-top: 15px;
+            }
+
+            .category-filter {
+                gap: 10px;
+            }
+
+            .category-button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+
+            .shop-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-tips {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 任务商店</h1>
+            <div class="shop-info">
+                <div class="player-stats">
+                    <div class="player-name">{{username}}</div>
+                    <div class="player-level">等级: {{userLevel}}</div>
+                    <div class="quest-points">🏆 任务点数: {{questPoints}}</div>
+                </div>
+                <div class="shop-stats">
+                    <div class="shop-title">欢迎光临任务商店</div>
+                    <div class="shop-subtitle">使用任务点数兑换珍贵物品</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-filter">
+            <div class="category-button active" data-category="all">全部商品</div>
+            <div class="category-button" data-category="consumable">消耗品</div>
+            <div class="category-button" data-category="equipment">装备</div>
+            <div class="category-button" data-category="material">材料</div>
+            <div class="category-button" data-category="special">特殊物品</div>
+        </div>
+
+        <div class="shop-grid">
+            {{#each items}}
+            <div class="shop-item {{#if isLimited}}limited{{/if}}" data-category="{{category}}">
+                <div class="item-header">
+                    <div class="item-info">
+                        <div class="item-name">{{name}}</div>
+                        <div class="item-category {{category}}">{{categoryText}}</div>
+                        <div class="item-description">{{description}}</div>
+                        {{#if effect}}
+                        <div class="item-effect">💫 {{effect}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="item-icon">{{icon}}</div>
+                </div>
+
+                <div class="item-price">
+                    <div class="price-info">
+                        <span class="price-value">{{price}}</span>
+                        <span class="price-currency">任务点数</span>
+                    </div>
+                    <div class="stock-info">
+                        <div class="stock-label">库存</div>
+                        <div class="stock-value {{stockStatus}}">{{stock}}</div>
+                    </div>
+                </div>
+
+                <button class="buy-button" {{#unless canBuy}}disabled{{/unless}}>
+                    {{#if canBuy}}
+                        💰 购买
+                    {{else}}
+                        {{#if outOfStock}}
+                            ❌ 缺货
+                        {{else}}
+                            💸 点数不足
+                        {{/if}}
+                    {{/if}}
+                </button>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="shop-stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-value">{{totalItems}}</div>
+                    <div class="stat-label">商品种类</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💎</div>
+                    <div class="stat-value">{{totalPurchases}}</div>
+                    <div class="stat-label">总购买次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">{{totalSpent}}</div>
+                    <div class="stat-label">累计消费点数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">{{questPoints}}</div>
+                    <div class="stat-label">当前点数</div>
+                </div>
+            </div>
+
+            <div class="quest-points-guide">
+                <div class="guide-title">
+                    <span>💡</span>
+                    <span>任务点数获取方式</span>
+                </div>
+                <div class="guide-methods">
+                    <div class="method-item">
+                        <div class="method-name">完成每日任务</div>
+                        <div class="method-points">+5-15 点数</div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-name">完成周常任务</div>
+                        <div class="method-points">+20-50 点数</div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-name">完成特殊任务</div>
+                        <div class="method-points">+50-200 点数</div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-name">连续签到奖励</div>
+                        <div class="method-points">+1-10 点数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-tips">
+                <div class="tip-item">
+                    <span>💰</span>
+                    <span>#购买 [商品名称] - 购买商店物品</span>
+                </div>
+                <div class="tip-item">
+                    <span>📋</span>
+                    <span>#任务列表 - 查看所有任务</span>
+                </div>
+                <div class="tip-item">
+                    <span>🎯</span>
+                    <span>#任务进度 - 查看任务进度</span>
+                </div>
+                <div class="tip-item">
+                    <span>🎁</span>
+                    <span>#背包 - 查看已购买的物品</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

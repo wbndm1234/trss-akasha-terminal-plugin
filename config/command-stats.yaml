@@ -1,0 +1,71 @@
+# 全局命令统计配置文件
+
+# 基础设置
+basic:
+  # 是否启用统计功能
+  enabled: true
+  # 统计数据保留天数 (0表示永久保留)
+  retention_days: 365
+  # 是否记录详细的消息类型统计
+  detailed_msg_type: true
+
+# 权限设置
+permission:
+  # 谁可以查看全局统计 (master/admin/all)
+  global_stats: master
+  # 谁可以查看用户统计 (master/admin/all)
+  user_stats: admin
+  # 谁可以查看群统计 (master/admin/all)
+  group_stats: admin
+  # 用户是否可以查看自己的统计
+  self_stats: true
+
+# 显示设置
+display:
+  # 每页显示的记录数
+  page_size: 10
+  # 是否显示图表 (需要渲染支持)
+  show_charts: false
+  # 默认时间范围 (today/week/month/year/total)
+  default_range: today
+  # 是否显示排行榜
+  show_ranking: true
+  # 排行榜显示数量
+  ranking_limit: 10
+
+# 高级设置
+advanced:
+  # 是否启用实时统计
+  realtime_stats: true
+  # 统计缓存时间(秒)
+  cache_duration: 300
+  # 是否记录命令执行时间
+  track_execution_time: true
+  # 是否记录错误统计
+  track_errors: true
+
+# 通知设置
+notification:
+  # 是否启用统计报告
+  daily_report: false
+  # 报告发送时间 (24小时制)
+  report_time: "09:00"
+  # 报告发送目标 (master群或指定群号)
+  report_target: "master"
+  # 异常阈值通知
+  alert_threshold:
+    # 每小时消息数超过此值时告警
+    hourly_messages: 1000
+    # 错误率超过此百分比时告警
+    error_rate: 5
+
+# 数据导出设置
+export:
+  # 是否允许数据导出
+  enabled: true
+  # 导出格式 (json/csv/xlsx)
+  format: json
+  # 导出文件保存路径
+  save_path: "./data/exports/"
+  # 是否压缩导出文件
+  compress: true

@@ -1,0 +1,36 @@
+enhanced_wife_system:
+  date_cooldown: 3600
+  confession_cooldown: 1800
+  propose_cooldown: 3600
+  confession_wait: 300
+quest_system:
+  daily_refresh: 86400
+  weekly_refresh: 604800
+  special_refresh: 86400
+  quest_complete_delay: 1
+shop_system:
+  signin_cooldown: 86400
+  streak_expire: 172800
+  protection_duration: 86400
+  luck_duration: 86400
+  workboost_duration: 604800
+synthesis_system:
+  synthesis_cooldown: 300
+  decompose_cooldown: 180
+  batch_synthesis_delay: 2
+other_systems:
+  gacha_cooldown: 300
+  duel_cooldown: 60
+  exercise_cooldown: 1800
+  breakthrough_cooldown: 3600
+  idcard_cooldown: 10
+  cpwsc_cooldown: 30
+wife_system:
+  random_marry_cooldown: 300
+  force_marry_cooldown: 600
+  work_cooldown: 1800
+  hug_cooldown: 900
+  shopping_cooldown: 1200
+  steal_wife_cooldown: 3600
+  welfare_cooldown: 1200
+  lottery_cooldown: 1800

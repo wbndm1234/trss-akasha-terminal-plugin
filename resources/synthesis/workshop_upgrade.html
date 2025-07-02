@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../common/common.css">
+    <link rel="stylesheet" type="text/css" href="./workshop_upgrade.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="workshop-logo">🏭⚡</div>
+            <div class="title">工坊升级</div>
+            <div class="subtitle">Workshop Upgrade - 提升你的合成能力</div>
+        </div>
+        
+        <div class="current-workshop">
+            <div class="workshop-overview">
+                <div class="workshop-image">
+                    <img src="{{workshopImage}}" alt="工坊">
+                    <div class="workshop-level-badge">Lv.{{currentLevel}}</div>
+                </div>
+                
+                <div class="workshop-info">
+                    <div class="workshop-name">{{workshopName}}</div>
+                    <div class="workshop-description">{{workshopDescription}}</div>
+                    
+                    <div class="workshop-stats">
+                        <div class="stat-row">
+                            <div class="stat-item">
+                                <span class="stat-icon">⚡</span>
+                                <span class="stat-label">合成效率:</span>
+                                <span class="stat-value">{{synthesisEfficiency}}%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">✨</span>
+                                <span class="stat-label">成功率加成:</span>
+                                <span class="stat-value">+{{successRateBonus}}%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-row">
+                            <div class="stat-item">
+                                <span class="stat-icon">🔧</span>
+                                <span class="stat-label">可用工作台:</span>
+                                <span class="stat-value">{{availableWorkbenches}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📦</span>
+                                <span class="stat-label">批量合成:</span>
+                                <span class="stat-value">{{batchSynthesisLimit}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-row">
+                            <div class="stat-item">
+                                <span class="stat-icon">💎</span>
+                                <span class="stat-label">稀有材料加成:</span>
+                                <span class="stat-value">+{{rareMaterialBonus}}%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">⏱️</span>
+                                <span class="stat-label">合成时间:</span>
+                                <span class="stat-value">-{{timeReduction}}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="workshop-features">
+                <div class="features-title">🌟 当前特性</div>
+                <div class="features-grid">
+                    {{#each currentFeatures}}
+                    <div class="feature-item {{rarity}}">
+                        <div class="feature-icon">{{icon}}</div>
+                        <div class="feature-info">
+                            <div class="feature-name">{{name}}</div>
+                            <div class="feature-desc">{{description}}</div>
+                        </div>
+                        <div class="feature-level">Lv.{{level}}</div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <div class="upgrade-options">
+            <div class="upgrade-header">
+                <div class="upgrade-title">🚀 升级选项</div>
+                <div class="player-resources">
+                    <div class="resource-item">
+                        <span class="resource-icon">💰</span>
+                        <span class="resource-amount">{{playerMoney}}</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="resource-icon">💎</span>
+                        <span class="resource-amount">{{playerGems}}</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="resource-icon">🔧</span>
+                        <span class="resource-amount">{{playerMaterials}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="upgrade-tabs">
+                <div class="upgrade-tab active" data-type="level">等级升级</div>
+                <div class="upgrade-tab" data-type="feature">特性升级</div>
+                <div class="upgrade-tab" data-type="expansion">工坊扩建</div>
+            </div>
+            
+            <div class="upgrade-content">
+                <!-- 等级升级 -->
+                <div class="upgrade-section level-upgrade active">
+                    {{#if canLevelUp}}
+                    <div class="next-level-preview">
+                        <div class="preview-header">
+                            <div class="preview-title">升级到 Lv.{{nextLevel}}</div>
+                            <div class="preview-subtitle">解锁更强大的合成能力</div>
+                        </div>
+                        
+                        <div class="preview-comparison">
+                            <div class="comparison-section">
+                                <div class="comparison-title">属性提升</div>
+                                <div class="comparison-stats">
+                                    {{#each statUpgrades}}
+                                    <div class="stat-upgrade">
+                                        <span class="stat-name">{{name}}:</span>
+                                        <span class="stat-current">{{currentValue}}</span>
+                                        <span class="stat-arrow">→</span>
+                                        <span class="stat-new">{{newValue}}</span>
+                                        <span class="stat-change">(+{{change}})</span>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            
+                            <div class="comparison-section">
+                                <div class="comparison-title">新增特性</div>
+                                <div class="new-features">
+                                    {{#each newFeatures}}
+                                    <div class="new-feature">
+                                        <span class="feature-icon">{{icon}}</span>
+                                        <span class="feature-name">{{name}}</span>
+                                        <span class="feature-desc">{{description}}</span>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="upgrade-cost">
+                            <div class="cost-title">升级费用</div>
+                            <div class="cost-items">
+                                {{#each levelUpgradeCost}}
+                                <div class="cost-item {{#unless canAfford}}insufficient{{/unless}}">
+                                    <span class="cost-icon">{{icon}}</span>
+                                    <span class="cost-amount">{{amount}}</span>
+                                    <span class="cost-type">{{type}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        
+                        <div class="upgrade-actions">
+                            <button class="upgrade-btn level-upgrade-btn" {{#unless canAffordLevelUp}}disabled{{/unless}}>
+                                {{#if canAffordLevelUp}}确认升级{{else}}资源不足{{/if}}
+                            </button>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="max-level-notice">
+                        <div class="max-level-icon">👑</div>
+                        <div class="max-level-text">工坊已达到最高等级</div>
+                        <div class="max-level-desc">你的工坊已经是最顶级的合成设施了！</div>
+                    </div>
+                    {{/if}}
+                </div>
+                
+                <!-- 特性升级 -->
+                <div class="upgrade-section feature-upgrade">
+                    <div class="feature-upgrades">
+                        {{#each upgradeableFeatures}}
+                        <div class="feature-upgrade-card">
+                            <div class="feature-header">
+                                <div class="feature-icon">{{icon}}</div>
+                                <div class="feature-details">
+                                    <div class="feature-name">{{name}}</div>
+                                    <div class="feature-current-level">当前等级: {{currentLevel}}</div>
+                                </div>
+                                <div class="feature-max-level">最高 Lv.{{maxLevel}}</div>
+                            </div>
+                            
+                            <div class="feature-description">{{description}}</div>
+                            
+                            <div class="feature-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{progressPercent}}%"></div>
+                                </div>
+                                <div class="progress-text">{{currentLevel}}/{{maxLevel}}</div>
+                            </div>
+                            
+                            <div class="feature-benefits">
+                                <div class="benefit-current">
+                                    <span class="benefit-label">当前效果:</span>
+                                    <span class="benefit-value">{{currentEffect}}</span>
+                                </div>
+                                <div class="benefit-next">
+                                    <span class="benefit-label">下级效果:</span>
+                                    <span class="benefit-value">{{nextEffect}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-cost">
+                                {{#each upgradeCost}}
+                                <div class="cost-item {{#unless canAfford}}insufficient{{/unless}}">
+                                    <span class="cost-icon">{{icon}}</span>
+                                    <span class="cost-amount">{{amount}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                            
+                            <button class="feature-upgrade-btn" {{#unless canUpgrade}}disabled{{/unless}}>
+                                {{#if canUpgrade}}升级特性{{else}}{{#if isMaxLevel}}已满级{{else}}资源不足{{/if}}{{/if}}
+                            </button>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                
+                <!-- 工坊扩建 -->
+                <div class="upgrade-section expansion-upgrade">
+                    <div class="expansion-options">
+                        {{#each expansionOptions}}
+                        <div class="expansion-card {{#if owned}}owned{{/if}}">
+                            <div class="expansion-image">
+                                <img src="{{image}}" alt="{{name}}">
+                                {{#if owned}}
+                                <div class="owned-badge">已拥有</div>
+                                {{/if}}
+                            </div>
+                            
+                            <div class="expansion-info">
+                                <div class="expansion-name">{{name}}</div>
+                                <div class="expansion-desc">{{description}}</div>
+                                
+                                <div class="expansion-benefits">
+                                    <div class="benefits-title">扩建效果:</div>
+                                    <div class="benefits-list">
+                                        {{#each benefits}}
+                                        <div class="benefit-item">
+                                            <span class="benefit-icon">{{icon}}</span>
+                                            <span class="benefit-text">{{text}}</span>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                
+                                {{#unless owned}}
+                                <div class="expansion-requirements">
+                                    <div class="requirements-title">建造要求:</div>
+                                    <div class="requirements-list">
+                                        {{#each requirements}}
+                                        <div class="requirement-item {{#if met}}met{{else}}unmet{{/if}}">
+                                            {{#if met}}✅{{else}}❌{{/if}} {{text}}
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                
+                                <div class="expansion-cost">
+                                    {{#each cost}}
+                                    <div class="cost-item {{#unless canAfford}}insufficient{{/unless}}">
+                                        <span class="cost-icon">{{icon}}</span>
+                                        <span class="cost-amount">{{amount}}</span>
+                                        <span class="cost-type">{{type}}</span>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                                
+                                <button class="expansion-btn" {{#unless canBuild}}disabled{{/unless}}>
+                                    {{#if canBuild}}开始建造{{else}}条件不足{{/if}}
+                                </button>
+                                {{/unless}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upgrade-history">
+            <div class="history-header">
+                <div class="history-title">📚 升级历史</div>
+                <div class="history-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">{{totalUpgrades}}</div>
+                        <div class="stat-label">总升级次数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{totalInvestment}}</div>
+                        <div class="stat-label">总投资金额</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{efficiencyGain}}%</div>
+                        <div class="stat-label">效率提升</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-timeline">
+                {{#each upgradeHistory}}
+                <div class="timeline-item {{type}}">
+                    <div class="timeline-icon">{{icon}}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">{{title}}</div>
+                        <div class="timeline-desc">{{description}}</div>
+                        <div class="timeline-time">{{time}}</div>
+                    </div>
+                    <div class="timeline-cost">
+                        {{#each cost}}
+                        <span class="cost-item">
+                            {{icon}} {{amount}}
+                        </span>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="upgrade-tips">
+            <div class="tips-title">💡 升级建议</div>
+            <div class="tips-content">
+                <div class="tip-category">
+                    <div class="category-title">🎯 优先升级</div>
+                    <div class="tips-list">
+                        {{#each priorityTips}}
+                        <div class="tip-item priority">
+                            <span class="tip-icon">{{icon}}</span>
+                            <span class="tip-text">{{text}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                
+                <div class="tip-category">
+                    <div class="category-title">💰 性价比推荐</div>
+                    <div class="tips-list">
+                        {{#each costEffectiveTips}}
+                        <div class="tip-item cost-effective">
+                            <span class="tip-icon">{{icon}}</span>
+                            <span class="tip-text">{{text}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                
+                <div class="tip-category">
+                    <div class="category-title">⚠️ 注意事项</div>
+                    <div class="tips-list">
+                        {{#each warningTips}}
+                        <div class="tip-item warning">
+                            <span class="tip-icon">{{icon}}</span>
+                            <span class="tip-text">{{text}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="info-text">🔧 持续升级工坊，解锁更多合成可能性</div>
+                <div class="update-time">最后更新: {{updateTime}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

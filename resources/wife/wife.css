@@ -1,0 +1,472 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(45deg, #ff6b9d, #c44569);
+    padding: 30px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.header h1 {
+    margin: 0 0 20px 0;
+    font-size: 2.8em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+    text-align: left;
+}
+
+.username {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.level, .money {
+    font-size: 1em;
+    opacity: 0.9;
+    margin-bottom: 3px;
+}
+
+.couple-section, .activities-section, .business-section, .single-section, .ranking-section, .bank-section {
+    padding: 30px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.couple-section h2, .activities-section h2, .business-section h2, .single-section h2, .ranking-section h2, .bank-section h2 {
+    color: #2c3e50;
+    font-size: 2em;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.couple-card {
+    background: linear-gradient(135deg, #ffeef8, #ffe0f0);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2);
+    border: 2px solid #ff6b9d;
+}
+
+.couple-avatars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.avatar-container {
+    text-align: center;
+}
+
+.avatar-container .username {
+    margin-top: 10px;
+    font-size: 1.1em;
+    color: #2c3e50;
+}
+
+.heart-icon {
+    font-size: 2.5em;
+    animation: heartbeat 2s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.couple-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.intimacy-bar {
+    background: #ecf0f1;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.intimacy-fill {
+    background: linear-gradient(90deg, #ff6b9d, #c44569);
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.activity-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.activity-card:hover {
+    transform: translateY(-5px);
+}
+
+.activity-card.available {
+    border-color: #27ae60;
+    background: linear-gradient(135deg, #fff, #e8f8f5);
+}
+
+.activity-card.cooldown {
+    border-color: #e74c3c;
+    background: linear-gradient(135deg, #fff, #fdf2f2);
+}
+
+.activity-icon {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.activity-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.activity-description {
+    color: #7f8c8d;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.activity-reward {
+    color: #f39c12;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.activity-status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.activity-status.available {
+    background: #27ae60;
+    color: white;
+}
+
+.activity-status.cooldown {
+    background: #e74c3c;
+    color: white;
+}
+
+.business-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 25px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.shop-level, .daily-income, .shop-reputation {
+    text-align: center;
+}
+
+.level-icon, .income-icon, .reputation-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+}
+
+.level-text, .income-text, .reputation-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.upgrade-card {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.upgrade-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.upgrade-cost, .upgrade-benefit {
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+.single-card {
+    background: linear-gradient(135deg, #ddd6fe, #c7d2fe);
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    border: 2px solid #8b5cf6;
+}
+
+.single-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.single-text {
+    font-size: 1.2em;
+    color: #4c1d95;
+    margin-bottom: 25px;
+}
+
+.single-actions {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.action-item {
+    text-align: center;
+}
+
+.action-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+}
+
+.action-text {
+    color: #6366f1;
+    font-weight: bold;
+}
+
+.ranking-list {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.3s ease;
+}
+
+.ranking-item:hover {
+    background: #f8f9fa;
+}
+
+.ranking-item.rank-0 {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+}
+
+.ranking-item.rank-1 {
+    background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
+}
+
+.ranking-item.rank-2 {
+    background: linear-gradient(135deg, #cd7f32, #daa520);
+}
+
+.rank-number {
+    font-size: 1.5em;
+    font-weight: bold;
+    width: 50px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.couple-info {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.couple-names {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+.couple-score {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.rank-badge {
+    font-size: 2em;
+}
+
+.bank-info {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 25px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.bank-balance, .interest-rate {
+    text-align: center;
+}
+
+.balance-icon, .rate-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+}
+
+.balance-text, .rate-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.bank-operations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.operation-card {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.operation-card:hover {
+    transform: translateY(-3px);
+}
+
+.operation-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.operation-description {
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+    background: #f8f9fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    .user-status {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .couple-avatars {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .couple-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .activities-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .business-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .single-actions {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .bank-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

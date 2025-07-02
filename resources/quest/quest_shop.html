@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务商店</title>
+    <link rel="stylesheet" href="../common/common.css">
+    <link rel="stylesheet" href="quest_shop.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 任务商店</h1>
+            <div class="shop-info">
+                <div class="player-info">
+                    <img src="{{playerAvatar}}" alt="头像" class="avatar">
+                    <div class="player-details">
+                        <div class="username">{{username}}</div>
+                        <div class="quest-points">任务点数: {{questPoints}}</div>
+                        <div class="money">金币: {{money}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop-content">
+            <div class="shop-categories">
+                <div class="category-tab active" data-category="items">道具商品</div>
+                <div class="category-tab" data-category="equipment">装备商品</div>
+                <div class="category-tab" data-category="special">特殊商品</div>
+            </div>
+
+            <div class="items-grid">
+                {{#each shopItems}}
+                <div class="item-card {{#if available}}available{{else}}unavailable{{/if}}" data-item-id="{{id}}">
+                    <div class="item-icon">{{icon}}</div>
+                    <div class="item-info">
+                        <div class="item-name">{{name}}</div>
+                        <div class="item-description">{{description}}</div>
+                        <div class="item-effects">
+                            {{#each effects}}
+                            <div class="effect">{{this}}</div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="item-price">
+                        <div class="price-info">
+                            {{#if questPointCost}}
+                            <div class="quest-point-cost">
+                                <span class="cost-icon">🎯</span>
+                                <span class="cost-value">{{questPointCost}}</span>
+                            </div>
+                            {{/if}}
+                            {{#if moneyCost}}
+                            <div class="money-cost">
+                                <span class="cost-icon">💰</span>
+                                <span class="cost-value">{{moneyCost}}</span>
+                            </div>
+                            {{/if}}
+                        </div>
+                        <div class="stock-info">
+                            {{#if limited}}
+                            <div class="stock">库存: {{stock}}/{{maxStock}}</div>
+                            {{else}}
+                            <div class="unlimited">无限库存</div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="purchase-button {{#unless available}}disabled{{/unless}}">
+                        {{#if available}}
+                        兑换
+                        {{else}}
+                        {{unavailableReason}}
+                        {{/if}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="shop-stats">
+            <h3>📊 商店统计</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-info">
+                        <div class="stat-label">今日购买次数</div>
+                        <div class="stat-value">{{todayPurchases}}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💎</div>
+                    <div class="stat-info">
+                        <div class="stat-label">累计消费点数</div>
+                        <div class="stat-value">{{totalSpentPoints}}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <div class="stat-label">VIP等级</div>
+                        <div class="stat-value">{{vipLevel}}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <div class="stat-label">商店刷新</div>
+                        <div class="stat-value">{{refreshTime}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quest-points-info">
+            <h3>🎯 任务点数获取方式</h3>
+            <div class="points-sources">
+                <div class="source-item">
+                    <div class="source-icon">📅</div>
+                    <div class="source-text">完成每日任务: 10-50点</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-icon">📆</div>
+                    <div class="source-text">完成周常任务: 50-200点</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-icon">🌟</div>
+                    <div class="source-text">完成特殊任务: 100-500点</div>
+                </div>
+                <div class="source-item">
+                    <div class="source-icon">🎁</div>
+                    <div class="source-text">活动奖励: 不定期发放</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="shop-tips">
+                <h3>💡 购买提示</h3>
+                <ul>
+                    <li>任务点数是商店的主要货币，通过完成任务获得</li>
+                    <li>部分商品需要同时消耗任务点数和金币</li>
+                    <li>限量商品每日刷新，售完即止</li>
+                    <li>VIP等级越高，享受的折扣越多</li>
+                    <li>特殊商品只在特定活动期间出现</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

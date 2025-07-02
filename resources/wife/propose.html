@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求婚申请</title>
+    <link rel="stylesheet" href="./propose.css">
+</head>
+<body>
+    <div class="container">
+       
+        <div class="background-decoration">
+            <div class="heart heart-1">♥</div>
+            <div class="heart heart-2">♥</div>
+            <div class="heart heart-3">♥</div>
+            <div class="heart heart-4">♥</div>
+            <div class="heart heart-5">♥</div>
+        </div>
+        
+        
+        <div class="proposal-card">
+           
+            <div class="proposal-header">
+                <h1 class="proposal-title">💍 求婚申请 💍</h1>
+                <div class="proposal-subtitle">一份来自真心的邀请</div>
+            </div>
+            
+            <div class="proposer-section">
+                <div class="proposer-avatar">
+                    <img src="{{userAvatar}}" alt="求婚者头像" class="avatar-img">
+                    <div class="avatar-ring"></div>
+                </div>
+                <div class="proposer-info">
+                    <div class="proposer-name">{{userName}}</div>
+                    <div class="proposer-level">等级 {{userLevel}}</div>
+                    <div class="proposer-money">💰 {{userMoney}} 金币</div>
+                </div>
+            </div>
+            
+            <div class="proposal-message-section">
+                <div class="message-label">💌 求婚宣言</div>
+                <div class="proposal-message">
+                    "{{proposeMessage}}"
+                </div>
+            </div>
+            
+          
+            <div class="target-section">
+                <div class="target-label">💕 向你求婚</div>
+                <div class="target-info">
+                    <img src="{{targetAvatar}}" alt="被求婚者头像" class="target-avatar">
+                    <div class="target-name">{{targetName}}</div>
+                </div>
+            </div>
+            
+           
+            <div class="proposal-cost-section">
+                <div class="cost-label">💎 求婚花费</div>
+                <div class="proposal-cost">
+                    <span class="cost-amount">100</span>
+                    <span class="cost-unit">金币</span>
+                </div>
+            </div>
+            
+           
+            <div class="proposal-actions">
+                <div class="actions-title">💭 请做出你的选择</div>
+                <div class="action-buttons">
+                    <div class="action-button accept">
+                        <span class="button-icon">💖</span>
+                        <span class="button-text">#我愿意</span>
+                    </div>
+                    <div class="action-button reject">
+                        <span class="button-icon">💔</span>
+                        <span class="button-text">#我拒绝</span>
+                    </div>
+                </div>
+                <div class="actions-note">
+                    请回复相应指令来回应这份求婚
+                </div>
+            </div>
+            
+           
+            <div class="decoration-rings">
+                <div class="ring ring-1">💍</div>
+                <div class="ring ring-2">💍</div>
+            </div>
+        </div>
+        
+       
+        <div class="footer">
+            <div class="footer-text">愿有情人终成眷属 💕</div>
+        </div>
+    </div>
+</body>
+</html>

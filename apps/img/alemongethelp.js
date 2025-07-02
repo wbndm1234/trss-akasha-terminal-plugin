@@ -29,3 +29,5 @@ export class AlemonGetHelp extends plugin {
         await e.reply(await BotApi.ImgCache.helpcache({ i: 0, data }))
     }
 }
+
+export default AlemonGetHelp

@@ -208,4 +208,50 @@ async function getQQYUserHouse(id, json, filename, is_save) {
         return json;
     }
 }
-export default { getUser, getQQYUserBattle, getQQYUserPlace, getQQYUserxiaoqie, getQQYUserHome, getQQYUserHouse, getUser2 }
+// 保存方法。这样应该会没问题把，大概
+async function saveQQYUserBattle(id, json) {
+    const filename = 'default.json'
+    return await getQQYUserBattle(id, json, filename, true)
+}
+
+async function saveQQYUserHome(id, json) {
+    const filename = 'default.json'
+    return await getQQYUserHome(id, json, filename, true)
+}
+
+async function saveQQYUserPlace(id, json) {
+    const filename = 'default.json'
+    return await getQQYUserPlace(id, json, filename, true)
+}
+
+async function saveQQYUserHouse(id, json) {
+    const filename = 'default.json'
+    return await getQQYUserHouse(id, json, filename, true)
+}
+
+async function saveQQYUserxiaoqie(id, json) {
+    const filename = 'default.json'
+    return await getQQYUserxiaoqie(id, json, filename, true)
+}
+
+async function saveUser(id, json) {
+    const Template = {}
+    const filename = 'default.json'
+    return await getUser(id, json, Template, filename, true)
+}
+
+export default { 
+    getUser, 
+    getQQYUserBattle, 
+    getQQYUserPlace, 
+    getQQYUserxiaoqie, 
+    getQQYUserHome, 
+    getQQYUserHouse, 
+    getUser2,
+    saveQQYUserBattle,
+    saveQQYUserHome,
+    saveQQYUserPlace,
+    saveQQYUserHouse,
+    saveQQYUserxiaoqie,
+    saveUser
+}

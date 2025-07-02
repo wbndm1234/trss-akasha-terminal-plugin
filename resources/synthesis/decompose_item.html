@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物品分解 </title>
+    <link rel="stylesheet" href="./decompose_item.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <div class="decompose-logo">🔨</div>
+            <h1 class="title">物品分解工坊</h1>
+            <p class="subtitle">回收利用，变废为宝</p>
+        </div>
+
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="{{userAvatar}}" alt="用户头像" class="user-avatar">
+                <div class="user-details">
+                    <div class="user-name">{{userName}}</div>
+                    <div class="user-level">分解师等级 {{decomposeLevel}}</div>
+                    <div class="user-exp">经验值: {{currentExp}}/{{maxExp}}</div>
+                </div>
+            </div>
+            <div class="user-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">🔧</span>
+                    <div class="stat-info">
+                        <div class="stat-label">分解次数</div>
+                        <div class="stat-value">{{totalDecomposes}}</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">💎</span>
+                    <div class="stat-info">
+                        <div class="stat-label">回收价值</div>
+                        <div class="stat-value">{{totalValue}}</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-info">
+                        <div class="stat-label">成功率</div>
+                        <div class="stat-value">{{successRate}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="item-selection">
+            <div class="selection-header">
+                <h2 class="selection-title">选择分解物品</h2>
+                <div class="selection-filters">
+                    <select class="filter-category">
+                        <option value="all">全部分类</option>
+                        <option value="weapon">武器</option>
+                        <option value="armor">防具</option>
+                        <option value="accessory">饰品</option>
+                        <option value="material">材料</option>
+                        <option value="consumable">消耗品</option>
+                    </select>
+                    <select class="filter-rarity">
+                        <option value="all">全部稀有度</option>
+                        <option value="common">普通</option>
+                        <option value="uncommon">优秀</option>
+                        <option value="rare">稀有</option>
+                        <option value="epic">史诗</option>
+                        <option value="legendary">传说</option>
+                    </select>
+                    <select class="filter-condition">
+                        <option value="all">全部状态</option>
+                        <option value="broken">损坏</option>
+                        <option value="worn">磨损</option>
+                        <option value="normal">正常</option>
+                    </select>
+                    <input type="text" class="search-item" placeholder="搜索物品...">
+                </div>
+            </div>
+
+            <div class="inventory-grid">
+                {{#each inventoryItems}}
+                <div class="item-card {{rarity}} {{#if selected}}selected{{/if}} {{#unless canDecompose}}disabled{{/unless}}" 
+                     data-item-id="{{id}}" data-category="{{category}}" data-rarity="{{rarity}}" data-condition="{{condition}}">
+                    <div class="item-image">
+                        <img src="{{image}}" alt="{{name}}">
+                        <div class="item-quantity">{{quantity}}</div>
+                        {{#if isEquipped}}
+                        <div class="equipped-badge">已装备</div>
+                        {{/if}}
+                        {{#unless canDecompose}}
+                        <div class="locked-badge">🔒</div>
+                        {{/unless}}
+                    </div>
+                    <div class="item-info">
+                        <div class="item-name">{{name}}</div>
+                        <div class="item-level">等级 {{level}}</div>
+                        <div class="item-condition {{condition}}">{{conditionText}}</div>
+                    </div>
+                    <div class="item-value">
+                        <div class="decompose-value">分解价值: {{decomposeValue}}</div>
+                        <div class="success-chance">成功率: {{successChance}}%</div>
+                    </div>
+                    <div class="item-materials">
+                        <div class="materials-title">可能获得:</div>
+                        <div class="materials-list">
+                            {{#each possibleMaterials}}
+                            <div class="material-item">
+                                <img src="{{icon}}" alt="{{name}}" class="material-icon">
+                                <span class="material-chance">{{chance}}%</span>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{#if canDecompose}}
+                    <div class="item-actions">
+                        <button class="select-btn" data-action="toggle-select">{{#if selected}}取消选择{{else}}选择{{/if}}</button>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+       
+        <div class="decompose-preview">
+            <div class="preview-header">
+                <h3 class="preview-title">分解预览</h3>
+                <div class="preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">选中物品:</span>
+                        <span class="stat-value">{{selectedCount}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">预计价值:</span>
+                        <span class="stat-value">{{estimatedValue}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">平均成功率:</span>
+                        <span class="stat-value">{{averageSuccessRate}}%</span>
+                    </div>
+                </div>
+            </div>
+
+            {{#if selectedItems.length}}
+            <div class="selected-items">
+                <div class="items-list">
+                    {{#each selectedItems}}
+                    <div class="selected-item">
+                        <div class="item-image">
+                            <img src="{{image}}" alt="{{name}}">
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">{{name}}</div>
+                            <div class="item-info">等级 {{level}} | {{conditionText}}</div>
+                        </div>
+                        <div class="item-value">{{decomposeValue}}</div>
+                        <div class="item-chance">{{successChance}}%</div>
+                        <button class="remove-btn" data-item-id="{{id}}">移除</button>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="expected-materials">
+                <div class="materials-header">
+                    <h4 class="materials-title">预期获得材料</h4>
+                </div>
+                <div class="materials-grid">
+                    {{#each expectedMaterials}}
+                    <div class="material-card">
+                        <div class="material-image">
+                            <img src="{{icon}}" alt="{{name}}">
+                        </div>
+                        <div class="material-info">
+                            <div class="material-name">{{name}}</div>
+                            <div class="material-amount">预期: {{expectedAmount}}</div>
+                            <div class="material-chance">概率: {{totalChance}}%</div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{else}}
+            <div class="empty-selection">
+                <div class="empty-icon">📦</div>
+                <div class="empty-text">未选择任何物品</div>
+                <div class="empty-desc">请从上方选择要分解的物品</div>
+            </div>
+            {{/if}}
+        </div>
+
+        
+        <div class="decompose-settings">
+            <div class="settings-header">
+                <h3 class="settings-title">分解设置</h3>
+            </div>
+
+            <div class="settings-content">
+                <div class="setting-group">
+                    <label class="setting-label">分解模式</label>
+                    <div class="mode-options">
+                        <label class="mode-option">
+                            <input type="radio" name="decomposeMode" value="normal" checked>
+                            <span class="mode-text">普通分解</span>
+                            <span class="mode-desc">标准分解，平衡风险与收益</span>
+                        </label>
+                        <label class="mode-option">
+                            <input type="radio" name="decomposeMode" value="careful">
+                            <span class="mode-text">谨慎分解</span>
+                            <span class="mode-desc">提高成功率，降低材料获得量</span>
+                        </label>
+                        <label class="mode-option">
+                            <input type="radio" name="decomposeMode" value="aggressive">
+                            <span class="mode-text">激进分解</span>
+                            <span class="mode-desc">提高材料获得量，降低成功率</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">使用增益道具</label>
+                    <div class="boost-items">
+                        {{#each availableBoosts}}
+                        <div class="boost-item {{#unless available}}unavailable{{/unless}}">
+                            <label class="boost-option">
+                                <input type="checkbox" name="useBoost" value="{{id}}" {{#unless available}}disabled{{/unless}}>
+                                <img src="{{icon}}" alt="{{name}}" class="boost-icon">
+                                <div class="boost-info">
+                                    <div class="boost-name">{{name}}</div>
+                                    <div class="boost-effect">{{effect}}</div>
+                                    <div class="boost-count">拥有: {{count}}</div>
+                                </div>
+                            </label>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">自动处理</label>
+                    <div class="auto-options">
+                        <label class="auto-option">
+                            <input type="checkbox" name="autoSell" value="true">
+                            <span class="auto-text">自动出售低价值材料</span>
+                        </label>
+                        <label class="auto-option">
+                            <input type="checkbox" name="autoStore" value="true">
+                            <span class="auto-text">自动存储稀有材料</span>
+                        </label>
+                        <label class="auto-option">
+                            <input type="checkbox" name="autoRepeat" value="true">
+                            <span class="auto-text">失败后自动重试</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 执行控制 -->
+        <div class="execution-control">
+            <div class="control-header">
+                <h3 class="control-title">执行分解</h3>
+                <div class="safety-warning">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-text">分解后的物品无法恢复，请谨慎操作</span>
+                </div>
+            </div>
+
+            <div class="control-summary">
+                <div class="summary-item">
+                    <div class="summary-label">分解物品数量</div>
+                    <div class="summary-value">{{selectedCount}} 件</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">预计获得价值</div>
+                    <div class="summary-value">{{estimatedValue}}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">总体成功率</div>
+                    <div class="summary-value">{{overallSuccessRate}}%</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">预计耗时</div>
+                    <div class="summary-value">{{estimatedTime}}</div>
+                </div>
+            </div>
+
+            <div class="control-actions">
+                <button class="preview-btn" {{#unless selectedCount}}disabled{{/unless}}>👁️ 详细预览</button>
+                <button class="decompose-btn" {{#unless selectedCount}}disabled{{/unless}}>🔨 开始分解</button>
+                <button class="batch-select-btn">📋 批量选择</button>
+                <button class="clear-btn">🗑️ 清空选择</button>
+            </div>
+        </div>
+
+      
+        {{#if decomposeResults}}
+        <div class="decompose-results">
+            <div class="results-header">
+                <h3 class="results-title">分解结果</h3>
+                <div class="results-summary">
+                    <div class="summary-stat success">
+                        <span class="stat-number">{{successCount}}</span>
+                        <span class="stat-label">成功</span>
+                    </div>
+                    <div class="summary-stat failure">
+                        <span class="stat-number">{{failureCount}}</span>
+                        <span class="stat-label">失败</span>
+                    </div>
+                    <div class="summary-stat total">
+                        <span class="stat-number">{{totalValue}}</span>
+                        <span class="stat-label">总价值</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-content">
+                <div class="obtained-materials">
+                    <h4 class="materials-title">获得的材料</h4>
+                    <div class="materials-grid">
+                        {{#each obtainedMaterials}}
+                        <div class="material-result">
+                            <div class="material-image">
+                                <img src="{{icon}}" alt="{{name}}">
+                                <div class="material-count">{{amount}}</div>
+                            </div>
+                            <div class="material-info">
+                                <div class="material-name">{{name}}</div>
+                                <div class="material-value">价值: {{value}}</div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                <div class="decompose-log">
+                    <h4 class="log-title">分解记录</h4>
+                    <div class="log-list">
+                        {{#each decomposeLog}}
+                        <div class="log-item {{result}}">
+                            <div class="log-icon">{{#if success}}✅{{else}}❌{{/if}}</div>
+                            <div class="log-content">
+                                <div class="log-item-name">{{itemName}}</div>
+                                <div class="log-result">{{resultText}}</div>
+                            </div>
+                            <div class="log-value">{{value}}</div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <button class="continue-btn">🔄 继续分解</button>
+                <button class="save-materials-btn">💾 保存材料</button>
+                <button class="share-results-btn">📤 分享结果</button>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- 分解历史 -->
+        <div class="decompose-history">
+            <div class="history-header">
+                <h3 class="history-title">最近分解记录</h3>
+                <button class="view-all-btn">查看全部记录</button>
+            </div>
+
+            <div class="history-list">
+                {{#each recentDecomposes}}
+                <div class="history-item">
+                    <div class="history-time">{{time}}</div>
+                    <div class="history-summary">
+                        <div class="summary-text">分解了 {{itemCount}} 件物品</div>
+                        <div class="summary-stats">
+                            <span class="success-rate">成功率: {{successRate}}%</span>
+                            <span class="total-value">获得价值: {{totalValue}}</span>
+                        </div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="details-btn">📋 查看详情</button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <div class="footer-info">
+                <p class="info-text">合理分解物品可以获得珍贵材料，提升分解技能等级可以提高成功率</p>
+                <p class="update-time">最后更新: {{updateTime}}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterCategory = document.querySelector('.filter-category');
+            const filterRarity = document.querySelector('.filter-rarity');
+            const filterCondition = document.querySelector('.filter-condition');
+            const searchInput = document.querySelector('.search-item');
+            
+            function filterItems() {
+                const category = filterCategory.value;
+                const rarity = filterRarity.value;
+                const condition = filterCondition.value;
+                const search = searchInput.value.toLowerCase();
+                
+                document.querySelectorAll('.item-card').forEach(card => {
+                    const cardCategory = card.dataset.category;
+                    const cardRarity = card.dataset.rarity;
+                    const cardCondition = card.dataset.condition;
+                    const cardName = card.querySelector('.item-name').textContent.toLowerCase();
+                    
+                    const categoryMatch = category === 'all' || cardCategory === category;
+                    const rarityMatch = rarity === 'all' || cardRarity === rarity;
+                    const conditionMatch = condition === 'all' || cardCondition === condition;
+                    const searchMatch = search === '' || cardName.includes(search);
+                    
+                    card.style.display = categoryMatch && rarityMatch && conditionMatch && searchMatch ? 'block' : 'none';
+                });
+            }
+            
+            filterCategory.addEventListener('change', filterItems);
+            filterRarity.addEventListener('change', filterItems);
+            filterCondition.addEventListener('change', filterItems);
+            searchInput.addEventListener('input', filterItems);
+            
+            document.querySelectorAll('.select-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemCard = this.closest('.item-card');
+                    const itemId = itemCard.dataset.itemId;
+                    
+                    itemCard.classList.toggle('selected');
+                    this.textContent = itemCard.classList.contains('selected') ? '取消选择' : '选择';
+                    
+                    updatePreview();
+                });
+            });
+            
+            
+            document.querySelector('.batch-select-btn').addEventListener('click', function() {
+                console.log('批量选择');
+            });
+            
+            
+            document.querySelector('.clear-btn').addEventListener('click', function() {
+                document.querySelectorAll('.item-card.selected').forEach(card => {
+                    card.classList.remove('selected');
+                    const btn = card.querySelector('.select-btn');
+                    if (btn) btn.textContent = '选择';
+                });
+                updatePreview();
+            });
+            
+           
+            document.querySelector('.decompose-btn').addEventListener('click', function() {
+                console.log('开始分解');
+            });
+            
+            function updatePreview() {
+                const selectedItems = document.querySelectorAll('.item-card.selected');
+                console.log('更新预览，选中物品数量:', selectedItems.length);
+            }
+        });
+    </script>
+</body>
+</html>

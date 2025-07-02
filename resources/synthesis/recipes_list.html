@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="<%= data.cssPath %>"/>
+    <style>
+       
+        .recipes-list-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        .recipes-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .recipes-header {
+            background: linear-gradient(45deg, #4834d4, #686de0);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .recipes-title {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .workshop-summary {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .summary-label {
+            display: block;
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .summary-value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        .recipes-content {
+            padding: 30px;
+        }
+        
+        .category-section {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: #4834d4;
+        }
+        
+        .recipe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #4834d4, #686de0);
+        }
+        
+        .recipe-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .rarity-icon {
+            font-size: 1.5em;
+        }
+        
+        .item-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .recipe-details {
+            space-y: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .materials-list {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        
+        .success-rate-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rate-original {
+            color: #e74c3c;
+            text-decoration: line-through;
+        }
+        
+        .rate-final {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .level-requirement {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .level-requirement.available {
+            background: #27ae60;
+        }
+        
+        .level-requirement.unavailable {
+            background: #e74c3c;
+        }
+        
+        .recipe-description {
+            background: #e8f4fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #2980b9;
+            border-left: 4px solid #3498db;
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            background: #ecf0f1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-tag.active {
+            background: #4834d4;
+            color: white;
+        }
+        
+        .stats-summary {
+            background: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4834d4;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="recipes-list-container">
+        <div class="recipes-main">
+            
+            <div class="recipes-header">
+                <h1 class="recipes-title">🔨 合成配方大全</h1>
+                <div class="workshop-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">工坊等级</span>
+                        <span class="summary-value">Lv.<%= data.workshopLevel %></span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">成功率加成</span>
+                        <span class="summary-value">+<%= data.successBonus %>%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">经验值</span>
+                        <span class="summary-value"><%= data.workshopExp %>/<%= data.expToNext %></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recipes-content">
+              
+                <div class="filter-section">
+                    <div class="filter-title">📋 配方分类</div>
+                    <div class="filter-options">
+                        <div class="filter-tag active">全部配方</div>
+                        <% data.recipes.forEach(recipe => { %>
+                        <div class="filter-tag"><%= recipe.categoryName %></div>
+                        <% }); %>
+                    </div>
+                </div>
+                
+                
+                <% data.recipes.forEach(recipe => { %>
+                <div class="category-section">
+                    <div class="category-header">
+                        📦 <%= recipe.categoryName %> (<%= recipe.items.length %>个配方)
+                    </div>
+                    <div class="recipes-grid">
+                        <% recipe.items.forEach(item => { %>
+                        <div class="recipe-card">
+                            <div class="recipe-name">
+                                <span class="rarity-icon"><%= item.rarityIcon %></span>
+                                <span class="item-name"><%= item.name %></span>
+                            </div>
+                            
+                            <div class="recipe-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">📋 所需材料</span>
+                                </div>
+                                <div class="materials-list">
+                                    <%= item.materialsText %>
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <span class="detail-label">🎯 成功率</span>
+                                    <div class="success-rate-display">
+                                        <span class="rate-original"><%= item.successRate %>%</span>
+                                        <span>→</span>
+                                        <span class="rate-final"><%= item.finalSuccessRate %>%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <span class="detail-label">⚡ 等级需求</span>
+                                    <span class="level-requirement <%= item.canCraft ? 'available' : 'unavailable' %>">
+                                        Lv.<%= item.workshopLevel %>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="recipe-description">
+                                💡 <%= item.description %>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                </div>
+                <% }); %>
+                
+                
+                <div class="stats-summary">
+                    <div class="filter-title">📊 合成统计</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number"><%= data.stats.totalCrafts %></span>
+                            <div class="stat-label">总合成次数</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= data.stats.successfulCrafts %></span>
+                            <div class="stat-label">成功次数</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= data.stats.successRate %>%</span>
+                            <div class="stat-label">成功率</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= data.recipes.length %></span>
+                            <div class="stat-label">可用配方</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

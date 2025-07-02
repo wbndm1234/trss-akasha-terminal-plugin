@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./couple_adventure.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="adventure-logo">🗺️⚔️</div>
+            <div class="title">情侣冒险</div>
+            <div class="subtitle">Couple Adventure - 携手探索未知世界</div>
+        </div>
+        
+        <div class="couple-info">
+            <div class="couple-member">
+                <div class="member-avatar">
+                    <img src="{{player1Avatar}}" alt="{{player1Name}}">
+                    <div class="member-level">Lv.{{player1Level}}</div>
+                </div>
+                <div class="member-details">
+                    <div class="member-name">{{player1Name}}</div>
+                    <div class="member-class">{{player1Class}}</div>
+                    <div class="member-hp">
+                        <div class="hp-bar">
+                            <div class="hp-fill" style="width: {{player1HpPercent}}%"></div>
+                        </div>
+                        <span class="hp-text">{{player1CurrentHp}}/{{player1MaxHp}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="couple-bond">
+                <div class="bond-icon">💕</div>
+                <div class="bond-level">羁绊等级 {{bondLevel}}</div>
+                <div class="bond-effect">{{bondEffect}}</div>
+            </div>
+            
+            <div class="couple-member">
+                <div class="member-avatar">
+                    <img src="{{player2Avatar}}" alt="{{player2Name}}">
+                    <div class="member-level">Lv.{{player2Level}}</div>
+                </div>
+                <div class="member-details">
+                    <div class="member-name">{{player2Name}}</div>
+                    <div class="member-class">{{player2Class}}</div>
+                    <div class="member-hp">
+                        <div class="hp-bar">
+                            <div class="hp-fill" style="width: {{player2HpPercent}}%"></div>
+                        </div>
+                        <span class="hp-text">{{player2CurrentHp}}/{{player2MaxHp}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="current-adventure">
+            <div class="adventure-header">
+                <div class="adventure-title">🌟 当前冒险</div>
+                <div class="adventure-status {{adventureStatusClass}}">{{adventureStatus}}</div>
+            </div>
+            
+            {{#if hasCurrentAdventure}}
+            <div class="adventure-details">
+                <div class="adventure-map">
+                    <div class="map-background">
+                        <img src="{{adventureMapImage}}" alt="{{adventureName}}">
+                    </div>
+                    <div class="map-overlay">
+                        <div class="adventure-name">{{adventureName}}</div>
+                        <div class="adventure-difficulty">难度: {{adventureDifficulty}}</div>
+                        <div class="adventure-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{adventureProgress}}%"></div>
+                            </div>
+                            <span class="progress-text">{{currentStage}}/{{totalStages}} 关卡</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="adventure-info">
+                    <div class="info-section">
+                        <div class="info-title">📍 当前位置</div>
+                        <div class="current-location">{{currentLocation}}</div>
+                        <div class="location-desc">{{locationDescription}}</div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <div class="info-title">⏱️ 冒险时间</div>
+                        <div class="adventure-time">{{adventureTime}}</div>
+                        <div class="time-remaining">预计剩余: {{timeRemaining}}</div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <div class="info-title">💰 当前收益</div>
+                        <div class="current-rewards">
+                            <div class="reward-item">
+                                <span class="reward-icon">💰</span>
+                                <span class="reward-amount">{{goldEarned}}</span>
+                            </div>
+                            <div class="reward-item">
+                                <span class="reward-icon">⭐</span>
+                                <span class="reward-amount">{{expEarned}}</span>
+                            </div>
+                            <div class="reward-item">
+                                <span class="reward-icon">💎</span>
+                                <span class="reward-amount">{{gemsEarned}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="adventure-actions">
+                <button class="action-btn continue-btn">继续冒险</button>
+                <button class="action-btn rest-btn">休息恢复</button>
+                <button class="action-btn retreat-btn">撤退返回</button>
+            </div>
+            {{else}}
+            <div class="no-adventure">
+                <div class="no-adventure-icon">🏠</div>
+                <div class="no-adventure-text">当前没有进行中的冒险</div>
+                <div class="no-adventure-desc">选择一个冒险地点开始你们的旅程吧！</div>
+            </div>
+            {{/if}}
+        </div>
+
+        <div class="available-adventures">
+            <div class="adventures-header">
+                <div class="adventures-title">🗺️ 可用冒险</div>
+                <div class="adventures-filter">
+                    <select class="difficulty-filter">
+                        <option value="all">全部难度</option>
+                        <option value="easy">简单</option>
+                        <option value="normal">普通</option>
+                        <option value="hard">困难</option>
+                        <option value="expert">专家</option>
+                        <option value="legendary">传说</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="adventures-grid">
+                {{#each availableAdventures}}
+                <div class="adventure-card {{difficultyClass}}">
+                    <div class="card-header">
+                        <div class="adventure-image">
+                            <img src="{{image}}" alt="{{name}}">
+                            <div class="difficulty-badge {{difficultyClass}}">{{difficulty}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="adventure-name">{{name}}</div>
+                        <div class="adventure-desc">{{description}}</div>
+                        
+                        <div class="adventure-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">⚔️</span>
+                                <span class="stat-label">推荐等级:</span>
+                                <span class="stat-value">{{recommendedLevel}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">⏱️</span>
+                                <span class="stat-label">预计时间:</span>
+                                <span class="stat-value">{{estimatedTime}}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">💰</span>
+                                <span class="stat-label">基础奖励:</span>
+                                <span class="stat-value">{{baseReward}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="adventure-rewards">
+                            <div class="rewards-title">可能获得:</div>
+                            <div class="rewards-list">
+                                {{#each possibleRewards}}
+                                <div class="reward-tag {{rarity}}">{{name}}</div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        
+                        <div class="adventure-requirements">
+                            {{#if requirements}}
+                            <div class="requirements-title">要求:</div>
+                            <div class="requirements-list">
+                                {{#each requirements}}
+                                <div class="requirement-item {{#if met}}met{{else}}unmet{{/if}}">
+                                    {{#if met}}✅{{else}}❌{{/if}} {{text}}
+                                </div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <button class="start-adventure-btn" {{#unless canStart}}disabled{{/unless}}>
+                            {{#if canStart}}开始冒险{{else}}条件不足{{/if}}
+                        </button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="adventure-history">
+            <div class="history-header">
+                <div class="history-title">📚 冒险历史</div>
+                <div class="history-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">{{totalAdventures}}</div>
+                        <div class="stat-label">总冒险次数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{successRate}}%</div>
+                        <div class="stat-label">成功率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{totalRewards}}</div>
+                        <div class="stat-label">总收益</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-list">
+                {{#each adventureHistory}}
+                <div class="history-item {{statusClass}}">
+                    <div class="history-icon">
+                        {{#if (eq status 'completed')}}✅{{/if}}
+                        {{#if (eq status 'failed')}}❌{{/if}}
+                        {{#if (eq status 'retreated')}}🏃{{/if}}
+                    </div>
+                    
+                    <div class="history-details">
+                        <div class="history-name">{{adventureName}}</div>
+                        <div class="history-time">{{completedTime}}</div>
+                        <div class="history-duration">耗时: {{duration}}</div>
+                    </div>
+                    
+                    <div class="history-rewards">
+                        {{#if rewards}}
+                        <div class="rewards-earned">
+                            {{#each rewards}}
+                            <span class="reward-item">
+                                {{icon}} {{amount}}
+                            </span>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                    </div>
+                    
+                    <div class="history-status {{statusClass}}">{{statusText}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="adventure-shop">
+            <div class="shop-header">
+                <div class="shop-title">🏪 冒险商店</div>
+                <div class="shop-currency">
+                    <span class="currency-icon">🏆</span>
+                    <span class="currency-amount">{{adventurePoints}}</span>
+                    <span class="currency-label">冒险点数</span>
+                </div>
+            </div>
+            
+            <div class="shop-items">
+                {{#each shopItems}}
+                <div class="shop-item">
+                    <div class="item-icon">{{icon}}</div>
+                    <div class="item-info">
+                        <div class="item-name">{{name}}</div>
+                        <div class="item-desc">{{description}}</div>
+                        <div class="item-effect">{{effect}}</div>
+                    </div>
+                    <div class="item-price">
+                        <span class="price-amount">{{price}}</span>
+                        <span class="price-currency">🏆</span>
+                    </div>
+                    <button class="buy-btn" {{#unless canAfford}}disabled{{/unless}}>
+                        {{#if canAfford}}购买{{else}}点数不足{{/if}}
+                    </button>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="info-text">无</div>
+                <div class="update-time">最后更新: {{updateTime}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

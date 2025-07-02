@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="{{cssPath}}"/>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部用户信息 -->
+        <div class="user-info">
+            <div class="user-header">
+                <h2>{{username}}的合成工坊</h2>
+                <div class="workshop-level">
+                    <span class="level-text">Lv.{{workshopLevel}}</span>
+                    <div class="exp-bar">
+                        <div class="exp-progress" style="width: {{workshopExp/expToNext*100}}%"></div>
+                    </div>
+                    <span class="exp-text">{{workshopExp}}/{{expToNext}}</span>
+                </div>
+                <div class="bonus-info">
+                    <span>成功率加成: +{{successBonus}}%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 合成配方列表 -->
+        <div class="recipes-container">
+            <h3>合成配方</h3>
+            {{#each recipes}}
+            <div class="recipe-category">
+                <h4>{{categoryName}}</h4>
+                <div class="recipe-list">
+                    {{#each items}}
+                    <div class="recipe-item">
+                        <div class="recipe-header">
+                            <span class="rarity-icon">{{rarityIcon}}</span>
+                            <span class="item-name">{{name}}</span>
+                        </div>
+                        <div class="recipe-content">
+                            <div class="materials">
+                                <span class="label">材料:</span>
+                                <span class="materials-text">{{materialsText}}</span>
+                            </div>
+                            <div class="success-rate">
+                                <span class="label">成功率:</span>
+                                <span class="rate-text">{{successRate}}% → {{finalSuccessRate}}%</span>
+                            </div>
+                            <div class="workshop-requirement">
+                                <span class="label">需求等级:</span>
+                                <span class="level-text">Lv.{{workshopLevel}}</span>
+                            </div>
+                            <div class="description">
+                                <span class="desc-text">{{description}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- 背包物品 -->
+        <div class="inventory-container">
+            <h3>我的背包</h3>
+            <div class="inventory-list">
+                {{#each inventory}}
+                <div class="inventory-item">
+                    <span class="rarity-icon">{{rarityIcon}}</span>
+                    <span class="item-name">{{name}}</span>
+                    <span class="item-amount">x{{amount}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- 合成统计 -->
+        <div class="stats-container">
+            <h3>合成统计</h3>
+            <div class="stats-content">
+                <div class="stat-item">
+                    <span class="label">总合成次数:</span>
+                    <span class="value">{{stats.totalCrafts}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">成功次数:</span>
+                    <span class="value">{{stats.successfulCrafts}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">成功率:</span>
+                    <span class="value">{{stats.successRate}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

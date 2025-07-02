@@ -1,7 +1,26 @@
 {
   "name": "trss-akasha-terminal-plugin",
   "version": "1.0.0",
-  "author": "dmqaq",
-  "description": "trss-akasha-terminal-plugin",
-  "type": "module"
+  "author": "dmqaq,nahida22",
+  "description": "Yunzai-Bot for trss-akasha-terminal-plugin",
+  "type": "module",
+   "imports": {
+    "#guoba.platform": "./components/guoba-platform.js"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "mysql2": "^3.6.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "scripts": {
+    "install-deps": "npm install mysql2 express cors",
+    "start-webui": "node webui/server.js"
+  },
+  "keywords": [
+    "yunzai-bot",
+    "trss-akasha-terminal-plugin",
+    "mysql",
+    "game"
+  ]
 }

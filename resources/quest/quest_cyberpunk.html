@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚空终端 - 任务系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd1e8 100%);
+    color: #2d2d2d;
+    overflow-x: hidden;
+    min-height: 100vh;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 少女风格容器 */
+.cyberpunk-container {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd1e8 100%);
+}
+
+/* 背景动画层 */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.grid-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 182, 193, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 182, 193, 0.2) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(3px 3px at 20px 30px, #ffb6c1, transparent),
+        radial-gradient(2px 2px at 40px 70px, #ffc0cb, transparent),
+        radial-gradient(2px 2px at 90px 40px, #ffb3d9, transparent),
+        radial-gradient(1px 1px at 130px 80px, #ffd1dc, transparent);
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: particleFloat 15s ease-in-out infinite;
+}
+
+/* 添加花朵装饰 */
+.floating-particles::before {
+    content: '🌸 💖 🌺 ✨ 🦋 💕';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    opacity: 0.3;
+    animation: floralFloat 20s ease-in-out infinite;
+    pointer-events: none;
+    white-space: pre;
+    line-height: 100px;
+    letter-spacing: 100px;
+}
+
+@keyframes floralFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(180deg); }
+}
+
+@keyframes particleFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.neon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 182, 193, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: neonPulse 4s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* 主界面 */
+.main-interface {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 状态栏 */
+.status-bar {
+    margin-bottom: 30px;
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffb6c1;
+    border-radius: 20px;
+    box-shadow: 
+        0 0 20px rgba(255, 182, 193, 0.4),
+        inset 0 0 20px rgba(255, 182, 193, 0.2);
+}
+
+.terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.neon-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-weight: 900;
+    font-size: 2.2em;
+    color: #ff1493;
+    text-shadow:
+        0 0 3px #ff69b4,
+        0 0 6px #ff69b4,
+        0 0 12px #ff69b4,
+        0 0 18px #ff69b4,
+        2px 2px 4px rgba(0,0,0,0.3);
+    animation: textGlow 2s ease-in-out infinite alternate;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    -webkit-text-stroke: 1px #ff1493;
+}
+
+.neon-text::before {
+    content: '💖 ';
+    font-size: 0.8em;
+}
+
+@keyframes textGlow {
+    from { text-shadow: 0 0 5px #ff69b4, 0 0 10px #ff69b4, 0 0 15px #ff69b4; }
+    to { text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4, 0 0 30px #ff69b4; }
+}
+
+.version {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #ff1493;
+    background: rgba(255, 182, 193, 0.3);
+    padding: 5px 10px;
+    border-radius: 15px;
+    border: 1px solid #ff1493;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.version::before {
+    content: '✨ ';
+}
+
+.system-time {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.4em;
+    color: #ff1493;
+    font-weight: 800;
+    text-shadow: 0 0 8px #ff69b4, 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.system-time::before {
+    content: '🕐 ';
+}
+
+/* 用户面板 */
+.user-panel {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #ffb6c1;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    box-shadow: 
+        0 0 25px rgba(255, 182, 193, 0.4),
+        inset 0 0 25px rgba(255, 182, 193, 0.2);
+}
+
+.avatar-section {
+    position: relative;
+}
+
+.avatar-frame {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.avatar-glow {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 182, 193, 0.5) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: avatarGlow 3s ease-in-out infinite;
+}
+
+@keyframes avatarGlow {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.avatar-image {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #ff69b4;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+
+.avatar-icon {
+    font-size: 2em;
+    color: #ff69b4;
+    text-shadow: 0 0 10px #ff69b4;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+.status-indicator.online {
+    background: #ff69b4;
+    box-shadow: 0 0 10px #ff69b4;
+    animation: statusBlink 2s ease-in-out infinite;
+}
+
+@keyframes statusBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.user-info {
+    flex: 1;
+}
+
+.username {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: #ff1493;
+    text-shadow: 0 0 10px #ff69b4, 1px 1px 3px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+    -webkit-text-stroke: 0.5px #ff1493;
+}
+
+.username::before {
+    content: '👑 ';
+    font-size: 0.8em;
+}
+
+.user-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: rgba(255, 182, 193, 0.2);
+    border: 1px solid #ffb6c1;
+    border-radius: 20px;
+}
+
+.stat-icon {
+    font-size: 1.2em;
+}
+
+.stat-value {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-weight: 800;
+    font-size: 1.5em;
+    color: #ff1493;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+    -webkit-text-stroke: 0.3px #ff1493;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #ff1493;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.neural-link {
+    text-align: center;
+}
+
+.link-status {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.0em;
+    color: #ff1493;
+    font-weight: 700;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+
+.link-status::before {
+    content: '💕 ';
+}
+
+.connection-bars {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+}
+
+.bar {
+    width: 4px;
+    height: 20px;
+    background: rgba(255, 182, 193, 0.4);
+    border-radius: 2px;
+}
+
+.bar.active {
+    background: #ff69b4;
+    box-shadow: 0 0 5px #ff69b4;
+    animation: barPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes barPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* 任务概览 */
+.quest-overview {
+    margin-bottom: 40px;
+}
+
+.overview-title {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.glitch-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 2.6em;
+    font-weight: 900;
+    color: #ff1493;
+    text-shadow: 
+        0 0 3px #ff69b4,
+        0 0 6px #ff69b4,
+        0 0 12px #ff69b4,
+        0 0 18px #ff69b4,
+        3px 3px 6px rgba(0,0,0,0.4);
+    animation: glitchEffect 3s ease-in-out infinite;
+    -webkit-text-stroke: 1px #ff1493;
+}
+
+.glitch-text::before {
+    content: '🌟 ';
+    font-size: 0.8em;
+}
+
+.glitch-text::after {
+    content: ' 🌟';
+    font-size: 0.8em;
+}
+
+@keyframes glitchEffect {
+    0%, 100% { transform: translateX(0); }
+    10% { transform: translateX(-2px); }
+    20% { transform: translateX(2px); }
+    30% { transform: translateX(-1px); }
+    40% { transform: translateX(1px); }
+    50% { transform: translateX(0); }
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.overview-card {
+    position: relative;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    border: 2px solid;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.overview-card.daily {
+    border-color: #ffb6c1;
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+}
+
+.overview-card.weekly {
+    border-color: #ff69b4;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+}
+
+.overview-card.special {
+    border-color: #ffc0cb;
+    box-shadow: 0 0 20px rgba(255, 192, 203, 0.4);
+}
+
+.overview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 182, 193, 0.6);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.card-icon {
+    font-size: 2em;
+}
+
+.card-title {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.5em;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ff1493;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+    -webkit-text-stroke: 0.3px #ff1493;
+}
+
+.card-progress {
+    text-align: center;
+}
+
+.progress-value {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 3.2em;
+    font-weight: 900;
+    color: #ff1493;
+    text-shadow: 0 0 8px #ff69b4, 2px 2px 4px rgba(0,0,0,0.4);
+    -webkit-text-stroke: 1px #ff1493;
+}
+
+.progress-label {
+    font-size: 0.9em;
+    color: #8b4b8b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: 15px;
+}
+
+.daily-glow {
+    background: radial-gradient(circle at center, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+    animation: dailyGlow 4s ease-in-out infinite;
+}
+
+.weekly-glow {
+    background: radial-gradient(circle at center, rgba(255, 0, 255, 0.1) 0%, transparent 70%);
+    animation: weeklyGlow 4s ease-in-out infinite;
+}
+
+.special-glow {
+    background: radial-gradient(circle at center, rgba(255, 255, 0, 0.1) 0%, transparent 70%);
+    animation: specialGlow 4s ease-in-out infinite;
+}
+
+@keyframes dailyGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes weeklyGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes specialGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* 任务区域 */
+.quest-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.quest-section {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 25px;
+    padding: 30px;
+    border: 2px solid rgba(255, 182, 193, 0.3);
+}
+
+.quest-section.daily {
+    border-color: #ffb6c1;
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
+}
+
+.quest-section.weekly {
+    border-color: #ff69b4;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+}
+
+.quest-section.special {
+    border-color: #ffc0cb;
+    box-shadow: 0 0 20px rgba(255, 192, 203, 0.3);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 182, 193, 0.3);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-icon {
+    font-size: 1.8em;
+}
+
+.section-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.7em;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ff1493;
+    text-shadow: 0 0 8px #ff69b4, 2px 2px 4px rgba(0,0,0,0.3);
+    -webkit-text-stroke: 0.5px #ff1493;
+}
+
+.section-refresh {
+    text-align: center;
+}
+
+.section-info {
+    text-align: center;
+}
+
+.refresh-timer, .info-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.3em;
+    font-weight: 800;
+    color: #ff1493;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.refresh-label, .info-label {
+    font-size: 0.8em;
+    color: #8b4b8b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+.section-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.0em;
+    font-weight: 700;
+    color: #ff1493;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff69b4;
+    box-shadow: 0 0 10px #ff69b4;
+    animation: statusBlink 2s ease-in-out infinite;
+}
+
+.status-dot.special {
+    background: #ffc0cb;
+    box-shadow: 0 0 10px #ffc0cb;
+}
+
+/* 任务网格 */
+.quest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+}
+
+.quest-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 25px;
+    border: 2px solid rgba(255, 182, 193, 0.4);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.quest-card:hover {
+    transform: translateY(-5px);
+}
+
+.quest-card.daily {
+    border-color: #ffb6c1;
+    box-shadow: 0 0 15px rgba(255, 182, 193, 0.4);
+}
+
+.quest-card.weekly {
+    border-color: #ff69b4;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+}
+
+.quest-card.special {
+    border-color: #ffc0cb;
+    box-shadow: 0 0 15px rgba(255, 192, 203, 0.4);
+}
+
+.quest-card.claimable {
+    animation: claimablePulse 2s ease-in-out infinite;
+}
+
+.quest-card.completed {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+}
+
+@keyframes claimablePulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 105, 180, 0.4); }
+    50% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.7); }
+}
+
+.card-glow {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-radius: 22px;
+    background: linear-gradient(45deg, transparent, rgba(255, 182, 193, 0.3), transparent);
+    animation: borderScan 3s linear infinite;
+    pointer-events: none;
+}
+
+.card-glow.special {
+    background: linear-gradient(45deg, transparent, rgba(255, 192, 203, 0.4), transparent);
+}
+
+@keyframes borderScan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.quest-content {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+}
+
+.quest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.quest-status {
+    font-size: 1.5em;
+}
+
+.quest-type {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8em;
+    font-weight: 700;
+    color: #ff69b4;
+    background: rgba(255, 182, 193, 0.3);
+    padding: 4px 8px;
+    border-radius: 15px;
+    border: 1px solid #ff69b4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quest-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #ff69b4;
+    text-shadow: 0 0 10px #ff69b4;
+    margin-bottom: 10px;
+}
+
+.quest-title.special {
+    color: #ffc0cb;
+    text-shadow: 0 0 10px #ffc0cb;
+}
+
+.quest-description {
+    color: #8b4b8b;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.quest-requirement {
+    color: #ff69b4;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+/* 进度条 */
+.quest-progress {
+    margin: 20px 0;
+}
+
+.progress-container {
+    position: relative;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 182, 193, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar.special {
+    background: rgba(255, 192, 203, 0.3);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff69b4, #ffb6c1);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 105, 180, 0.6), rgba(255, 182, 193, 0.6));
+    border-radius: 10px;
+    filter: blur(2px);
+    animation: progressGlow 2s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.progress-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9em;
+    color: #ff69b4;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* 奖励 */
+.quest-rewards {
+    margin: 20px 0;
+}
+
+.quest-rewards.special {
+    border: 1px solid #ffc0cb;
+    border-radius: 15px;
+    padding: 15px;
+    background: rgba(255, 192, 203, 0.2);
+}
+
+.rewards-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #ff69b4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.rewards-title::before {
+    content: '🎁 ';
+}
+
+.rewards-content {
+    color: #ff69b4;
+    font-size: 0.95em;
+}
+
+/* 领取按钮 */
+.claim-button {
+    position: relative;
+    background: rgba(255, 182, 193, 0.3);
+    border: 2px solid #ff69b4;
+    border-radius: 20px;
+    padding: 12px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.claim-button.special {
+    background: rgba(255, 192, 203, 0.3);
+    border-color: #ffc0cb;
+}
+
+.claim-button:hover {
+    background: rgba(255, 182, 193, 0.5);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+}
+
+.claim-button.special:hover {
+    background: rgba(255, 192, 203, 0.5);
+    box-shadow: 0 0 20px rgba(255, 192, 203, 0.6);
+}
+
+.button-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: buttonScan 2s linear infinite;
+}
+
+@keyframes buttonScan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.button-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-weight: 800;
+    font-size: 1.1em;
+    color: #ff1493;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.button-text::before {
+    content: '💖 ';
+}
+
+.button-text::after {
+    content: ' 💖';
+}
+
+.quest-status-icon {
+    font-size: 1.5em;
+    width: 40px;
+    text-align: center;
+}
+
+.quest-title {
+    flex: 1;
+    font-size: 1.5em;
+    font-weight: 800;
+    color: #ff1493;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+    -webkit-text-stroke: 0.3px #ff1493;
+}
+
+.quest-difficulty {
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 0.9em;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.difficulty-label {
+    background: rgba(255, 182, 193, 0.3);
+    color: #ff69b4;
+    border: 1px solid #ff69b4;
+}
+
+.difficulty-label.special {
+    background: rgba(255, 192, 203, 0.3);
+    color: #ffc0cb;
+    border: 1px solid #ffc0cb;
+    animation: specialGlow 2s ease-in-out infinite;
+}
+
+.quest-description {
+    color: #5a5a5a;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.quest-progress-section {
+    margin-bottom: 20px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.progress-text {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    color: #ff1493;
+    font-weight: 800;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.progress-percent {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    color: #ff1493;
+    font-weight: 800;
+    font-size: 1.1em;
+    text-shadow: 0 0 4px #ff69b4, 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.progress-bar {
+    position: relative;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ffff, #00ff00);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-bar.special .progress-fill {
+    background: linear-gradient(90deg, #ffc0cb, #ff69b4);
+}
+
+.progress-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressGlow 2s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.quest-rewards {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.rewards-label {
+    font-family: 'Orbitron', 'Microsoft YaHei', monospace;
+    font-size: 1.0em;
+    color: #ff1493;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.rewards-text {
+    color: #ff1493;
+    font-weight: 600;
+    font-size: 1.05em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.quest-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    pointer-events: none;
+}
+
+.quest-card.active .quest-glow {
+    background: radial-gradient(circle at center, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+    animation: questGlow 4s ease-in-out infinite;
+}
+
+.quest-card.claimable .quest-glow {
+    background: radial-gradient(circle at center, rgba(255, 105, 180, 0.15) 0%, transparent 70%);
+    animation: claimableGlow 2s ease-in-out infinite;
+}
+
+.quest-card.special .quest-glow.special {
+    background: radial-gradient(circle at center, rgba(255, 192, 203, 0.1) 0%, transparent 70%);
+    animation: specialQuestGlow 3s ease-in-out infinite;
+}
+
+@keyframes questGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes claimableGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes specialQuestGlow {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* 底部信息 */
+.footer-info {
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 182, 193, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    text-align: center;
+}
+
+.system-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.info-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9em;
+    color: #ff69b4;
+    text-shadow: 0 0 5px #ff69b4;
+}
+
+.separator {
+    color: #ff69b4;
+    font-weight: bold;
+}
+
+.command-hint {
+    color: #ff69b4;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.hint-text {
+    background: rgba(255, 182, 193, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 105, 180, 0.4);
+    display: inline-block;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-interface {
+        padding: 15px;
+    }
+    
+    .user-panel {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quest-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .system-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .neon-text {
+        font-size: 1.4em;
+    }
+    
+    .glitch-text {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .terminal-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .quest-card {
+        padding: 20px;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* 特殊动画效果 */
+@keyframes matrixRain {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff69b4, #ffc0cb);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #ff1493, #ff69b4);
+    box-shadow: 0 0 15px rgba(255, 20, 147, 0.7);
+}
+
+/* 任务商店 */
+.quest-shop {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    padding: 30px;
+    border: 2px solid rgba(255, 182, 193, 0.4);
+    margin-top: 40px;
+}
+
+.shop-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.shop-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2em;
+    font-weight: 700;
+    color: #ff69b4;
+    text-shadow: 0 0 15px #ff69b4;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.shop-subtitle {
+    color: #8b4b8b;
+    font-size: 1.1em;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.shop-item {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px solid rgba(255, 182, 193, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.shop-item:hover {
+    transform: translateY(-3px);
+    border-color: #ff69b4;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.item-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #ff69b4;
+    text-shadow: 0 0 8px #ff69b4;
+}
+
+.item-price {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #ff1493;
+    text-shadow: 0 0 8px #ff1493;
+}
+
+.item-description {
+    color: #8b4b8b;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.buy-button {
+    position: relative;
+    background: rgba(255, 182, 193, 0.3);
+    border: 2px solid #ff69b4;
+    border-radius: 15px;
+    padding: 10px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    width: 100%;
+}
+
+.buy-button:hover {
+    background: rgba(255, 105, 180, 0.5);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+}
+
+.buy-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #666666;
+    background: rgba(102, 102, 102, 0.2);
+}
+
+.buy-button.disabled:hover {
+    background: rgba(102, 102, 102, 0.2);
+    box-shadow: none;
+}
+
+.buy-text {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    color: #ff69b4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 空状态 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666666;
+}
+
+.empty-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* 移动端响应式优化 */
+@media (max-width: 768px) {
+    .quest-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .shop-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .quest-shop {
+        padding: 20px;
+        margin-top: 30px;
+    }
+    
+    .shop-title {
+        font-size: 1.5em;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- 背景动画层 -->
+    <div class="bg-animation">
+        <div class="grid-lines"></div>
+        <div class="floating-particles"></div>
+        <div class="neon-glow"></div>
+    </div>
+
+    <!-- 主界面容器 -->
+    <div class="cyberpunk-container">
+        <div class="main-interface">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="terminal-header">
+                    <div class="terminal-title">
+                        <div class="neon-text">AKASHA TERMINAL</div>
+                        <div class="version">v1.0.0</div>
+                    </div>
+                    <div class="system-time">{{templateData.currentTime}}</div>
+                </div>
+            </div>
+
+            <!-- 用户面板 -->
+            <div class="user-panel">
+                <div class="avatar-section">
+                    <div class="avatar-frame">
+                        <div class="avatar-glow"></div>
+                        <div class="avatar-image">
+                            <img src="https://q1.qlogo.cn/g?b=qq&nk={{templateData.userId}}&s=100" alt="头像" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        <div class="status-indicator online"></div>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="username">{{templateData.username || 'UNKNOWN_USER'}}</div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{templateData.questPoints || 0}}</div>
+                                <div class="stat-label">任务点数</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{templateData.totalCompleted || 0}}</div>
+                                <div class="stat-label">已完成</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{templateData.completionRate || 0}}%</div>
+                                <div class="stat-label">完成率</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="neural-link">
+                    <div class="link-status">神经链接激活</div>
+                    <div class="connection-bars">
+                        <div class="bar active"></div>
+                        <div class="bar active"></div>
+                        <div class="bar active"></div>
+                        <div class="bar active"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务概览 -->
+            <div class="quest-overview">
+                <div class="overview-title">
+                    <div class="glitch-text">任务概览</div>
+                </div>
+                <div class="overview-grid">
+                    <div class="overview-card daily">
+                        <div class="card-header">
+                            <div class="card-icon">📅</div>
+                            <div class="card-title">每日任务</div>
+                        </div>
+                        <div class="card-stats">
+                            <div class="stat-number">{{templateData.dailyQuests.length || 0}}</div>
+                            <div class="stat-label">可用</div>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{templateData.dailyCompleted / templateData.dailyQuests.length * 100 || 0}}%"></div>
+                            </div>
+                            <div class="progress-text">{{templateData.dailyCompleted || 0}}/{{templateData.dailyQuests.length || 0}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card weekly">
+                        <div class="card-header">
+                            <div class="card-icon">📆</div>
+                            <div class="card-title">周常任务</div>
+                        </div>
+                        <div class="card-stats">
+                            <div class="stat-number">{{templateData.weeklyQuests.length || 0}}</div>
+                            <div class="stat-label">可用</div>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{templateData.weeklyCompleted / templateData.weeklyQuests.length * 100 || 0}}%"></div>
+                            </div>
+                            <div class="progress-text">{{templateData.weeklyCompleted || 0}}/{{templateData.weeklyQuests.length || 0}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card special">
+                        <div class="card-header">
+                            <div class="card-icon">⭐</div>
+                            <div class="card-title">特殊任务</div>
+                        </div>
+                        <div class="card-stats">
+                            <div class="stat-number">{{templateData.specialQuests.length || 0}}</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{templateData.specialCompleted / templateData.specialQuests.length * 100 || 0}}%"></div>
+                            </div>
+                            <div class="progress-text">{{templateData.specialCompleted || 0}}/{{templateData.specialQuests.length || 0}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务列表 -->
+            <div class="quest-sections">
+                <!-- 每日任务 -->
+                {{if templateData.dailyQuests && templateData.dailyQuests.length > 0}}
+                <div class="quest-section daily">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">📅</div>
+                            <div class="section-text">每日任务</div>
+                        </div>
+                        <div class="section-refresh">
+                            <div class="refresh-timer">{{templateData.dailyRefreshTime || '0h 0m'}}</div>
+                            <div class="refresh-label">距离刷新</div>
+                        </div>
+                    </div>
+                    <div class="quest-grid">
+                        {{each templateData.dailyQuests quest}}
+                        <div class="quest-card daily {{quest.status === '✅' ? 'completed' : quest.status === '🎁' ? 'claimable' : 'active'}}">
+                            <div class="card-glow"></div>
+                            <div class="quest-header">
+                                <div class="quest-status">{{quest.status}}</div>
+                                <div class="quest-type">每日</div>
+                            </div>
+                            <div class="quest-content">
+                                <div class="quest-title">{{quest.name}}</div>
+                                <div class="quest-description">{{quest.description}}</div>
+                                {{if quest.requirement}}
+                                <div class="quest-requirement">⚠️ {{quest.requirement}}</div>
+                                {{/if}}
+                            </div>
+                            <div class="quest-progress">
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {{quest.progressPercent}}%"></div>
+                                        <div class="progress-glow" style="width: {{quest.progressPercent}}%"></div>
+                                    </div>
+                                    <div class="progress-text">{{quest.progressText}}</div>
+                                </div>
+                            </div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">奖励</div>
+                                <div class="rewards-content">{{quest.rewardsText}}</div>
+                            </div>
+                            {{if quest.status === '🎁'}}
+                            <div class="claim-button">
+                                <div class="button-glow"></div>
+                                <div class="button-text">领取奖励</div>
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+
+                <!-- 周常任务 -->
+                {{if templateData.weeklyQuests && templateData.weeklyQuests.length > 0}}
+                <div class="quest-section weekly">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">📆</div>
+                            <div class="section-text">周常任务</div>
+                        </div>
+                        <div class="section-refresh">
+                            <div class="refresh-timer">{{templateData.weeklyRefreshTime || '0d 0h'}}</div>
+                            <div class="refresh-label">距离刷新</div>
+                        </div>
+                    </div>
+                    <div class="quest-grid">
+                        {{each templateData.weeklyQuests quest}}
+                        <div class="quest-card weekly {{quest.status === '✅' ? 'completed' : quest.status === '🎁' ? 'claimable' : 'active'}}">
+                            <div class="card-glow"></div>
+                            <div class="quest-header">
+                                <div class="quest-status">{{quest.status}}</div>
+                                <div class="quest-type">周常</div>
+                            </div>
+                            <div class="quest-content">
+                                <div class="quest-title">{{quest.name}}</div>
+                                <div class="quest-description">{{quest.description}}</div>
+                                {{if quest.requirement}}
+                                <div class="quest-requirement">⚠️ {{quest.requirement}}</div>
+                                {{/if}}
+                            </div>
+                            <div class="quest-progress">
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {{quest.progressPercent}}%"></div>
+                                        <div class="progress-glow" style="width: {{quest.progressPercent}}%"></div>
+                                    </div>
+                                    <div class="progress-text">{{quest.progressText}}</div>
+                                </div>
+                            </div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">奖励</div>
+                                <div class="rewards-content">{{quest.rewardsText}}</div>
+                            </div>
+                            {{if quest.status === '🎁'}}
+                            <div class="claim-button">
+                                <div class="button-glow"></div>
+                                <div class="button-text">领取奖励</div>
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+
+                <!-- 特殊任务 -->
+                {{if templateData.specialQuests && templateData.specialQuests.length > 0}}
+                <div class="quest-section special">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">⭐</div>
+                            <div class="section-text">特殊任务</div>
+                        </div>
+                        <div class="section-info">
+                            <div class="info-text">独特奖励</div>
+                            <div class="info-label">仅限一次</div>
+                        </div>
+                    </div>
+                    <div class="quest-grid">
+                        {{each templateData.specialQuests quest}}
+                        <div class="quest-card special {{quest.status === '✅' ? 'completed' : quest.status === '🎁' ? 'claimable' : 'active'}}">
+                            <div class="card-glow special"></div>
+                            <div class="quest-header">
+                                <div class="quest-status">{{quest.status}}</div>
+                                <div class="quest-type">特殊</div>
+                            </div>
+                            <div class="quest-content">
+                                <div class="quest-title special">{{quest.name}}</div>
+                                <div class="quest-description">{{quest.description}}</div>
+                                {{if quest.requirement}}
+                                <div class="quest-requirement">⚠️ {{quest.requirement}}</div>
+                                {{/if}}
+                            </div>
+                            <div class="quest-progress">
+                                <div class="progress-container">
+                                    <div class="progress-bar special">
+                                        <div class="progress-fill" style="width: {{quest.progressPercent}}%"></div>
+                                        <div class="progress-glow" style="width: {{quest.progressPercent}}%"></div>
+                                    </div>
+                                    <div class="progress-text">{{quest.progressText}}</div>
+                                </div>
+                            </div>
+                            <div class="quest-rewards special">
+                                <div class="rewards-title">特殊奖励</div>
+                                <div class="rewards-content">{{quest.rewardsText}}</div>
+                            </div>
+                            {{if quest.status === '🎁'}}
+                            <div class="claim-button special">
+                                <div class="button-glow"></div>
+                                <div class="button-text">领取特殊奖励</div>
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- 任务商店 -->
+            {{if templateData.questShop && templateData.questShop.length > 0}}
+            <div class="quest-shop">
+                <div class="shop-header">
+                    <div class="shop-title">
+                        <div class="shop-icon">🛒</div>
+                        <div class="shop-text">任务商店</div>
+                    </div>
+                    <div class="shop-balance">
+                        <div class="balance-icon">🏆</div>
+                        <div class="balance-text">{{questPoints || 0}} 点数</div>
+                    </div>
+                </div>
+                <div class="shop-grid">
+                    {{each templateData.questShop item}}
+                    <div class="shop-item {{item.affordable ? 'affordable' : 'expensive'}}">
+                        <div class="item-header">
+                            <div class="item-name">{{item.name}}</div>
+                            <div class="item-cost">{{item.cost}} 🏆</div>
+                        </div>
+                        <div class="item-description">{{item.description}}</div>
+                        {{if item.affordable}}
+                        <div class="buy-button">
+                            <div class="button-glow"></div>
+                            <div class="button-text">购买</div>
+                        </div>
+                        {{else}}
+                        <div class="buy-button disabled">
+                            <div class="button-text">点数不足</div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- 底部信息 -->
+            <div class="footer-info">
+                <div class="system-info">
+                    <div class="info-item">
+                        <div class="info-label">系统状态</div>
+                        <div class="info-value online">在线</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">最后更新</div>
+                        <div class="info-value">{{templateData.currentDate}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">版本</div>
+                        <div class="info-value">trss-akasha-terminal-plugin v1.0.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script>
+        // 添加一些动态效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为卡片添加悬停效果
+            const cards = document.querySelectorAll('.quest-card, .shop-item');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // 更新时间
+            function updateTime() {
+                const now = new Date();
+                const timeElement = document.querySelector('.system-time');
+                if (timeElement) {
+                    timeElement.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+                }
+            }
+            setInterval(updateTime, 1000);
+        });
+    </script>
+</body>
+</html>

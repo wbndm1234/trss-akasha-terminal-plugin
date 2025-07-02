@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>赠送道具</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: heartBeat 0.8s ease-out;
+        }
+
+        @keyframes heartBeat {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .header {
+            background: linear-gradient(45deg, #fd79a8, #e84393);
+            padding: 25px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,30 C20,20 30,20 35,30 C40,20 50,20 50,30 C50,40 35,55 35,55 C35,55 20,40 20,30 Z" fill="white" opacity="0.1"/><path d="M60,15 C60,10 65,10 67.5,15 C70,10 75,10 75,15 C75,20 67.5,30 67.5,30 C67.5,30 60,20 60,15 Z" fill="white" opacity="0.15"/></svg>');
+            animation: floatHearts 4s ease-in-out infinite;
+        }
+
+        @keyframes floatHearts {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .gift-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: giftShake 1s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes giftShake {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-5deg);
+            }
+            75% {
+                transform: rotate(5deg);
+            }
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .gift-participants {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .participant {
+            text-align: center;
+            flex: 1;
+        }
+
+        .participant-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            margin: 0 auto 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .participant-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .participant-role {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .gift-arrow {
+            font-size: 2em;
+            color: #e84393;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .item-showcase {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-showcase::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(253,121,168,0.1) 1px, transparent 1px);
+            background-size: 15px 15px;
+            animation: sparkleGift 3s linear infinite;
+        }
+
+        @keyframes sparkleGift {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .item-showcase.common {
+            border-color: #95a5a6;
+        }
+
+        .item-showcase.uncommon {
+            border-color: #27ae60;
+        }
+
+        .item-showcase.rare {
+            border-color: #3498db;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+        }
+
+        .item-showcase.epic {
+            border-color: #9b59b6;
+            background: linear-gradient(45deg, #fff, #f8f0ff);
+        }
+
+        .item-showcase.legendary {
+            border-color: #f39c12;
+            background: linear-gradient(45deg, #fff, #fff8e1);
+        }
+
+        .item-showcase.mythic {
+            border-color: #e74c3c;
+            background: linear-gradient(45deg, #fff, #ffe6e6);
+        }
+
+        .item-rarity {
+            font-size: 2em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .item-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .item-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gift-message {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.2"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.3"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.1"/></svg>');
+        }
+
+        .message-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .message-content {
+            font-size: 1.1em;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gift-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .friendship-boost {
+            background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                max-width: 90vw;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .gift-icon {
+                font-size: 3em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .gift-participants {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .gift-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="gift-icon">🎁</div>
+            <h1>{{title}}</h1>
+        </div>
+        
+        <div class="content">
+            <div class="gift-participants">
+                <div class="participant">
+                    <div class="participant-avatar">👤</div>
+                    <div class="participant-name">{{username}}</div>
+                    <div class="participant-role">赠送者</div>
+                </div>
+                <div class="gift-arrow">💝</div>
+                <div class="participant">
+                    <div class="participant-avatar">👤</div>
+                    <div class="participant-name">{{targetName}}</div>
+                    <div class="participant-role">接收者</div>
+                </div>
+            </div>
+
+            <div class="item-showcase {{item.rarity}}">
+                <div class="item-rarity">{{item.rarity}}</div>
+                <div class="item-name">{{item.name}}</div>
+                <div class="item-description">{{item.description}}</div>
+            </div>
+
+            <div class="gift-message">
+                <div class="message-title">💌 赠送留言</div>
+                <div class="message-content">{{message}}</div>
+            </div>
+
+            <div class="gift-info">
+                <div class="info-row">
+                    <span class="info-label">🎁 赠送道具</span>
+                    <span class="info-value">{{item.name}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">⏰ 赠送时间</span>
+                    <span class="info-value">{{timestamp}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">📦 道具状态</span>
+                    <span class="info-value">已转移</span>
+                </div>
+            </div>
+
+            <div class="friendship-boost">
+                🤝 友谊值 +10！分享快乐，友谊长存！
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By trss-akasha-terminal-plugin</p>
+        </div>
+    </div>
+</body>
+</html>

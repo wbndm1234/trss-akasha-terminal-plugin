@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./couple_ranking.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">💕 情侣排行榜 💕</div>
+            <div class="subtitle">最甜蜜的CP们</div>
+        </div>
+        
+        <div class="ranking-stats">
+            <div class="stat-item">
+                <div class="stat-label">总情侣数</div>
+                <div class="stat-value">{{totalCouples}}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">活跃情侣</div>
+                <div class="stat-value">{{activeCouples}}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">最高爱意</div>
+                <div class="stat-value">{{maxLove}}</div>
+            </div>
+        </div>
+
+        <div class="ranking-tabs">
+            <div class="tab active" data-type="love">💖 爱意排行</div>
+            <div class="tab" data-type="money">💰 财富排行</div>
+            <div class="tab" data-type="days">📅 恋爱天数</div>
+        </div>
+
+        <div class="ranking-list">
+            {{#each rankings}}
+            <div class="ranking-item {{#if @first}}champion{{/if}} {{#if (eq @index 1)}}runner-up{{/if}} {{#if (eq @index 2)}}third-place{{/if}}">
+                <div class="rank-number">
+                    {{#if @first}}
+                        👑
+                    {{else if (eq @index 1)}}
+                        🥈
+                    {{else if (eq @index 2)}}
+                        🥉
+                    {{else}}
+                        {{add @index 1}}
+                    {{/if}}
+                </div>
+                
+                <div class="couple-info">
+                    <div class="couple-avatars">
+                        <img src="{{user1Avatar}}" class="avatar" alt="{{user1Name}}">
+                        <div class="heart-icon">💕</div>
+                        <img src="{{user2Avatar}}" class="avatar" alt="{{user2Name}}">
+                    </div>
+                    
+                    <div class="couple-details">
+                        <div class="couple-names">{{user1Name}} ❤️ {{user2Name}}</div>
+                        <div class="couple-status">{{relationshipStatus}}</div>
+                        <div class="couple-days">恋爱 {{loveDays}} 天</div>
+                    </div>
+                </div>
+                
+                <div class="ranking-stats">
+                    <div class="stat">
+                        <div class="stat-icon">💖</div>
+                        <div class="stat-text">
+                            <div class="stat-label">爱意值</div>
+                            <div class="stat-value">{{love}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-text">
+                            <div class="stat-label">共同财富</div>
+                            <div class="stat-value">{{totalMoney}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-text">
+                            <div class="stat-label">综合评分</div>
+                            <div class="stat-value">{{score}}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="couple-achievements">
+                    {{#each achievements}}
+                    <div class="achievement" title="{{description}}">
+                        <span class="achievement-icon">{{icon}}</span>
+                        <span class="achievement-name">{{name}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        
+        <div class="ranking-footer">
+            <div class="update-time">更新时间: {{updateTime}}</div>
+            <div class="ranking-tips">
+                <div class="tip">💡 提升排名小贴士:</div>
+                <div class="tip-list">
+                    <div class="tip-item">• 每日约会增加爱意值</div>
+                    <div class="tip-item">• 赠送礼物提升关系</div>
+                    <div class="tip-item">• 完成情侣任务获得奖励</div>
+                    <div class="tip-item">• 参与情侣冒险赚取财富</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

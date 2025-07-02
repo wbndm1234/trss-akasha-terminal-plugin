@@ -1,67 +1,116 @@
-import fs from 'node:fs'
+import fs from 'fs'
 import YAML from 'yaml'
-const _defpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.def.yaml`;
-const configyamlpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.yaml`;
-const configyamlbackpath = `./plugins/trss-akasha-terminal-plugin/config/akasha.config.back.yaml`;
-const _path = process.cwd().replace(/\\/g, '/');
+import path from 'path'
 
-export class getconfig extends plugin {
+/**
+ * 虚空配置管理功能
+ * 提供配置文件的重置、获取和管理功能
+ */
+
+// 配置文件路径
+const CONFIG_PATHS = {
+    DEFAULT: './plugins/trss-akasha-terminal-plugin/config/akasha.config.def.yaml',
+    CURRENT: './plugins/trss-akasha-terminal-plugin/config/akasha.config.yaml',
+    BACKUP: './plugins/trss-akasha-terminal-plugin/config/akasha.config.back.yaml'
+}
+
+export class VoidConfigManager extends plugin {
     constructor() {
         super({
-            /** 功能名称 */
-            name: '点赞',
-            /** 功能描述 */
-            dsc: '',
+            name: '虚空配置管理',
+            dsc: '管理虚空插件配置文件',
             event: 'message',
-            /** 优先级，数字越小等级越高 */
-            priority: 1000,
+            priority: 1,
             rule: [
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#?(强制)?(重置虚空|虚空重置)配置$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'command'
+                    reg: '^#?(强制)?(重置虚空|虚空重置)配置$',
+                    fnc: 'resetConfig'
                 },
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#?(发送|获取)?虚空配置$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'getconfig'
+                    reg: '^#?(发送|获取)?虚空配置$',
+                    fnc: 'getConfig'
                 }
             ]
         })
     }
+
     /**
-     * 
+     * 检查是否为管理员
+     * @param {Object} e 消息事件对象
+     * @returns {boolean} 是否为管理员
      */
-    async command(e) {
+    checkPermission(e) {
         if (!e.isMaster) {
-            e.reply([segment.at(e.user_id), `\n凡人，休得僭越！`]);
-            return true
+            e.reply([segment.at(e.user_id), '\n凡人，休得僭越！'])
+            return false
         }
-        if (!fs.existsSync(configyamlpath)) {//如果配置不存在，则复制一份默认配置到配置里面
-            fs.copyFileSync(`${_defpath}`, `${configyamlpath}`);
-            e.reply(`${configyamlpath}不存在配置，已经自动生成。重启后确保生效`)
-        }
-        else {
-            fs.copyFileSync(`${configyamlpath}`, `${configyamlbackpath}`);
-            fs.copyFileSync(`${_defpath}`, `${configyamlpath}`);
-            e.reply(`${configyamlpath}存在配置，已经自动重置并备份。重启后确保生效`)
-        }
+        return true
     }
-    async getconfig(e) {
-        if (!e.isMaster) {
-            e.reply([segment.at(e.user_id), `\n凡人，休得僭越！`]);
-            return true
+
+    /**
+     * 重置配置文件
+     * @param {Object} e 消息事件对象
+     */
+    async resetConfig(e) {
+        if (!this.checkPermission(e)) return true
+
+        try {
+            const { DEFAULT, CURRENT, BACKUP } = CONFIG_PATHS
+            
+            // 检查默认配置文件是否存在
+            if (!fs.existsSync(DEFAULT)) {
+                await e.reply('默认配置文件不存在，无法重置配置')
+                return true
+            }
+
+            if (!fs.existsSync(CURRENT)) {
+                // 配置文件不存在，直接复制默认配置
+                fs.copyFileSync(DEFAULT, CURRENT)
+                await e.reply('配置文件不存在，已自动生成默认配置。重启后生效')
+            } else {
+                // 配置文件存在，先备份再重置
+                fs.copyFileSync(CURRENT, BACKUP)
+                fs.copyFileSync(DEFAULT, CURRENT)
+                await e.reply('配置已重置并备份。重启后生效')
+            }
+        } catch (error) {
+            console.error('[配置管理] 重置配置失败:', error)
+            await e.reply('重置配置失败，请检查文件权限')
         }
-        if (!fs.existsSync(configyamlpath)) {
-            e.reply(`${configyamlpath}不存在。`)
+        return true
+    }
+
+    /**
+     * 获取配置文件
+     * @param {Object} e 消息事件对象
+     */
+    async getConfig(e) {
+        if (!this.checkPermission(e)) return true
+
+        try {
+            const { CURRENT } = CONFIG_PATHS
+            
+            if (!fs.existsSync(CURRENT)) {
+                await e.reply('配置文件不存在，请先重置配置')
+                return true
+            }
+
+            // 根据消息类型发送文件
+            if (e.isPrivate) {
+                await e.friend.sendFile(CURRENT)
+                await e.reply('配置文件已发送')
+            } else if (e.isGroup) {
+                await e.group.fs.upload(CURRENT)
+                await e.reply('配置文件已上传到群文件')
+            } else {
+                await e.reply('当前环境不支持文件发送')
+            }
+        } catch (error) {
+            console.error('[配置管理] 获取配置失败:', error)
+            await e.reply('获取配置文件失败，请稍后重试')
         }
-        if (e.isPrivate) {
-            e.friend.sendFile(configyamlpath)
-        }
-        if (e.isGroup) {
-            e.group.fs.upload(configyamlpath)
-        }
+        return true
     }
 }
+
+export default VoidConfigManager

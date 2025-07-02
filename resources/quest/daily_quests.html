@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日任务</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #5f27cd, #341f97);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0 0 20px 0;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .player-stats {
+            text-align: left;
+        }
+
+        .player-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .player-level, .quest-points {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .refresh-info {
+            background: linear-gradient(45deg, #e8f4fd, #d1ecf1);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #3498db;
+        }
+
+        .refresh-text {
+            color: #2980b9;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .refresh-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .refresh-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .quest-list {
+            padding: 20px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .quest-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #bdc3c7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quest-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .quest-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-card.completed {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+        }
+
+        .quest-card.claimed {
+            border-left-color: #95a5a6;
+            opacity: 0.8;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .quest-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .quest-status {
+            font-size: 2em;
+            margin-left: 15px;
+        }
+
+        .quest-status.pending {
+            color: #f39c12;
+        }
+
+        .quest-status.completed {
+            color: #27ae60;
+        }
+
+        .quest-status.claimed {
+            color: #95a5a6;
+        }
+
+        .quest-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: bold;
+            color: #5f27cd;
+            font-size: 0.9em;
+        }
+
+        .quest-rewards {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rewards-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .reward-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .reward-item {
+            background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+            color: #2c3e50;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .claim-button {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .claim-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .requirement {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .tips {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .player-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .refresh-info {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .quest-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .quest-status {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+
+            .tips {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 每日任务</h1>
+            <div class="player-info">
+                <div class="player-stats">
+                    <div class="player-name">{{username}}</div>
+                    <div class="player-level">等级: {{userLevel}}</div>
+                    <div class="quest-points">🏆 任务点数: {{questPoints}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="refresh-info">
+            <div class="refresh-text">⏰ 距离刷新还有: {{refreshTime}}</div>
+            <button class="refresh-button">🔄 手动刷新 (消耗 50 任务点数)</button>
+        </div>
+
+        <div class="quest-list">
+            {{#each quests}}
+            <div class="quest-card {{status}}">
+                <div class="quest-header">
+                    <div class="quest-info">
+                        <div class="quest-title">{{name}}</div>
+                        <div class="quest-description">{{description}}</div>
+                        {{#if requirement}}
+                        <div class="requirement">⚠️ {{requirement}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="quest-status {{status}}">{{statusIcon}}</div>
+                </div>
+
+                <div class="quest-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{progressPercent}}%"></div>
+                    </div>
+                    <div class="progress-text">{{progress}}/{{target}} ({{progressPercent}}%)</div>
+                </div>
+
+                <div class="quest-rewards">
+                    <div class="rewards-title">🎁 奖励</div>
+                    <div class="reward-items">
+                        {{#each rewards}}
+                        <div class="reward-item">
+                            <span>{{icon}}</span>
+                            <span>{{text}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                {{#if canClaim}}
+                <button class="claim-button">🎁 领取奖励</button>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="footer">
+            <div class="tips">
+                <div class="tip-item">
+                    <span>💡</span>
+                    <span>#领取奖励 [任务ID] - 领取已完成的任务奖励</span>
+                </div>
+                <div class="tip-item">
+                    <span>🏪</span>
+                    <span>#任务商店 - 使用任务点数兑换奖励</span>
+                </div>
+                <div class="tip-item">
+                    <span>📊</span>
+                    <span>#任务进度 - 查看详细进度</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

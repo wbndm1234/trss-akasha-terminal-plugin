@@ -1,85 +1,142 @@
 import { BotApi, AlemonApi, plugin } from '../../model/api/api.js'
-import fs from "fs";
-//项目路径
-//如果报错请删除Yunzai/data/目录中akasha文件夹
-const dirpath = "plugins/trss-akasha-terminal-plugin/data/";//文件夹路径
-var filename = `battle`;//文件名
-if (filename.indexOf(".json") == -1) {//如果文件名不包含.json
-    filename = filename + ".json";//添加.json
-}
-let Template = {//创建该用户
-    "experience": 0,
-    "level": 0,
-    "levelname": '无等级',
-    "Privilege": 0,
-};
-//配置一些有意思的参数
+import fs from 'fs'
+import path from 'path'
+import dataManager from '../../components/data_manager.js'
 
-export class duel_seelevel extends plugin {
+/**
+ * 用户等级查询功能
+ * 提供用户等级、经验、境界信息查询
+ */
+
+// 配置常量
+const CONFIG = {
+    DATA_PATH: 'plugins/trss-akasha-terminal-plugin/data/',
+    DATA_FILE: 'battle.json'
+}
+
+// 用户数据模板
+const USER_TEMPLATE = {
+    experience: 0,
+    level: 0,
+    levelname: '无等级',
+    Privilege: 0
+}
+
+export class UserLevelQuery extends plugin {
     constructor() {
         super({
-            /** 功能名称 */
-            name: '我的等级',
-            /** 功能描述 */
-            dsc: '',
+            name: '用户等级查询',
+            dsc: '查询用户等级、经验和境界信息',
             event: 'message',
-            /** 优先级，数字越小等级越高 */
-            priority: 1000,
+            priority: 1,
             rule: [
                 {
-                    /** 命令正则匹配 */
-                    reg: "^#我的(等级|经验)$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'seelevel',
-                    /** 命令正则匹配 */
-                    reg: "^#我的(境界)$", //匹配消息正则，命令正则
-                    /** 执行方法 */
-                    fnc: 'seelevel2'
+                    reg: '^#我的(等级|经验)$',
+                    fnc: 'queryLevel'
+                },
+                {
+                    reg: '^#我的境界$',
+                    fnc: 'queryRealm'
                 }
             ]
         })
     }
+
     /**
-     * 
+     * 确保数据目录和文件存在
      */
-    async seelevel(e) {
-        let user_id = e.user_id;
-        if (!fs.existsSync(dirpath)) {//如果文件夹不存在
-            fs.mkdirSync(dirpath);//创建文件夹
+    async ensureDataFile() {
+        const dirPath = CONFIG.DATA_PATH
+        const filePath = path.join(dirPath, CONFIG.DATA_FILE)
+        
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true })
         }
-        if (!fs.existsSync(dirpath + "/" + filename)) {//如果文件不存在
-            fs.writeFileSync(dirpath + "/" + filename, JSON.stringify({//创建文件
-            }));
+        
+        if (!fs.existsSync(filePath)) {
+            await dataManager.saveJsonData(filePath, {})
         }
-        var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
-        if (!json.hasOwnProperty(user_id)) {//如果json中不存在该用户
-            json[e.user_id] = Template
-        }
-        if (json[e.user_id].experience < 1) {
-            json[e.user_id].experience = 0
-        }//当经验小于1时，自动归零
-        e.reply(`你的等级是${json[e.user_id].level},你的经验是${json[e.user_id].experience},是否是开挂${json[e.user_id].Privilege}`)
-        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
-        return
+        
+        return filePath
     }
-    async seelevel(e) {
-        let user_id = e.user_id;
-        if (!fs.existsSync(dirpath)) {//如果文件夹不存在
-            fs.mkdirSync(dirpath);//创建文件夹
+
+    /**
+     * 获取用户数据
+     * @param {string} userId 用户ID
+     * @returns {Object} 用户数据
+     */
+    async getUserData(userId) {
+        try {
+            const filePath = await this.ensureDataFile()
+            const data = await dataManager.loadJsonData(filePath)
+            
+            if (!data[userId]) {
+                data[userId] = { ...USER_TEMPLATE }
+                await dataManager.saveJsonData(filePath, data)
+            }
+            
+            // 确保经验值不为负数
+            if (data[userId].experience < 0) {
+                data[userId].experience = 0
+                await dataManager.saveJsonData(filePath, data)
+            }
+            
+            return data[userId]
+        } catch (error) {
+            console.error('[等级查询] 获取用户数据失败:', error)
+            return { ...USER_TEMPLATE }
         }
-        if (!fs.existsSync(dirpath + "/" + filename)) {//如果文件不存在
-            fs.writeFileSync(dirpath + "/" + filename, JSON.stringify({//创建文件
-            }));
+    }
+
+    /**
+     * 查询用户等级和经验
+     * @param {Object} e 消息事件对象
+     */
+    async queryLevel(e) {
+        try {
+            const userData = await this.getUserData(e.user_id)
+            const privilegeText = userData.Privilege === 1 ? '是' : '否'
+            
+            const msg = [
+                '📊 等级信息',
+                '─────────────',
+                `🎯 等级: ${userData.level}`,
+                `⭐ 经验: ${userData.experience}`,
+                `🔧 特权: ${privilegeText}`
+            ].join('\n')
+            
+            await e.reply(msg)
+        } catch (error) {
+            console.error('[等级查询] 查询失败:', error)
+            await e.reply('查询等级信息失败，请稍后重试')
         }
-        var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
-        if (!json.hasOwnProperty(user_id)) {//如果json中不存在该用户
-            json[e.user_id] = Template
+        return true
+    }
+
+    /**
+     * 查询用户境界
+     * @param {Object} e 消息事件对象
+     */
+    async queryRealm(e) {
+        try {
+            const userData = this.getUserData(e.user_id)
+            const privilegeText = userData.Privilege === 1 ? '是' : '否'
+            
+            const msg = [
+                '🏮 境界信息',
+                '─────────────',
+                `⚡ 境界: ${userData.levelname}`,
+                `🔥 内力: ${userData.experience}`,
+                `🔧 特权: ${privilegeText}`
+            ].join('\n')
+            
+            await e.reply(msg)
+        } catch (error) {
+            console.error('[境界查询] 查询失败:', error)
+            await e.reply('查询境界信息失败，请稍后重试')
         }
-        if (json[e.user_id].experience < 1) {
-            json[e.user_id].experience = 0
-        }//当内力小于1时，自动归零
-        e.reply(`你的境界是${json[e.user_id].levelname},你的内力是${json[e.user_id].experience},是否是开挂${json[e.user_id].Privilege}`)
-        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
-        return
+        return true
     }
 }
+
+export default UserLevelQuery

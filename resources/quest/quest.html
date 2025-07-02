@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="quest.css">
+    <title>任务系统</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 虚空任务中心</h1>
+            <div class="player-info">
+                <div class="avatar">{{playerAvatar}}</div>
+                <div class="player-stats">
+                    <div class="player-name">{{playerName}}</div>
+                    <div class="player-level">冒险者等级: {{adventurerLevel}}</div>
+                    <div class="quest-points">任务点数: {{questPoints}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quest-overview">
+            <div class="overview-card">
+                <div class="overview-icon">📅</div>
+                <div class="overview-content">
+                    <div class="overview-title">今日任务</div>
+                    <div class="overview-value">{{dailyCompleted}}/{{dailyTotal}}</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">📆</div>
+                <div class="overview-content">
+                    <div class="overview-title">周常任务</div>
+                    <div class="overview-value">{{weeklyCompleted}}/{{weeklyTotal}}</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">⭐</div>
+                <div class="overview-content">
+                    <div class="overview-title">特殊任务</div>
+                    <div class="overview-value">{{specialCompleted}}/{{specialTotal}}</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">🏆</div>
+                <div class="overview-content">
+                    <div class="overview-title">完成率</div>
+                    <div class="overview-value">{{completionRate}}%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quest-tabs">
+            <div class="tab-button active" data-tab="daily">📅 每日任务</div>
+            <div class="tab-button" data-tab="weekly">📆 周常任务</div>
+            <div class="tab-button" data-tab="special">⭐ 特殊任务</div>
+            <div class="tab-button" data-tab="completed">✅ 已完成</div>
+        </div>
+        
+        <div class="quest-content">
+            <div class="tab-content active" id="daily">
+                <div class="quest-section">
+                    <h2>📅 每日任务</h2>
+                    <div class="refresh-info">
+                        <div class="refresh-text">距离刷新还有: {{dailyRefreshTime}}</div>
+                        <div class="refresh-button">🔄 手动刷新 (消耗 50 任务点数)</div>
+                    </div>
+                    <div class="quest-list">
+                        {{#each dailyQuests}}
+                        <div class="quest-card {{status}} {{difficulty}}">
+                            <div class="quest-header">
+                                <div class="quest-icon">{{icon}}</div>
+                                <div class="quest-info">
+                                    <div class="quest-title">{{title}}</div>
+                                    <div class="quest-difficulty {{difficulty}}">{{difficultyText}}</div>
+                                </div>
+                                <div class="quest-status {{status}}">{{statusText}}</div>
+                            </div>
+                            <div class="quest-description">{{description}}</div>
+                            <div class="quest-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{progressPercentage}}%"></div>
+                                </div>
+                                <div class="progress-text">{{currentProgress}}/{{targetProgress}}</div>
+                            </div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">奖励:</div>
+                                {{#each rewards}}
+                                <div class="reward-item">
+                                    <span class="reward-icon">{{icon}}</span>
+                                    <span class="reward-text">{{text}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                            {{#if canClaim}}
+                            <div class="claim-button">🎁 领取奖励</div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="weekly">
+                <div class="quest-section">
+                    <h2>📆 周常任务</h2>
+                    <div class="refresh-info">
+                        <div class="refresh-text">距离刷新还有: {{weeklyRefreshTime}}</div>
+                    </div>
+                    <div class="quest-list">
+                        {{#each weeklyQuests}}
+                        <div class="quest-card {{status}} {{difficulty}}">
+                            <div class="quest-header">
+                                <div class="quest-icon">{{icon}}</div>
+                                <div class="quest-info">
+                                    <div class="quest-title">{{title}}</div>
+                                    <div class="quest-difficulty {{difficulty}}">{{difficultyText}}</div>
+                                </div>
+                                <div class="quest-status {{status}}">{{statusText}}</div>
+                            </div>
+                            <div class="quest-description">{{description}}</div>
+                            <div class="quest-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{progressPercentage}}%"></div>
+                                </div>
+                                <div class="progress-text">{{currentProgress}}/{{targetProgress}}</div>
+                            </div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">奖励:</div>
+                                {{#each rewards}}
+                                <div class="reward-item">
+                                    <span class="reward-icon">{{icon}}</span>
+                                    <span class="reward-text">{{text}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                            {{#if canClaim}}
+                            <div class="claim-button">🎁 领取奖励</div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="special">
+                <div class="quest-section">
+                    <h2>⭐ 特殊任务</h2>
+                    <div class="special-info">
+                        <div class="info-text">特殊任务不会自动刷新，完成后将永久消失</div>
+                    </div>
+                    <div class="quest-list">
+                        {{#each specialQuests}}
+                        <div class="quest-card {{status}} {{difficulty}} special">
+                            <div class="quest-header">
+                                <div class="quest-icon">{{icon}}</div>
+                                <div class="quest-info">
+                                    <div class="quest-title">{{title}}</div>
+                                    <div class="quest-difficulty {{difficulty}}">{{difficultyText}}</div>
+                                    <div class="quest-rarity">{{rarity}}</div>
+                                </div>
+                                <div class="quest-status {{status}}">{{statusText}}</div>
+                            </div>
+                            <div class="quest-description">{{description}}</div>
+                            <div class="quest-lore">{{lore}}</div>
+                            <div class="quest-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{progressPercentage}}%"></div>
+                                </div>
+                                <div class="progress-text">{{currentProgress}}/{{targetProgress}}</div>
+                            </div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">奖励:</div>
+                                {{#each rewards}}
+                                <div class="reward-item special">
+                                    <span class="reward-icon">{{icon}}</span>
+                                    <span class="reward-text">{{text}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                            {{#if canClaim}}
+                            <div class="claim-button special">🌟 领取特殊奖励</div>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="completed">
+                <div class="quest-section">
+                    <h2>✅ 已完成任务</h2>
+                    <div class="completed-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-text">总完成数: {{totalCompleted}}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-text">完成率: {{overallCompletionRate}}%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-text">总收益: {{totalRewards}}</div>
+                        </div>
+                    </div>
+                    <div class="quest-list completed">
+                        {{#each completedQuests}}
+                        <div class="quest-card completed {{difficulty}}">
+                            <div class="quest-header">
+                                <div class="quest-icon">{{icon}}</div>
+                                <div class="quest-info">
+                                    <div class="quest-title">{{title}}</div>
+                                    <div class="quest-difficulty {{difficulty}}">{{difficultyText}}</div>
+                                </div>
+                                <div class="completion-time">{{completionTime}}</div>
+                            </div>
+                            <div class="quest-description">{{description}}</div>
+                            <div class="quest-rewards">
+                                <div class="rewards-title">已获得奖励:</div>
+                                {{#each rewards}}
+                                <div class="reward-item claimed">
+                                    <span class="reward-icon">{{icon}}</span>
+                                    <span class="reward-text">{{text}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quest-shop-section">
+            <h2>🏪 任务商店</h2>
+            <div class="shop-info">
+                <div class="points-display">
+                    <div class="points-icon">🏆</div>
+                    <div class="points-text">可用任务点数: {{questPoints}}</div>
+                </div>
+            </div>
+            <div class="shop-items">
+                {{#each shopItems}}
+                <div class="shop-item {{rarity}}">
+                    <div class="item-icon">{{icon}}</div>
+                    <div class="item-info">
+                        <div class="item-name">{{name}}</div>
+                        <div class="item-description">{{description}}</div>
+                        <div class="item-rarity {{rarity}}">{{rarityText}}</div>
+                    </div>
+                    <div class="item-price">
+                        <div class="price-icon">🏆</div>
+                        <div class="price-text">{{price}}</div>
+                    </div>
+                    {{#if canBuy}}
+                    <div class="buy-button">💰 购买</div>
+                    {{else}}
+                    <div class="buy-button disabled">点数不足</div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="achievements-section">
+            <h2>🏅 任务成就</h2>
+            <div class="achievements-grid">
+                {{#each achievements}}
+                <div class="achievement-card {{#if unlocked}}unlocked{{else}}locked{{/if}}">
+                    <div class="achievement-icon">{{icon}}</div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">{{title}}</div>
+                        <div class="achievement-description">{{description}}</div>
+                        {{#if unlocked}}
+                        <div class="achievement-date">解锁时间: {{unlockDate}}</div>
+                        {{else}}
+                        <div class="achievement-progress">进度: {{progress}}/{{target}}</div>
+                        {{/if}}
+                    </div>
+                    {{#if unlocked}}
+                    <div class="achievement-badge">✅</div>
+                    {{else}}
+                    <div class="achievement-progress-bar">
+                        <div class="progress-fill" style="width: {{progressPercentage}}%"></div>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Create By Akasha-Terminal-Plugin</p>
+        </div>
+    </div>
+</body>
+</html>

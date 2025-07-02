@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="couple_date.css">
+    <title>约会</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💕 浪漫约会时光</h1>
+            <div class="date-info">
+                <div class="date-location">{{dateLocation}}</div>
+                <div class="date-time">{{dateTime}}</div>
+            </div>
+        </div>
+        
+        <div class="couple-section">
+            <div class="couple-avatars">
+                <div class="avatar-container">
+                    <div class="avatar">{{userAvatar}}</div>
+                    <div class="username">{{username}}</div>
+                    <div class="mood">{{userMood}}</div>
+                </div>
+                <div class="heart-animation">
+                    <div class="heart">💖</div>
+                    <div class="heart">💕</div>
+                    <div class="heart">💗</div>
+                </div>
+                <div class="avatar-container">
+                    <div class="avatar">{{partnerAvatar}}</div>
+                    <div class="username">{{partnerName}}</div>
+                    <div class="mood">{{partnerMood}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="date-activities">
+            <h2>🎯 约会活动</h2>
+            <div class="activities-grid">
+                {{#each activities}}
+                <div class="activity-card {{status}}">
+                    <div class="activity-icon">{{icon}}</div>
+                    <div class="activity-name">{{name}}</div>
+                    <div class="activity-description">{{description}}</div>
+                    <div class="activity-result">
+                        <div class="love-gain">💕 +{{loveGain}}</div>
+                        <div class="money-cost">💰 -{{moneyCost}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="date-result">
+            <div class="result-header">
+                <h2>💝 约会结果</h2>
+            </div>
+            <div class="result-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">💕</div>
+                    <div class="stat-label">爱意增加</div>
+                    <div class="stat-value">+{{totalLoveGain}}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">花费金币</div>
+                    <div class="stat-value">-{{totalMoneyCost}}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-label">约会评分</div>
+                    <div class="stat-value">{{dateRating}}/10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-label">关系状态</div>
+                    <div class="stat-value">{{relationshipStatus}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="date-memories">
+            <h2>📸 美好回忆</h2>
+            <div class="memory-card">
+                <div class="memory-text">{{memoryText}}</div>
+                <div class="memory-quote">"{{memoryQuote}}"</div>
+            </div>
+        </div>
+        
+        <div class="next-date">
+            <div class="cooldown-info">
+                <div class="cooldown-icon">⏰</div>
+                <div class="cooldown-text">下次约会时间: {{nextDateTime}}</div>
+            </div>
+            <div class="date-suggestions">
+                <h3>💡 下次约会建议</h3>
+                <div class="suggestions-list">
+                    {{#each suggestions}}
+                    <div class="suggestion-item">
+                        <span class="suggestion-icon">{{icon}}</span>
+                        <span class="suggestion-text">{{text}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="love-tips">
+                <h3>💝 恋爱小贴士</h3>
+                <ul>
+                    <li>经常约会可以增进感情</li>
+                    <li>不同的约会活动有不同的效果</li>
+                    <li>约会需要消耗一定的金币</li>
+                    <li>约会评分越高，获得的爱意越多</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
