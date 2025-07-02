@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import lodash from 'lodash'
 import path from 'path'
 import { _paths, cfg } from '#guoba.platform'
@@ -393,7 +392,6 @@ export function supportGuoba () {
     }
   }
 }
-=======
 import lodash from 'lodash'
 import path from 'path'
 import { _paths, cfg } from '#guoba.platform'
@@ -788,4 +786,3 @@ export function supportGuoba () {
     }
   }
 }
->>>>>>> 49d5867c59564315c58663292e796a3723253e0f
