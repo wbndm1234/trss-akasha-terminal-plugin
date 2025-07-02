@@ -1,5 +1,7 @@
 # TRSS Akasha Terminal Plugin
 
+![:动态访问量](https://count.kjchmc.cn/get/@:xtower-plugin)
+
 一个功能丰富的Yunzai-Bot插件（trss版本单独开发版），提供完整的游戏系统、MySQL数据库支持和Web管理界面。
 
 ## 🌟 主要功能
@@ -29,11 +31,34 @@
 
 ### 安装插件
 
-使用 git 进行安装（推荐）
+使用 git 进行安装
+
+<details>
+<summary><b>① (推荐) 使用 Github</b></summary>
 
 ```bash
-git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
+git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/Xtower-Plugin/
 ```
+
+</details>
+
+<details>
+<summary><b>② (国内) 使用 Gitee</b></summary>
+
+```bash
+git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/Xtower-Plugin/
+```
+
+</details>
+
+<details>
+<summary><b>③ (备用) 使用 Gitcode</b></summary>
+
+```bash
+git clone --depth=1 https://gitcode.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/Xtower-Plugin/
+```
+
+</details>
 
 或者直接下载并解压到 plugins 目录
 
