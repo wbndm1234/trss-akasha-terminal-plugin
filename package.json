@@ -1,9 +1,8 @@
 {
   "name": "trss-akasha-terminal-plugin",
   "version": "1.0.0",
-<<<<<<< HEAD
   "author": "dmqaq,nahida22",
-  "description": "Yunzai-Bot for trss-akasha-terminal-plugin",
+  "description": "trss-akasha-terminal-plugin",
   "type": "module",
    "imports": {
     "#guoba.platform": "./components/guoba-platform.js"
@@ -24,12 +23,4 @@
     "mysql",
     "game"
   ]
-=======
-  "author": "dmqaq",
-  "description": "trss-akasha-terminal-plugin",
-  "type": "module",
-  "imports": {
-    "#guoba.platform": "./components/guoba-platform.js"
-  }
->>>>>>> 49d5867c59564315c58663292e796a3723253e0f
 }
