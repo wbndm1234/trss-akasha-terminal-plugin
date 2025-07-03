@@ -1,5 +1,7 @@
 # TRSS Akasha Terminal Plugin
 
+![:动态访问量](https://count.kjchmc.cn/get/@:xtower-plugin)
+
 一个功能丰富的Yunzai-Bot插件（trss版本单独开发版），提供完整的游戏系统、MySQL数据库支持和Web管理界面。
 
 ## 🌟 主要功能
@@ -29,19 +31,42 @@
 
 ### 安装插件
 
-使用 git 进行安装（推荐）
+使用 git 进行安装
+
+<details>
+<summary><b>① (推荐) 使用 Github</b></summary>
+
+```bash
+git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
+```
+
+</details>
+
+<details>
+<summary><b>② (国内) 使用 Gitee</b></summary>
 
 ```bash
 git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
 ```
 
+</details>
+
+<details>
+<summary><b>③ (备用) 使用 Gitcode</b></summary>
+
+```bash
+git clone --depth=1 https://gitcode.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
+```
+
+</details>
+
 或者直接下载并解压到 plugins 目录
 
-### 初始化环境
+### 初始化依赖
 
 ```bash
 cd ./plugins/trss-akasha-terminal-plugin/
-node install.js
+pnpm i
 ```
 
 ### 启动服务
@@ -49,10 +74,14 @@ node install.js
 ```bash
 # 启动Web管理界面
 #启动webui
+```
 
+```bash
 # 启动MySQL数据库连接
 #启动mysql
+```
 
+```bash
 # 查看服务状态
 #webui状态
 #mysql状态
@@ -290,7 +319,7 @@ export const cfg = {
   </details>
    
    ## ❤️ 贡献
-  - 这个是原[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin) 仓库，我与原插件作者二创以适配trss崽（喵崽的ICQQ还是太牢了），我建库加写帮助放武器图，[越追越远](https://gitee.com/go-farther-and-farther)+[上一刻](https://gitee.com/tyg211375)+[我](https://gitee.com/dmqaq)来改的代码
+  - 这个是原[虚空插件](https://gitee.com/go-farther-and-farther/akasha-terminal-plugin) 仓库，我与原插件作者二创以适配trss崽（喵崽的ICQQ还是太牢了），[越追越远](https://gitee.com/go-farther-and-farther)+[上一刻](https://gitee.com/tyg211375)+[nahida](https://gitee.com/nahida22)+[我](https://gitee.com/dmqaq)来改的代码
   
   **提交 Bug 或建议**：
   - 通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
