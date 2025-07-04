@@ -47,7 +47,7 @@ git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git
 <summary><b>② (国内) 使用 Gitee</b></summary>
 
 ```bash
-git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/Xtower-Plugin/
+git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
 ```
 
 </details>
