@@ -4,14 +4,15 @@
   "author": "dmqaq,nahida22",
   "description": "虚空插件trss版",
   "type": "module",
-   "imports": {
+  "imports": {
     "#guoba.platform": "./components/guoba-platform.js"
   },
   "main": "./index.js",
   "dependencies": {
-    "mysql2": "^3.6.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "ioredis": "^5.6.1",
+    "mysql2": "^3.6.0"
   },
   "scripts": {
     "install-deps": "npm install mysql2 express cors",
