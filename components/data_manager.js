@@ -68,7 +68,7 @@ class DataManager {
     async saveUser(id, json, Template, filename, is_save) {
        
         if (arguments.length === 2) {
-            和json
+            // 保存用户数据
             if (this.isMySQL()) {
                 return await this.saveUserMySQL(id, json)
             } else {
@@ -104,6 +104,7 @@ class DataManager {
 
     // 获取用户战斗数据
     async getUserBattle(id, json, is_save) {
+     
         if (arguments.length === 1) {
             
             if (this.isMySQL()) {
@@ -123,6 +124,7 @@ class DataManager {
 
     // MySQL用户战斗数据
     async getUserBattleMySQL(id, json, is_save) {
+      
         if (arguments.length === 1) {
             const data = await mysqlManager.getUserData(id, 'battle')
             if (data) {
@@ -190,6 +192,7 @@ class DataManager {
     }
 
     async getUserHome(id, json, filename, is_save) {
+       
         if (arguments.length === 1) {
             
             if (this.isMySQL()) {
@@ -209,13 +212,13 @@ class DataManager {
     }
 
     async getUserHomeMySQL(id, json, filename, is_save) {
-      
+        
         if (arguments.length === 1) {
             const data = await mysqlManager.getUserData(id, 'home')
             if (data) {
                 return {
                     [id]: {
-                        s: data.spouse_id || 0,
+                        s: data.spouse_id ,
                         love: data.love || 0,
                         money: data.money || 0,
                         wait: data.wait || 0
@@ -224,7 +227,7 @@ class DataManager {
             } else {
                 return {
                     [id]: {
-                        s: 0,
+                        s: '',
                         love: 0,
                         money: 0,
                         wait: 0
@@ -239,9 +242,9 @@ class DataManager {
             if (data) {
                 const result = {
                     [id]: {
-                        s: data.spouse_id || 0,
+                        s: data.spouse_id ,
                         wait: data.wait_status || 0,
-                        money: parseInt(data.money) || 100,
+                        money: parseInt(data.money) || 500,
                         love: data.love || 0
                     }
                 }
@@ -270,7 +273,7 @@ class DataManager {
                 return result
             } else {
                 const defaultData = {
-                    spouse_id: '0',
+                    spouse_id: '',
                     wait_status: 0,
                     money: 100,
                     love: 0
@@ -278,7 +281,7 @@ class DataManager {
                 await mysqlManager.updateUserData(id, 'home', defaultData)
                 return {
                     [id]: {
-                        s: 0,
+                        s: '',
                         wait: 0,
                         money: 100,
                         love: 0
@@ -288,9 +291,9 @@ class DataManager {
         } else {
             if (json[id]) {
                 const data = {
-                    spouse_id: json[id].s || '0',
+                    spouse_id: json[id].s,
                     wait_status: json[id].wait || 0,
-                    money: json[id].money || 100,
+                    money: json[id].money || 1000,
                     love: json[id].love || 0,
                     money_binary: json[id].money ? json[id].money.toString(2) : null,
                     love_binary: json[id].love ? json[id].love.toString(2) : null
@@ -364,9 +367,14 @@ class DataManager {
 
     // 保存用户位置数据
     async saveUserPlace(id, json, filename, is_save) {
-       
+        // 验证用户ID的有效性
+        if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+            (typeof id === 'string' && id.length < 5)) {
+            console.warn(`[saveUserPlace] 无效的用户ID: ${id}`);
+            return json;
+        }
+        
         if (arguments.length === 2) {
-            和json
             if (this.isMySQL()) {
                 return await this.saveUserPlaceMySQL(id, json)
             } else {
@@ -382,36 +390,11 @@ class DataManager {
         }
     }
 
-    // MySQL版本的获取用户位置数据
-    async getUserPlaceMySQL(id, json, filename, is_save) {
-      
-        if (arguments.length === 1) {
-            const data = await mysqlManager.getUserData(id, 'place')
-            if (data) {
-                return {
-                    place: data.current_place || 'home',
-                    placetime: data.place_time || 0
-                }
-            }
-            return { place: 'home', placetime: 0 }
-        }
-        
-        if (!is_save) {
-            // 读
-            const data = await mysqlManager.getUserData(id, 'place')
-            if (data) {
-                json[id] = {
-                    place: data.current_place || 'home',
-                    placetime: data.place_time || 0
-                }
-            }
-        }
-        return json
-    }
+
 
     // MySQL版本的保存用户位置数据
     async saveUserPlaceMySQL(id, json, filename, is_save) {
-      
+       
         if (arguments.length === 2) {
             const data = {
                 current_place: json.place || 'home',
@@ -503,9 +486,8 @@ class DataManager {
 
     // 保存用户房屋数据
     async saveUserHouse(id, json, filename, is_save) {
-       
+        
         if (arguments.length === 2) {
-            和json
             if (this.isMySQL()) {
                 return await this.saveUserHouseMySQL(id, json)
             } else {
@@ -523,7 +505,9 @@ class DataManager {
 
     // MySQL版本的保存用户房屋数据
     async saveUserHouseMySQL(id, json, filename, is_save) {
-      
+        
+        
+        
         if (arguments.length === 2) {
             const data = {
                 house_name: json.name || '小破屋',
@@ -603,8 +587,8 @@ class DataManager {
     // 保存用户战斗数据
     async saveUserBattle(id, json, is_save) {
        
+       
         if (arguments.length === 2) {
-            和json
             if (this.isMySQL()) {
                 return await this.saveUserBattleMySQL(id, json)
             } else {
@@ -622,7 +606,9 @@ class DataManager {
 
     // MySQL版本的保存用户战斗数据
     async saveUserBattleMySQL(id, json, is_save) {
-      
+        // 验证用户ID的有效性
+       
+        
         if (arguments.length === 2) {
             const data = {
                 experience: json.experience || 0,
@@ -650,8 +636,8 @@ class DataManager {
     // 保存用户小妾数据
     async saveUserxiaoqie(id, json, filename, is_save) {
        
+        
         if (arguments.length === 2) {
-            和json
             if (this.isMySQL()) {
                 return await this.saveUserxiaoqieMySQL(id, json)
             } else {
@@ -688,6 +674,7 @@ class DataManager {
     // MySQL版本的保存用户小妾数据
     async saveUserxiaoqieMySQL(id, json, filename, is_save) {
       
+        
         if (arguments.length === 2) {
             await mysqlManager.updateUserData(id, 'xiaoqie', json)
             return json
@@ -854,6 +841,8 @@ class DataManager {
     }
     // 保存用户家园数据
     async saveUserHome(id, json, filename, is_save) {
+        // 验证用户ID的有效性
+       
        
         if (arguments.length === 2) {
             if (this.isMySQL()) {
@@ -878,10 +867,10 @@ class DataManager {
       
         if (arguments.length === 2) {
             const data = {
-                spouse_id: json.s || '0',
+                spouse_id: json.s,
                 wait_status: json.wait || 0,
-                money: json.money || 100,
-                love: json.love || 0,
+                money: json.money || 1000,
+                love: json.love, 
                 money_binary: json.money ? json.money.toString(2) : null,
                 love_binary: json.love ? json.love.toString(2) : null
             }
@@ -892,7 +881,7 @@ class DataManager {
       
         if (json[id]) {
             const data = {
-                spouse_id: json[id].s || '0',
+                spouse_id: json[id].s,
                 wait_status: json[id].wait || 0,
                 money: json[id].money || 100,
                 love: json[id].love || 0,
@@ -904,8 +893,20 @@ class DataManager {
         return json
     }
 
-    // 通用JSON数据读取方法
+    // JSON数据读取方法
     async loadJsonData(filePath, defaultData = {}) {
+        if (filePath.includes('/resources/') || filePath.includes('\\resources\\')) {
+            if (!fs.existsSync(filePath)) {
+                const dir = path.dirname(filePath)
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir, { recursive: true })
+                }
+                fs.writeFileSync(filePath, JSON.stringify(defaultData, null, 2))
+                return defaultData
+            }
+            return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+        }
+        
         if (this.isMySQL()) {
             // 从文件路径提取数据类型
             const fileName = path.basename(filePath, '.json')
@@ -915,7 +916,23 @@ class DataManager {
             if (!fileName.includes('user_')) {
                 try {
                     const globalData = await mysqlManager.getGlobalData(dataType)
-                    return globalData || defaultData
+                    // 如果MySQL中没有数据，尝试从本地文件读取并同步到MySQL
+                    if (!globalData || Object.keys(globalData).length === 0) {
+                        console.log(`MySQL中没有${dataType}数据，尝试从本地文件读取`)
+                        if (fs.existsSync(filePath)) {
+                            const localData = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+                            // 将本地数据同步到MySQL
+                            try {
+                                await mysqlManager.saveGlobalData(dataType, localData)
+                                console.log(`已将${dataType}数据同步到MySQL`)
+                            } catch (syncError) {
+                                console.warn(`同步${dataType}数据到MySQL失败: ${syncError.message}`)
+                            }
+                            return localData
+                        }
+                        return defaultData
+                    }
+                    return globalData
                 } catch (error) {
                     console.warn(`MySQL读取全局数据失败，使用本地文件: ${error.message}`)
                     // 如果MySQL读取失败，回退到本地文件
@@ -1010,6 +1027,60 @@ class DataManager {
             const allInventoryData = await this.loadJsonData(inventoryPath, {})
             allInventoryData[userId] = inventoryData
             return await this.saveJsonData(inventoryPath, allInventoryData)
+        }
+    }
+
+    // 获取用户工作历史
+    async getUserWorkHistory(userId) {
+        try {
+            if (this.isMySQL()) {
+                // MySQL存储
+                const data = await mysqlManager.getUserData(userId, 'work_history')
+                return data ? data.history : []
+            } else {
+                // 文件存储
+                const workHistoryPath = path.join(__dirname, '..', 'data', 'user_work_history.json')
+                
+                if (!fs.existsSync(workHistoryPath)) {
+                    return []
+                }
+                
+                const allHistories = JSON.parse(fs.readFileSync(workHistoryPath, 'utf8'))
+                return allHistories[userId] || []
+            }
+        } catch (error) {
+            console.error('获取用户工作历史失败:', error)
+            return []
+        }
+    }
+
+    // 保存用户工作历史
+    async saveUserWorkHistory(userId, historyData) {
+        try {
+            if (this.isMySQL()) {
+                // MySQL存储
+                await mysqlManager.updateUserData(userId, 'work_history', { history: historyData })
+            } else {
+                // 文件存储
+                const workHistoryPath = path.join(__dirname, '..', 'data', 'user_work_history.json')
+                let allHistories = {}
+                
+                if (fs.existsSync(workHistoryPath)) {
+                    allHistories = JSON.parse(fs.readFileSync(workHistoryPath, 'utf8'))
+                }
+                
+                allHistories[userId] = historyData
+                
+                // 确保目录存在
+                const dataDir = path.dirname(workHistoryPath)
+                if (!fs.existsSync(dataDir)) {
+                    fs.mkdirSync(dataDir, { recursive: true })
+                }
+                
+                fs.writeFileSync(workHistoryPath, JSON.stringify(allHistories, null, 2))
+            }
+        } catch (error) {
+            console.error('保存用户工作历史失败:', error)
         }
     }
 }

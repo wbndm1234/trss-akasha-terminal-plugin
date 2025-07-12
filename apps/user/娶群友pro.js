@@ -80,7 +80,7 @@ export class Wifepro extends plugin {
                     fnc: 'coupleAdventure'
                 },
                 {
-                    reg: '^#?(爱情银行|存爱心)$',
+                    reg: '^#?(cp银行|存爱心)$',
                     fnc: 'loveBank'
                 },
                 {
@@ -115,11 +115,10 @@ export class Wifepro extends plugin {
         const groupId = e.group_id
         const commandName = '约会'
         
-        try {
             await mysqlManager.logCommandUsage(userId, groupId, commandName, e.msg, true)
         const filename = `${groupId}.json`
         
-        const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+        const homejson = await dataManager.getUserHome(userId, {}, filename, false)
         if (!homejson[userId] || homejson[userId].s === 0) {
             await e.reply('你还没有老婆，无法约会！')
             return true
@@ -186,13 +185,15 @@ export class Wifepro extends plugin {
                 await TextHelper.consumeWorkBoost(userId, groupId)
             }
             
-            await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+            await dataManager.saveUserHome(userId, homejson[userId], filename, true)
             
             // 更新约会任务进度
             const questSystem = new QuestSystem()
             await questSystem.updateQuestProgress(userId, groupId, 'date_count', 1, true)
-            // 更新好感度相关特殊任务
-            await questSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love, false)
+                // 更新爱心相关特殊任务
+                await questSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love, false)
+                // 更新社交互动计数
+                await questSystem.updateQuestProgress(userId, groupId, 'interaction_count', 1, true)
             
             await e.reply([
                 global.segment.at(userId), '\n',
@@ -205,7 +206,7 @@ export class Wifepro extends plugin {
             ])
         } else {
             homejson[userId].money -= Math.floor(randomEvent.money_cost / 2)
-            await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+            await dataManager.saveUserHome(userId, homejson[userId], filename, true)
             
             await e.reply([
                 global.segment.at(userId), '\n',
@@ -226,7 +227,7 @@ export class Wifepro extends plugin {
             userAvatar: '👤',
             username: e.sender.card || e.sender.nickname || '未知用户',
             level: await TextHelper.getUserLevel(userId),
-            money: await TextHelper.getUserMoney(userId),
+            money: await TextHelper.getUserMoney(userId, groupId),
             wifeAvatar: '👤',
             wifeName: homejson[userId].s_name || '未知',
             loveDays: Math.floor((Date.now() - (homejson[userId].marriageTime || Date.now())) / (1000 * 60 * 60 * 24)),
@@ -247,33 +248,16 @@ export class Wifepro extends plugin {
             interestRate: 2.5
         }
         
-        try {
-            const img = await puppeteer.screenshot('date', {
-                tplFile: './resources/date/date.html',
-                cssPath: './resources/date/date.css',
-                ...templateData
-            })
+
             
-            if (img) {
-                await e.reply(img)
-            } else {
-                TextHelper.showDateResultText(e, templateData)
-            }
-        } catch (error) {
-            console.error('约会渲染失败:', error)
-            TextHelper.showDateResultText(e, templateData)
-        }
-        
-        
+          await this.renderImage(e, 'date', { 
+                ...templateData,
+            });
+            
         const dateCooldown = cooldownConfig.getEnhancedWifeCooldown('date_cooldown', 3600)
         await redis.set(`akasha:enhanced-date-cd:${groupId}:${userId}`, currentTime, { EX: dateCooldown })
-        return true
-        } catch (error) {
-            console.error('约会失败:', error)
-            
-            await e.reply('约会失败，请稍后再试')
-            return false
-        }
+       
+       
     }
 
     
@@ -282,7 +266,7 @@ export class Wifepro extends plugin {
         const groupId = e.group_id
         const filename = `${groupId}.json`
         
-        const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+        const homejson = await dataManager.getUserHome(userId, {}, filename, false)
         if (!homejson[userId] || homejson[userId].s === 0) {
             await e.reply('你还没有老婆，无法进行情侣任务！')
             return true
@@ -345,9 +329,10 @@ export class Wifepro extends plugin {
         homejson[userId].love += randomTask.reward_love
         
         // 更新特殊任务进度
-        const QuestSystem = (await import('./quest_system.js')).default
-        await QuestSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
-        await QuestSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love)
+        const { QuestSystem } = await import('../../components/quest_system.js')
+        const questSystem = new QuestSystem()
+        await questSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
+        await questSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love)
         
         // 如果cp也存在，给cp也加奖励
         if (homejson[partnerId]) {
@@ -355,11 +340,11 @@ export class Wifepro extends plugin {
             homejson[partnerId].love += Math.floor(randomTask.reward_love * 0.8)
             
             // 更新cp的特殊任务进度
-            await QuestSystem.updateQuestProgress(partnerId, groupId, 'max_money', homejson[partnerId].money)
-            await QuestSystem.updateQuestProgress(partnerId, groupId, 'max_love', homejson[partnerId].love)
+            await questSystem.updateQuestProgress(partnerId, groupId, 'max_money', homejson[partnerId].money)
+            await questSystem.updateQuestProgress(partnerId, groupId, 'max_love', homejson[partnerId].love)
         }
         
-        await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+        await dataManager.saveUserHome(userId, homejson[userId], filename, true)
         
         // 获取统计数据
         const totalUsers = Object.keys(homejson).length
@@ -372,7 +357,7 @@ export class Wifepro extends plugin {
             userAvatar: '👤',
             username: e.sender.card || e.sender.nickname || '未知用户',
             level: await TextHelper.getUserLevel(userId),
-            money: await TextHelper.getUserMoney(userId),
+            money: await TextHelper.getUserMoney(userId, groupId),
             wifeAvatar: '👤',
             wifeName: homejson[userId].s_name || '未知',
             loveDays: Math.floor((Date.now() - (homejson[userId].marriageTime || Date.now())) / (1000 * 60 * 60 * 24)),
@@ -432,14 +417,14 @@ export class Wifepro extends plugin {
             return true
         }
 
-        const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+        const homejson = await dataManager.getUserHome(userId, {}, filename, false)
         if (!homejson[userId]) {
             await e.reply('请先创建存档')
             return true
         }
 
         // 检查是否已有对象
-        if (homejson[userId].s !== 0) {
+        if (homejson[userId].s !== 0 && homejson[userId].s !== undefined && homejson[userId].s !== null && homejson[userId].s !== '') {
             await e.reply('你已经有对象了，不能表白！')
             return true
         }
@@ -488,17 +473,22 @@ export class Wifepro extends plugin {
             await TextHelper.consumeLuckBoost(userId, groupId)
         }
 
+        // 获取目标用户信息
+        const targetName = homejson[targetId]?.s_name || '未知用户'
+        const currentTime = Math.floor(Date.now() / 1000)
        
         const templateData = {
             hasWife: false,
             userAvatar: '👤',
             username: e.sender.card || e.sender.nickname || '未知用户',
             level: await TextHelper.getUserLevel(userId),
-            money: await TextHelper.getUserMoney(userId),
-            targetName: e.sender.card || e.sender.nickname || '未知用户',
-            confession: {
+            money: await TextHelper.getUserMoney(userId, groupId),
+            targetName: targetName,
+            confessionEvent: {
+                name: '浪漫表白',
+                description: '用真诚的话语表达内心的爱意',
                 success: success,
-                successRate: successRate,
+                successRate: finalSuccessRate,
                 bonusUsed: successBonus > 0,
                 resultMessage: success ? 
                     `表白成功！${targetName} 接受了你的表白！` : 
@@ -510,17 +500,8 @@ export class Wifepro extends plugin {
         }
         
         try {
-            const img = await puppeteer.screenshot('confession', {
-                tplFile: './resources/confession/confession.html',
-                cssPath: './resources/confession/confession.css',
-                ...templateData
-            })
-            
-            if (img) {
-                await e.reply(img)
-            } else {
-                TextHelper.showConfessionResultText(e, templateData)
-            }
+             await this.renderImage(e, 'confession', { templateData })
+           
         } catch (error) {
             console.error('表白渲染失败:', error)
             TextHelper.showConfessionResultText(e, templateData)
@@ -536,7 +517,7 @@ export class Wifepro extends plugin {
         const groupId = e.group_id
         const filename = `${groupId}.json`
         
-        const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+        const homejson = await dataManager.getUserHome(userId, {}, filename, false)
         if (!homejson[userId]) {
             await e.reply('请先创建存档')
             return true
@@ -558,7 +539,7 @@ export class Wifepro extends plugin {
 
         // 扣除金币并创建店铺
         homejson[userId].money -= shopCost
-        await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+        await dataManager.saveUserHome(userId, homejson[userId], filename, true)
         
         relationshipData.shops[shopKey] = {
             owner: userId,
@@ -625,9 +606,9 @@ export class Wifepro extends plugin {
         // 自动收集收入
         if (pendingIncome > 0) {
             const filename = `${groupId}.json`
-            const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+            const homejson = await dataManager.getUserHome(userId, {}, filename, false)
             homejson[userId].money += pendingIncome
-            await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+            await dataManager.saveUserHome(userId, homejson[userId], filename, true)
             
             shop.last_collect = now
             fs.writeFileSync(relationshipPath, JSON.stringify(relationshipData, null, 2))
@@ -645,7 +626,7 @@ export class Wifepro extends plugin {
         const groupId = e.group_id
         const filename = `${groupId}.json`
         
-        const homejson = await akasha_data.getQQYUserHome(0, {}, filename, false)
+        const homejson = await dataManager.getUserHome(0, {}, filename, false)
         
         // 找出所有情侣
         const couples = []
@@ -740,7 +721,7 @@ export class Wifepro extends plugin {
         }
         
         const userLevel = await TextHelper.getUserLevel(userId)
-        const userMoney = await TextHelper.getUserMoney(userId)
+        const userMoney = await TextHelper.getUserMoney(userId, groupId)
         const confessionCount = await this.getConfessionCount(userId, groupId)
         const rankings = await this.getCoupleRankings(groupId)
         const bankData = await this.getLoveBankData(userId, groupId)
@@ -798,7 +779,7 @@ export class Wifepro extends plugin {
             userAvatar: '👤',
             username: e.sender.card || e.sender.nickname || '未知用户',
             level: await TextHelper.getUserLevel(userId),
-            money: await TextHelper.getUserMoney(userId),
+            money: await TextHelper.getUserMoney(userId, groupId),
             ...(coupleData && {
                 wifeAvatar: '👤',
                 wifeName: coupleData.user1Id === userId ? coupleData.user2Name : coupleData.user1Name,
@@ -901,13 +882,14 @@ export class Wifepro extends plugin {
         homejson[loser].money -= loseReward
         
         // 更新获胜者的特殊任务进度
-        const QuestSystem = (await import('./quest_system.js')).default
-        await QuestSystem.updateQuestProgress(winner, groupId, 'max_money', homejson[winner].money)
-        await QuestSystem.updateQuestProgress(winner, groupId, 'max_love', homejson[winner].love)
+        const { QuestSystem } = await import('../../components/quest_system.js')
+        const questSystem = new QuestSystem()
+        await questSystem.updateQuestProgress(winner, groupId, 'max_money', homejson[winner].money)
+        await questSystem.updateQuestProgress(winner, groupId, 'max_love', homejson[winner].love)
         
         // 更新失败者的金币任务进度（如果金币减少后仍然需要更新）
         if (homejson[loser].money > 0) {
-            await QuestSystem.updateQuestProgress(loser, groupId, 'max_money', homejson[loser].money)
+            await questSystem.updateQuestProgress(loser, groupId, 'max_money', homejson[loser].money)
         }
         
         await akasha_data.getQQYUserHome(userId, homejson, filename, true)
@@ -916,7 +898,7 @@ export class Wifepro extends plugin {
             userAvatar: '👤',
             username: e.sender.card || e.sender.nickname || '未知用户',
             level: await TextHelper.getUserLevel(userId),
-            money: await TextHelper.getUserMoney(userId),
+            money: await TextHelper.getUserMoney(userId, groupId),
             wifeAvatar: '👤',
             wifeName: homejson[userId].s_name || '未知',
             loveDays: Math.floor((Date.now() - (homejson[userId].marriageTime || Date.now())) / (1000 * 60 * 60 * 24)),
@@ -967,7 +949,7 @@ export class Wifepro extends plugin {
         const filename = `${groupId}.json`
         
         const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
-        if (!homejson[userId] || homejson[userId].s === 0) {
+        if (!homejson[userId] || homejson[userId].s === 0 || homejson[userId].s === undefined || homejson[userId].s === null || homejson[userId].s === '') {
             await e.reply('你还没有老婆，无法使用爱情银行！')
             return true
         }
@@ -1032,7 +1014,7 @@ export class Wifepro extends plugin {
         }
 
         // 检查是否已有对象
-        if (homejson[userId].s !== 0) {
+        if (homejson[userId].s !== 0 && homejson[userId].s !== undefined && homejson[userId].s !== null && homejson[userId].s !== '') {
             await e.reply('你已经有对象了，不能求婚！')
             return true
         }
@@ -1123,6 +1105,20 @@ export class Wifepro extends plugin {
         await redis.set(`akasha:propose-cd:${groupId}:${userId}`, currentTime, { EX: proposeCooldown })
         
         return true
+    }
+    async renderImage(e, file, obj) {
+       
+            let data = {
+                quality: 100,
+                tplFile: `./plugins/trss-akasha-terminal-plugin/resources/propose/${file}.html`,
+                ...obj, 
+            }
+            let img = await puppeteer.screenshot('trss-akasha-terminal-plugin', {
+                ...data,
+            })
+           
+            await e.reply([img])
+       
     }
 }
 

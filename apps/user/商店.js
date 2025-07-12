@@ -10,6 +10,7 @@ import cooldownConfig from '../../components/cooldown_config.js'
 import { QuestSystem } from '../../components/quest_system.js'
 import mysqlManager from '../../components/mysql_manager.js'
 import TextHelper from '../../components/text.js'
+import akasha_data from '../../components/akasha_data.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -163,7 +164,6 @@ export class VoidShopSystem extends plugin {
         const groupId = e.group_id
         const commandName = '虚空商城'
         
-        try {
         const shopData = await dataManager.loadJsonData(shopDataPath, {})
         const today = moment().format('YYYY-MM-DD')
         
@@ -172,7 +172,7 @@ export class VoidShopSystem extends plugin {
             await TextHelper.autoRefreshShop()
         }
 
-        const userData = await TextHelper.getUserData(userId)
+        const userData = await TextHelper.getUserData(userId, e.group_id)
         const inventory = await TextHelper.getUserInventory(userId, e.group_id)
         const signinData = await TextHelper.getSigninData(userId, e.group_id)
         
@@ -206,38 +206,9 @@ export class VoidShopSystem extends plugin {
         }
         
        
-        const renderSuccess = await this.renderImage(e, 'shop_main', { templateData })
-        if (renderSuccess) {
-            return true
-        }
-//假如图片渲染不出来则使用文本回复
-        let msg = ['🏪 虚空商城 🏪\n']
-        msg.push('━━━━━━━━━━━━━━━━')
-        
-        for (let itemId of Object.keys(shopData.items)) {
-            const item = shopData.items[itemId]
-            const rarityEmoji = TextHelper.getRarityEmoji(item.rarity)
-            const stockText = item.stock === -1 ? '∞' : item.stock
-            
-            msg.push(`${rarityEmoji} [${item.id}] ${item.name}`)
-            msg.push(`💰 价格: ${item.price}金币`)
-            msg.push(`📦 库存: ${stockText}`)
-            msg.push(`📝 ${item.description}`)
-            msg.push('━━━━━━━━━━━━━━━━')
-        }
-        
-        msg.push('\n💡 使用方法:')
-        msg.push('• #购买道具[ID] - 购买指定道具')
-        msg.push('• #道具详情[ID] - 查看道具详情')
-        msg.push('• #我的背包 - 查看背包')
-        msg.push('• #每日签到 - 获取免费金币')
-        //这里模仿md，qaq
-        await e.reply(msg.join('\n'))
-        return true
-        } catch (error) {
-            console.error('虚空商城显示失败:', error)
-            return false
-        }
+         await this.renderImage(e, 'shop_main', { ...templateData })
+       
+       
     }
 
    
@@ -251,7 +222,7 @@ export class VoidShopSystem extends plugin {
             await mysqlManager.logCommandUsage(userId, groupId, commandName, e.msg, true)
         const filename = `${groupId}.json`
         
-        const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+        const homejson = await dataManager.getUserHome(userId, {}, filename, false)
         if (!homejson[userId]) {
             await e.reply('请先使用 #创建老婆 创建存档')
             return true
@@ -277,7 +248,7 @@ export class VoidShopSystem extends plugin {
         
         // 扣除金币
         homejson[userId].money -= item.price
-        await akasha_data.getQQYUserHome(userId, homejson, filename, true)
+        await dataManager.saveUserHome(userId, homejson[userId], filename, true)
         
         // 减少库存
         if (item.stock > 0) {
@@ -288,9 +259,11 @@ export class VoidShopSystem extends plugin {
         // 添加到背包
         await TextHelper.addToInventory(userId, groupId, itemId)
         
-        // 更新购物任务进度
-        const questSystem = new QuestSystem()
-        await questSystem.updateQuestProgress(userId, groupId, 'shop_count', 1, true)
+        // 更新任务进度
+                const questSystem = new QuestSystem()
+                await questSystem.updateQuestProgress(userId, groupId, 'shop_count', 1, true)
+                // 更新社交互动计数（购买行为）
+                await questSystem.updateQuestProgress(userId, groupId, 'interaction_count', 1, true)
         
         const templateData = {
             username: e.sender.card || e.sender.nickname || '未知用户',
@@ -313,7 +286,7 @@ export class VoidShopSystem extends plugin {
         }
         
        
-        const renderSuccess = await this.renderImage(e, 'buy_item', { templateData })
+        const renderSuccess = await this.renderImage(e, 'buy_item', { ...templateData })
         if (renderSuccess) {
             return true
         }
@@ -352,7 +325,7 @@ export class VoidShopSystem extends plugin {
         }
         
         const shopData = await dataManager.loadJsonData(shopDataPath, {})
-        const userData = await TextHelper.getUserData(userId)
+        const userData = await TextHelper.getUserData(userId, groupId)
         const templateData = {
             money: userData.money || 0,
             points: userData.points || 0,
@@ -577,8 +550,9 @@ export class VoidShopSystem extends plugin {
         }
         homejson[userId].money += totalReward
         
-        const QuestSystem = (await import('./quest_system.js')).default
-        await QuestSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
+        const { QuestSystem } = await import('../../components/quest_system.js')
+        const questSystem = new QuestSystem()
+        await questSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
         
         await akasha_data.getQQYUserHome(userId, homejson, filename, true)
         
@@ -610,8 +584,9 @@ export class VoidShopSystem extends plugin {
                     }
                     homejson[userId].love += item.effect.love
                     
-                    const QuestSystem = (await import('./quest_system.js')).default
-                    await QuestSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love)
+                    const { QuestSystem } = await import('../../components/quest_system.js')
+                    const questSystem = new QuestSystem()
+                    await questSystem.updateQuestProgress(userId, groupId, 'max_love', homejson[userId].love)
                     
                     await akasha_data.getQQYUserHome(userId, homejson, filename, true)
                     return { success: true, message: `💕 好感度增加 ${item.effect.love}，当前好感度: ${homejson[userId].love}` }
@@ -621,8 +596,9 @@ export class VoidShopSystem extends plugin {
                     const money = Math.floor(Math.random() * (item.effect.money_max - item.effect.money_min + 1)) + item.effect.money_min
                     homejson[userId].money += money
                     
-                    const QuestSystem = (await import('./quest_system.js')).default
-                    await QuestSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
+                    const { QuestSystem } = await import('../../components/quest_system.js')
+                    const questSystem = new QuestSystem()
+                    await questSystem.updateQuestProgress(userId, groupId, 'max_money', homejson[userId].money)
                     
                     await akasha_data.getQQYUserHome(userId, homejson, filename, true)
                     return { success: true, message: `💰 获得 ${money} 金币，当前余额: ${homejson[userId].money}` }
@@ -694,6 +670,11 @@ export class VoidShopSystem extends plugin {
         return true
     }
 
+    async autoRefreshShop() {
+        // 调用TextHelper中的autoRefreshShop方法
+        await TextHelper.autoRefreshShop()
+    }
+
     
     async itemDetail(e) {
         const itemId = parseInt(e.msg.replace(/(道具详情|#)/g, '').trim())
@@ -717,13 +698,12 @@ export class VoidShopSystem extends plugin {
         
         const msg = [
             `${rarityEmoji} ${item.name}`,
-            `━━━━━━━━━━━━━━━━`,
+            `━━━━━━━━━━━━━`,
             `🏷️ 稀有度: ${rarityName}`,
             `💰 价格: ${item.price}金币`,
             `📦 库存: ${stockText}`,
             `📝 描述: ${item.description}`,
-            `🔧 类型: ${item.type}`,
-            `━━━━━━━━━━━━━━━━`
+            `━━━━━━━━━━━━━`
         ]
         
             await e.reply(msg.join('\n'))

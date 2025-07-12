@@ -1,9 +1,11 @@
+![trss-akasha-terminal-plugin](https://socialify.git.ci/wbndm1234/trss-akasha-terminal-plugin/image?description=1&font=Raleway&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Auto)
+
 # TRSS Akasha Terminal Plugin
 
 ![:动态访问量](https://count.kjchmc.cn/get/@:xtower-plugin)
 
 
-一个功能丰富的Yunzai-Bot插件（trss版本单独开发版），提供完整的游戏系统、MySQL数据库支持和Web管理界面。
+一个功能丰富的Yunzai-Bot插件，提供完整的游戏系统、MySQL数据库&JSON双存储支持和Web管理界面。（本来是trss版本单独开发版，想了想兼容下喵崽）
 
 ## 🌟 主要功能
 
@@ -35,7 +37,7 @@
 使用 git 进行安装
 
 <details>
-<summary><b>① (推荐) 使用 Github</b></summary>
+<summary><b>① (国外更新较慢) 使用 Github</b></summary>
 
 ```bash
 git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
@@ -44,7 +46,7 @@ git clone --depth=1 https://github.com/wbndm1234/trss-akasha-terminal-plugin.git
 </details>
 
 <details>
-<summary><b>② (国内) 使用 Gitee</b></summary>
+<summary><b>② (国内推荐最快) 使用 Gitee</b></summary>
 
 ```bash
 git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
@@ -53,7 +55,7 @@ git clone --depth=1 https://gitee.com/dmqaq/trss-akasha-terminal-plugin.git ./pl
 </details>
 
 <details>
-<summary><b>③ (备用) 使用 Gitcode</b></summary>
+<summary><b>③ (国内备用最慢) 使用 Gitcode</b></summary>
 
 ```bash
 git clone --depth=1 https://gitcode.com/dmqaq/trss-akasha-terminal-plugin.git ./plugins/trss-akasha-terminal-plugin/
@@ -287,16 +289,6 @@ export const cfg = {
 
   </details>
 
-  <h1 align="center"><i>面向未来🕰!</i></h1>
-  <details><summary align="center">展开说明</summary>
-
-  |将实现   |描述   |
-  |---|---|
-  |银啪   |奇妙的银啪剧情     |
-  |商城&合成系统   |合成物品   |
-  |房屋容量   |家具?图形化房屋   |
-
-  </details>
 
 #### 常见问题
 
@@ -326,6 +318,5 @@ export const cfg = {
   - 通过 [GitHub Issues](https://github.com/wbndm1234/trss-akasha-terminal-plugin/issues) 提交问题啦
   - 通过 [GitHub pull requests](https://github.com/wbndm1234/trss-akasha-terminal-plugin/pulls) 提交PR啦
   - 可以来[QQ群](https://qm.qq.com/q/n0ewaCWIGk)玩玩来提点建议捏
- 
 
-
+![Star History Chart](https://api.star-history.com/svg?repos=wbndm1234/trss-akasha-terminal-plugin&type)

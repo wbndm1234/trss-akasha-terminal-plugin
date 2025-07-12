@@ -52,7 +52,7 @@ export class SynthesisSystem extends plugin {
                     fnc: 'showRecipes'
                 },
                 {
-                    reg: '^#?合成\\s*(.+)$',
+                    reg: '^#?虚空合成\\s*(.+)$',
                     fnc: 'synthesizeItem'
                 },
                 {
@@ -240,130 +240,120 @@ export class SynthesisSystem extends plugin {
         const groupId = e.group_id
         const commandName = '合成列表'
         
-        try {
+            let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+            const shopData = await TextHelper.getShopData()
+            const workshop = await TextHelper.getUserWorkshop(userId, groupId)
+            const inventory = await TextHelper.getUserInventory(userId, groupId)
             
+            // 安全检查：确保recipes.recipes存在，如果不存在则初始化
+            if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+                console.log('[合成系统] 配方数据异常，尝试初始化默认数据')
+                await this.initSynthesisData()
+                recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+                
+                // 再次检查，如果还是有问题则报错
+                if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+                    await e.reply('合成配方数据异常，请联系管理员检查数据文件')
+                    return true
+                }
+            }
             
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
-        const shopData = await TextHelper.getShopData()
-        const workshop = await TextHelper.getUserWorkshop(userId, groupId)
-        const inventory = await TextHelper.getUserInventory(userId, groupId)
-        
-        const categories = {}
-        for (let [name, recipe] of Object.entries(recipes.recipes)) {
-            const category = recipe.category || "其他"
-            if (!categories[category]) categories[category] = []
-            categories[category].push({ name, ...recipe })
-        }
+            const categories = {}
+            for (let [name, recipe] of Object.entries(recipes.recipes)) {
+                const category = recipe.category || "其他"
+                if (!categories[category]) categories[category] = []
+                categories[category].push({ name, ...recipe })
+            }
 
-       
-        const templateData = {
-            username: e.sender.card || e.sender.nickname || '未知用户',
-            workshopLevel: workshop.level,
-            workshopExp: workshop.exp,
-            expToNext: workshop.level * 100,
-            successBonus: Math.min(20, (workshop.level - 1) * 5),
-            recipes: Object.entries(categories).map(([category, items]) => ({
-                category,
-                categoryName: category,
-                items: items.map(item => {
-                    const materials = []
-                    for (let [itemId, count] of Object.entries(item.materials)) {
-                        const itemName = shopData.items[itemId]?.name || `道具${itemId}`
-                        materials.push(`${itemName}×${count}`)
-                    }
-                    
-                    const rarity = recipes.items[item.result_id]?.rarity || "普通"
-                    const rarityEmoji = TextHelper.getSynthesisRarityEmoji(rarity)
-                    const levelBonus = Math.min(20, (workshop.level - item.workshop_level) * 5)
-                    const finalSuccessRate = Math.min(95, item.success_rate + levelBonus)
-                    
+            
+            const templateData = {
+                username: e.sender.card || e.sender.nickname || '未知用户',
+                workshopLevel: workshop?.level || 1,
+                workshopExp: workshop?.exp || 0,
+                expToNext: (workshop?.level || 1) * 100,
+                successBonus: Math.min(20, ((workshop?.level || 1) - 1) * 5),
+                recipes: Object.entries(categories).map(([category, items]) => ({
+                    category,
+                    categoryName: category,
+                    items: items.map(item => {
+                        const materials = []
+                        // 安全检查：确保item.materials存在
+                        if (item.materials && typeof item.materials === 'object') {
+                            for (let [itemId, count] of Object.entries(item.materials)) {
+                                const itemName = shopData?.items?.[itemId]?.name || `道具${itemId}`
+                                materials.push(`${itemName}×${count}`)
+                            }
+                        }
+                        
+                        const rarity = recipes?.items?.[item.result_id]?.rarity || "普通"
+                        const rarityEmoji = TextHelper.getSynthesisRarityEmoji(rarity)
+                        const levelBonus = Math.min(20, ((workshop?.level || 1) - (item.workshop_level || 1)) * 5)
+                        const finalSuccessRate = Math.min(95, (item.success_rate || 50) + levelBonus)
+                        
+                        return {
+                            name: item.name || '未知道具',
+                            rarityIcon: rarityEmoji,
+                            materialsText: materials.join(', '),
+                            successRate: item.success_rate || 50,
+                            finalSuccessRate: finalSuccessRate,
+                            workshopLevel: item.workshop_level || 1,
+                            description: item.description || '暂无描述',
+                            canCraft: (workshop?.level || 1) >= (item.workshop_level || 1)
+                        }
+                    })
+                })),
+                inventory: Object.entries(inventory || {}).map(([itemId, count]) => {
+                    const itemName = shopData?.items?.[itemId]?.name || recipes?.items?.[itemId]?.name || `道具${itemId}`
+                    const rarity = shopData?.items?.[itemId]?.rarity || recipes?.items?.[itemId]?.rarity || "普通"
                     return {
-                        name: item.name,
-                        rarityIcon: rarityEmoji,
-                        materialsText: materials.join(', '),
-                        successRate: item.success_rate,
-                        finalSuccessRate: finalSuccessRate,
-                        workshopLevel: item.workshop_level,
-                        description: item.description,
-                        canCraft: workshop.level >= item.workshop_level
+                        name: itemName,
+                        amount: count,
+                        rarityIcon: TextHelper.getSynthesisRarityEmoji(rarity)
                     }
-                })
-            })),
-            inventory: Object.entries(inventory).map(([itemId, count]) => {
-                const itemName = shopData.items[itemId]?.name || recipes.items[itemId]?.name || `道具${itemId}`
-                const rarity = shopData.items[itemId]?.rarity || recipes.items[itemId]?.rarity || "普通"
-                return {
-                    name: itemName,
-                    amount: count,
-                    rarityIcon: TextHelper.getSynthesisRarityEmoji(rarity)
+                }),
+                materialSlots: [null, null, null, null],
+                stats: {
+                    totalCrafts: workshop?.synthesis_count || 0,
+                    successfulCrafts: workshop?.success_count || 0,
+                    successRate: (workshop?.synthesis_count || 0) > 0 ? Math.round(((workshop?.success_count || 0) / (workshop?.synthesis_count || 1)) * 100) : 0
                 }
-            }),
-            materialSlots: [null, null, null, null],
-            stats: {
-                totalCrafts: workshop.synthesis_count || 0,
-                successfulCrafts: workshop.success_count || 0,
-                successRate: workshop.synthesis_count > 0 ? Math.round((workshop.success_count / workshop.synthesis_count) * 100) : 0
             }
-        }
-        
-       
-            const img = await image(e, 'recipes_list', { 
+            
+            await image(e, 'recipes_list', { 
                 cssPath: './plugins/trss-akasha-terminal-plugin/resources/synthesis/recipes_list.css',
-                templateData,
+                ...templateData,
             });
-          
-            await e.reply(img)
-      /*  let msg = ['🔨 合成配方大全 🔨\n']
-        msg.push('━━━━━━━━━━━━━━━━')
-        
-        for (let [category, items] of Object.entries(categories)) {
-            msg.push(`\n📋 ${category}:`)
-            for (let item of items) {
-                const materials = []
-                for (let [itemId, count] of Object.entries(item.materials)) {
-                    const itemName = shopData.items[itemId]?.name || `道具${itemId}`
-                    materials.push(`${itemName}×${count}`)
-                }
-                
-                const rarity = recipes.items[item.result_id]?.rarity || "普通"
-                const rarityEmoji = TextHelper.getSynthesisRarityEmoji(rarity)
-                
-                msg.push(`${rarityEmoji} ${item.name}`)
-                msg.push(`   📦 材料: ${materials.join(', ')}`)
-                msg.push(`   📊 成功率: ${item.success_rate}%`)
-                msg.push(`   🏭 需要工坊等级: ${item.workshop_level}`)
-                msg.push(`   💡 ${item.description}`)
-                msg.push('   ────────────────')
-            }
-        }
-        
-        msg.push('\n💡 使用 #合成 [道具名] 进行合成')
-        msg.push('💡 使用 #我的工坊 查看工坊状态')
-        
-        await e.reply(msg.join('\n'))
-        return true*/
-        } catch (error) {
-            console.error('显示合成列表失败:', error)
-            return false
-        }
+            
+       
     }
 
     
     async synthesizeItem(e) {
         const userId = e.user_id
         const groupId = e.group_id
-        const itemName = e.msg.match(/^#?合成\s*(.+)$/)?.[1]?.trim()
+        const itemName = e.msg.match(/^#?虚空合成\s*(.+)$/)?.[1]?.trim()
         const commandName = '合成道具'
-        
-        try {
-            
-        
+       
         if (!itemName) {
             await e.reply('请指定要合成的道具名称！')
             return true
         }
 
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        
+     
+        if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+            console.log('[合成系统] 配方数据异常，尝试初始化默认数据')
+            await this.initSynthesisData()
+            recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+            
+            // 再次检查，如果还是有问题则报错
+            if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+                await e.reply('合成配方数据异常，请联系管理员检查数据文件')
+                return true
+            }
+        }
+        
         const recipe = recipes.recipes[itemName]
         
         if (!recipe) {
@@ -383,10 +373,16 @@ export class SynthesisSystem extends plugin {
         const missingMaterials = []
         const shopData = TextHelper.getShopData()
         
+        // 安全检查：确保recipe.materials存在
+        if (!recipe.materials || typeof recipe.materials !== 'object') {
+            await e.reply(`配方 ${itemName} 的材料数据异常！`)
+            return true
+        }
+        
         for (let [itemId, needCount] of Object.entries(recipe.materials)) {
             const haveCount = inventory[itemId] || 0
             if (haveCount < needCount) {
-                const itemName = shopData.items[itemId]?.name || `道具${itemId}`
+                const itemName = shopData?.items?.[itemId]?.name || `道具${itemId}`
                 missingMaterials.push(`${itemName} (需要${needCount}个，拥有${haveCount}个)`)
             }
         }
@@ -426,19 +422,37 @@ export class SynthesisSystem extends plugin {
         const success = Math.random() * 100 < finalSuccessRate
         
         if (success) {
-            for (let [itemId, count] of Object.entries(recipe.materials)) {
-                await TextHelper.removeFromInventory(userId, groupId, itemId, count)
+            // 扣除材料
+            for (let [itemId, needCount] of Object.entries(recipe.materials)) {
+                await TextHelper.updateUserInventory(userId, groupId, itemId, -needCount)
             }
             
             await TextHelper.addToInventory(userId, groupId, recipe.result_id, 1)
             await TextHelper.addWorkshopExp(userId, groupId, 10)
             
-            // 更新合成任务进度
-            const questSystem = new QuestSystem()
-            await questSystem.updateQuestProgress(userId, groupId, 'synthesis_count', 1, true)
-            await questSystem.updateQuestProgress(userId, groupId, 'synthesis_success', 1, true)
+            // 更新工坊数据
+            workshop.exp = (workshop.exp || 0) + 10
+            workshop.synthesis_count = (workshop.synthesis_count || 0) + 1
+            workshop.success_count = (workshop.success_count || 0) + 1
             
-            const rarity = recipes.items[recipe.result_id]?.rarity || "普通"
+            // 检查升级
+            const expNeeded = (workshop.level || 1) * 100
+            if ((workshop.exp || 0) >= expNeeded) {
+                workshop.level = (workshop.level || 1) + 1
+                workshop.exp = 0
+                await e.reply(`🎉 工坊升级到 ${workshop.level} 级！`)
+            }
+            
+            await TextHelper.saveUserWorkshop(userId, groupId, workshop)
+            
+            // 更新任务进度
+                const questSystem = new QuestSystem()
+                await questSystem.updateQuestProgress(userId, groupId, 'synthesis_count', 1, true)
+                await questSystem.updateQuestProgress(userId, groupId, 'synthesis_success', 1, true)
+                // 更新社交互动计数（合成行为）
+                await questSystem.updateQuestProgress(userId, groupId, 'interaction_count', 1, true)
+            
+            const rarity = recipes?.items?.[recipe.result_id]?.rarity || "普通"
             const rarityEmoji = TextHelper.getSynthesisRarityEmoji(rarity)
             
             // 记录合成历史
@@ -472,36 +486,10 @@ export class SynthesisSystem extends plugin {
                 }
             }
             
-            try {
-                const img = await puppeteer.screenshot('synthesis', {
-                    tplFile: './resources/synthesis/synthesis.html',
-                    cssPath: './resources/synthesis/synthesis.css',
-                    ...templateData
-                })
-                
-                if (img) {
-                    await e.reply([global.segment.at(userId), img])
-                } else {
-                    await e.reply([
-                        global.segment.at(userId), '\n',
-                        `✨ 合成成功！\n`,
-                        `${rarityEmoji} 获得: ${itemName}\n`,
-                        `🎯 成功率: ${finalSuccessRate}%\n`,
-                        `⭐ 工坊经验 +10\n`,
-                        `💡 ${recipe.description}`
-                    ])
-                }
-            } catch (error) {
-                console.error('合成成功渲染失败:', error)
-                await e.reply([
-                    global.segment.at(userId), '\n',
-                    `✨ 合成成功！\n`,
-                    `${rarityEmoji} 获得: ${itemName}\n`,
-                    `🎯 成功率: ${finalSuccessRate}%\n`,
-                    `⭐ 工坊经验 +10\n`,
-                    `💡 ${recipe.description}`
-                ])
-            }
+           await image(e, 'synthesis', { 
+               ...templateData
+            });
+              
         } else {
             // 失败时返还部分材料
             const returnRate = 0.5
@@ -545,43 +533,17 @@ export class SynthesisSystem extends plugin {
                     { item: null }
                 ],
                 stats: {
-                    totalCrafts: workshopAfterUpdate.synthesis_count || 0,
-                    successfulCrafts: workshopAfterUpdate.success_count || 0,
-                    successRate: workshopAfterUpdate.synthesis_count > 0 ? Math.round((workshopAfterUpdate.success_count / workshopAfterUpdate.synthesis_count) * 100) : 0
+                    totalCrafts: workshopAfterUpdate?.synthesis_count || 0,
+                    successfulCrafts: workshopAfterUpdate?.success_count || 0,
+                    successRate: (workshopAfterUpdate?.synthesis_count || 0) > 0 ? Math.round(((workshopAfterUpdate?.success_count || 0) / (workshopAfterUpdate?.synthesis_count || 1)) * 100) : 0
                 }
             }
             
-            try {
-                const img = await puppeteer.screenshot('synthesis', {
-                    tplFile: './resources/synthesis/synthesis.html',
-                    cssPath: './resources/synthesis/synthesis.css',
-                    ...templateData
-                })
-                
-                if (img) {
-                    await e.reply([global.segment.at(userId), img])
-                } else {
-                    await e.reply([
-                        global.segment.at(userId), '\n',
-                        `💥 合成失败！\n`,
-                        `🎯 成功率: ${finalSuccessRate}%\n`,
-                        `💔 返还了50%的材料\n`,
-                        `💡 提升工坊等级可以增加成功率`
-                    ])
-                }
-            } catch (error) {
-                console.error('合成失败渲染失败:', error)
-                await e.reply([
-                    global.segment.at(userId), '\n',
-                    `💥 合成失败！\n`,
-                    `🎯 成功率: ${finalSuccessRate}%\n`,
-                    `💔 返还了50%的材料\n`,
-                    `💡 提升工坊等级可以增加成功率`
-                ])
-            }
-            
-            // 记录合成历史
-            await TextHelper.recordSynthesis(userId, groupId, itemName, false)
+         
+                await image(e, 'synthesis', { 
+                cssPath: './plugins/trss-akasha-terminal-plugin/resources/synthesis/synthesis.css',
+                ...templateData
+            })
         }
 
         if (isRedisAvailable()) {
@@ -595,13 +557,7 @@ export class SynthesisSystem extends plugin {
                 memoryCache.delete(cooldownKey)
             }, 300000)
         }
-        return true
-        } catch (error) {
-            console.error('合成道具失败:', error)
-            
-            await e.reply('合成失败，请稍后再试')
-            return false
-        }
+       
     }
 
     
@@ -613,7 +569,15 @@ export class SynthesisSystem extends plugin {
         const inventory = await TextHelper.getUserInventory(userId, groupId)
         
         const shopData = TextHelper.getShopData()
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        
+        // 安全检查：确保recipes数据存在，如果不存在则初始化
+        if (!recipes || typeof recipes !== 'object') {
+            console.log('[合成系统] 配方数据异常，尝试初始化默认数据')
+            await this.initSynthesisData()
+            recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        }
+        
         const nextLevelExp = workshop.level * 100
         const expProgress = Math.min(100, (workshop.exp / nextLevelExp) * 100)
         
@@ -687,12 +651,24 @@ export class SynthesisSystem extends plugin {
         const match = e.msg.match(/^#?(批量合成|快速合成)\s*(.+)$/)
         const params = match?.[2]?.trim().split(' ') || []
         
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
         const inventory = await TextHelper.getUserInventory(userId, groupId)
         const workshop = await TextHelper.getUserWorkshop(userId, groupId)
         const shopData = TextHelper.getShopData()
         
-       
+        // 安全检查：确保recipes和recipes.recipes存在，如果不存在则初始化
+        if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+            console.log('[合成系统] 配方数据异常，尝试初始化默认数据')
+            await this.initSynthesisData()
+            recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+            
+            // 再次检查，如果还是有问题则报错
+            if (!recipes || !recipes.recipes || typeof recipes.recipes !== 'object') {
+                await e.reply('合成配方数据异常，请联系管理员检查数据文件')
+                return true
+            }
+        }
+        
         const templateData = {
             user: {
                 name: e.sender.card || e.sender.nickname || '未知用户',
@@ -703,14 +679,14 @@ export class SynthesisSystem extends plugin {
             availableRecipes: Object.entries(recipes.recipes).map(([name, recipe]) => ({
                 name: name,
                 description: recipe.description || '暂无描述',
-                materials: Object.entries(recipe.materials).map(([id, count]) => ({
-                    name: shopData.items[id]?.name || `道具${id}`,
+                materials: Object.entries(recipe.materials || {}).map(([id, count]) => ({
+                    name: shopData?.items?.[id]?.name || `道具${id}`,
                     count: count,
                     have: inventory[id] || 0
                 })),
-                successRate: recipe.success_rate,
-                workshopLevel: recipe.workshop_level,
-                canCraft: Object.entries(recipe.materials).every(([id, count]) => (inventory[id] || 0) >= count)
+                successRate: recipe.success_rate || 50,
+                workshopLevel: recipe.workshop_level || 1,
+                canCraft: Object.entries(recipe.materials || {}).every(([id, count]) => (inventory[id] || 0) >= count)
             })),
             queue: [],
             queueStats: {
@@ -736,7 +712,7 @@ export class SynthesisSystem extends plugin {
         }
         
         try {
-            await image(e, 'batch_synthesize', { templateData })
+            await image(e, 'batch_synthesize', { ...templateData })
         } catch (error) {
             console.error('批量合成渲染失败:', error)
             
@@ -818,11 +794,23 @@ export class SynthesisSystem extends plugin {
         const match = e.msg.match(/^#?(分解道具|道具分解)\s*(.+)$/)
         const params = match?.[2]?.trim().split(' ') || []
         
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
         const inventory = await TextHelper.getUserInventory(userId, groupId)
         const shopData = TextHelper.getShopData()
         
-       
+        // 安全检查：确保recipes和recipes.decompose存在，如果不存在则初始化
+        if (!recipes || !recipes.decompose || typeof recipes.decompose !== 'object') {
+            console.log('[合成系统] 分解配方数据异常，尝试初始化默认数据')
+            await this.initSynthesisData()
+            recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+            
+            // 再次检查，如果还是有问题则报错
+            if (!recipes || !recipes.decompose || typeof recipes.decompose !== 'object') {
+                await e.reply('分解配方数据异常，请联系管理员检查数据文件')
+                return true
+            }
+        }
+        
         const templateData = {
             user: {
                 name: e.sender.card || e.sender.nickname || '未知用户',
@@ -830,20 +818,20 @@ export class SynthesisSystem extends plugin {
                 money: 0,
                 level: 1
             },
-            availableItems: Object.entries(inventory).filter(([id, count]) => {
-                return recipes.decompose[id] && count > 0
+            availableItems: Object.entries(inventory || {}).filter(([id, count]) => {
+                return recipes?.decompose?.[id] && count > 0
             }).map(([id, count]) => {
-                const item = recipes.items[id]
-                const decomposeData = recipes.decompose[id]
+                const item = recipes?.items?.[id]
+                const decomposeData = recipes?.decompose?.[id]
                 return {
                     id: id,
                     name: item?.name || `道具${id}`,
                     count: count,
                     rarity: item?.rarity || 'common',
                     value: item?.value || 0,
-                    successRate: decomposeData.success_rate,
-                    materials: Object.entries(decomposeData.materials).map(([matId, matCount]) => ({
-                        name: shopData.items[matId]?.name || `材料${matId}`,
+                    successRate: decomposeData?.success_rate || 50,
+                    materials: Object.entries(decomposeData?.materials || {}).map(([matId, matCount]) => ({
+                        name: shopData?.items?.[matId]?.name || `材料${matId}`,
                         count: matCount
                     }))
                 }
@@ -910,14 +898,14 @@ export class SynthesisSystem extends plugin {
             
             // 找对应道具ID
             let targetItemId = null
-            for (let [id, item] of Object.entries(recipes.items)) {
-                if (item.name === itemName) {
+            for (let [id, item] of Object.entries(recipes?.items || {})) {
+                if (item?.name === itemName) {
                     targetItemId = id
                     break
                 }
             }
             
-            if (!targetItemId || !recipes.decompose[targetItemId]) {
+            if (!targetItemId || !recipes?.decompose?.[targetItemId]) {
                 await e.reply(`${itemName} 无法分解！`)
                 return true
             }
@@ -929,16 +917,22 @@ export class SynthesisSystem extends plugin {
                 return true
             }
             
-            const decomposeData = recipes.decompose[targetItemId]
+            const decomposeData = recipes?.decompose?.[targetItemId]
+            
+            // 安全检查：确保分解数据存在
+            if (!decomposeData || typeof decomposeData !== 'object') {
+                await e.reply(`${itemName} 的分解数据异常！`)
+                return true
+            }
             
             let successCount = 0
             let materials = {}
             
             for (let i = 0; i < count; i++) {
-                const success = Math.random() * 100 < decomposeData.success_rate
+                const success = Math.random() * 100 < (decomposeData.success_rate || 50)
                 if (success) {
                     successCount++
-                    for (let [materialId, materialCount] of Object.entries(decomposeData.materials)) {
+                    for (let [materialId, materialCount] of Object.entries(decomposeData.materials || {})) {
                         materials[materialId] = (materials[materialId] || 0) + materialCount
                     }
                 }
@@ -953,7 +947,7 @@ export class SynthesisSystem extends plugin {
             
             const materialList = []
             for (let [materialId, materialCount] of Object.entries(materials)) {
-                const materialName = shopData.items[materialId]?.name || `道具${materialId}`
+                const materialName = shopData?.items?.[materialId]?.name || `道具${materialId}`
                 materialList.push(`${materialName}×${materialCount}`)
             }
             
@@ -1033,12 +1027,12 @@ export class SynthesisSystem extends plugin {
         const successCount = history.filter(h => h.success).length
         const successRate = totalAttempts > 0 ? ((successCount / totalAttempts) * 100).toFixed(1) : 0
         
-        msg.push(`━━━━━━━━━━━━━\n`)
+        msg.push(`━━━━━━━━━━\n`)
         msg.push(`📊 统计信息:\n`)
         msg.push(`🔨 总合成次数: ${totalAttempts}\n`)
         msg.push(`✅ 成功次数: ${successCount}\n`)
         msg.push(`📈 成功率: ${successRate}%\n`)
-        msg.push(`━━━━━━━━━━━━━`)
+        msg.push(`━━━━━━━━━━`)
         
         await e.reply(msg)
         return true
@@ -1050,7 +1044,14 @@ export class SynthesisSystem extends plugin {
         
         const workshop = await TextHelper.getUserWorkshop(userId, groupId)
         const requiredExp = workshop.level * 100
-        const recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        let recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        
+        // 安全检查：确保recipes数据存在，如果不存在则初始化
+        if (!recipes || typeof recipes !== 'object') {
+            console.log('[合成系统] 配方数据异常，尝试初始化默认数据')
+            await this.initSynthesisData()
+            recipes = await dataManager.loadJsonData(synthesisRecipesPath, {})
+        }
         
        
         const templateData = {
@@ -1080,21 +1081,9 @@ export class SynthesisSystem extends plugin {
             ]
         }
         
-        try {
+        
             await image(e, 'workshop_upgrade', { templateData })
-        } catch (error) {
-            console.error('工坊升级渲染失败:', error)
-            
-            if (workshop.exp < requiredExp) {
-                await e.reply([
-                    global.segment.at(userId), '\n',
-                    `🏭 工坊升级失败！\n`,
-                    `📊 当前等级: ${workshop.level}\n`,
-                    `⭐ 当前经验: ${workshop.exp}/${requiredExp}\n`,
-                    `💡 还需要 ${requiredExp - workshop.exp} 经验值才能升级`
-                ])
-                return true
-            }
+       
             
             // 执行升级
             const oldLevel = workshop.level
@@ -1113,17 +1102,10 @@ export class SynthesisSystem extends plugin {
                 memoryCache.set(workshopKey, workshop)
             }
             
-            await e.reply([
-                global.segment.at(userId), '\n',
-                `🎉 工坊升级成功！\n`,
-                `📊 等级: ${oldLevel} → ${workshop.level}\n`,
-                `⭐ 剩余经验: ${workshop.exp}\n`,
-                `🎯 成功率加成: +${Math.min(20, (workshop.level - 1) * 5)}%\n`,
-                `💡 下次升级需要 ${workshop.level * 100} 经验值`
-            ])
-        }
+           
         
-        return true
+        
+      
     }
 }
 async function image(e, flie, obj) {
@@ -1131,7 +1113,6 @@ async function image(e, flie, obj) {
       quality: 100,
       tplFile: `./plugins/trss-akasha-terminal-plugin/resources/synthesis/${flie}.html`,
       ...obj,
-      data: obj.templateData  // 确保templateData作为data属性传递给puppeteer
     }
     let img = await puppeteer.screenshot('trss-akasha-terminal-plugin', {
       ...data,

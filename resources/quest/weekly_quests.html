@@ -468,13 +468,31 @@
             </div>
         </div>
 
+<<<<<<< HEAD
+        {{if weeklyBonus}}
+=======
         {{#if weeklyBonus}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
         <div class="weekly-bonus">
             <div class="bonus-text">🎉 周常全部完成奖励: +{{weeklyBonus}} 任务点数</div>
         </div>
         {{/if}}
 
         <div class="quest-list">
+<<<<<<< HEAD
+            {{each quests}}
+            <div class="quest-card {{$value.status}} weekly">
+                <div class="quest-header">
+                    <div class="quest-info">
+                        <div class="quest-title">{{$value.name}}</div>
+                        <div class="quest-difficulty {{$value.difficulty}}">{{$value.difficultyText}}</div>
+                        <div class="quest-description">{{$value.description}}</div>
+                        {{if $value.requirement}}
+                        <div class="requirement">⚠️ {{$value.requirement}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="quest-status {{$value.status}}">{{$value.statusIcon}}</div>
+=======
             {{#each quests}}
             <div class="quest-card {{status}} weekly">
                 <div class="quest-header">
@@ -487,13 +505,20 @@
                         {{/if}}
                     </div>
                     <div class="quest-status {{status}}">{{statusIcon}}</div>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 </div>
 
                 <div class="quest-progress">
                     <div class="progress-bar">
+<<<<<<< HEAD
+                        <div class="progress-fill" style="width: {{$value.progressPercent}}%"></div>
+                    </div>
+                    <div class="progress-text">{{$value.progress}}/{{$value.target}} ({{$value.progressPercent}}%)</div>
+=======
                         <div class="progress-fill" style="width: {{progressPercent}}%"></div>
                     </div>
                     <div class="progress-text">{{progress}}/{{target}} ({{progressPercent}}%)</div>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 </div>
 
                 <div class="quest-rewards">
@@ -502,16 +527,27 @@
                         <span>周常奖励</span>
                     </div>
                     <div class="reward-items">
+<<<<<<< HEAD
+                        {{each $value.rewards}}
+                        <div class="reward-item">
+                            <span>{{$value.icon}}</span>
+                            <span>{{$value.text}}</span>
+=======
                         {{#each rewards}}
                         <div class="reward-item">
                             <span>{{icon}}</span>
                             <span>{{text}}</span>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         </div>
                         {{/each}}
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                {{if $value.canClaim}}
+=======
                 {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <button class="claim-button">🏆 领取周常奖励</button>
                 {{/if}}
             </div>
@@ -522,7 +558,11 @@
             <div class="tips">
                 <div class="tip-item">
                     <span>💡</span>
+<<<<<<< HEAD
+                    <span>#领取奖励 [任务名称] - 领取已完成的任务奖励</span>
+=======
                     <span>#领取奖励 [任务ID] - 领取已完成的任务奖励</span>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 </div>
                 <div class="tip-item">
                     <span>🏪</span>

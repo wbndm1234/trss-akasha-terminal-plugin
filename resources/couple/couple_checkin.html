@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情侣打卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkin-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e91e63;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-time {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .checkin-success {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(238, 90, 36, 0.3);
+        }
+
+        .checkin-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .checkin-message {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .checkin-details {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .mood-location {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #f8b500;
+        }
+
+        .mood-location-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+
+        .mood-location-content {
+            font-size: 14px;
+            color: #8b4513;
+        }
+
+        .love-bonus {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #ff6b9d;
+        }
+
+        .love-bonus-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 5px;
+        }
+
+        .love-bonus-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #f1c40f;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .heart-decoration {
+            color: #e91e63;
+            font-size: 20px;
+            margin: 0 10px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .streak-highlight {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 4px 8px rgba(245, 87, 108, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="checkin-container">
+        <div class="header">
+            <div class="title">💕 情侣打卡成功 💕</div>
+            <div class="date-time">{{currentDate}} {{currentTime}}</div>
+        </div>
+
+        <div class="checkin-success">
+            <div class="checkin-icon">{{checkinInfo.mood}}</div>
+            <div class="checkin-message">{{checkinInfo.message}}</div>
+            <div class="checkin-details">
+                📍 {{checkinInfo.location}} · ⏰ {{checkinInfo.time}}
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{streakData.current}}</div>
+                <div class="stat-label">连续打卡天数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{streakData.max}}</div>
+                <div class="stat-label">最长连续记录</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{statsData.total}}</div>
+                <div class="stat-label">累计打卡次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{statsData.thisMonth}}</div>
+                <div class="stat-label">本月打卡次数</div>
+            </div>
+        </div>
+
+        {{if streakData.showStreak}}
+        <div class="streak-highlight">
+            🎉 连续打卡{{streakData.current}}天！坚持得很棒哦~
+        </div>
+        {{/if}}
+
+        <div class="love-bonus">
+            <div class="love-bonus-title">💖 好感度奖励</div>
+            <div class="love-bonus-amount">+{{loveBonus}} 点</div>
+        </div>
+
+        <div class="mood-location">
+            <div class="mood-location-title">今日状态</div>
+            <div class="mood-location-content">
+                心情：{{checkinInfo.mood}} | 地点：{{checkinInfo.location}}
+            </div>
+        </div>
+
+        <div class="footer">
+            <span class="heart-decoration">💕</span>
+            愿你们的爱情天长地久
+            <span class="heart-decoration">💕</span>
+            <br>
+            更新时间：{{updateTime}}
+        </div>
+    </div>
+</body>
+</html>

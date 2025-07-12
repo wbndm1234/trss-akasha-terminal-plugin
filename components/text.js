@@ -1,6 +1,6 @@
 import fs from 'fs'
 import moment from 'moment'
-import dataManager from './akasha_data.js'
+import dataManager from './data_manager.js'
 import path from 'path'
 import cfg from '../../../lib/config/config.js'
 import cooldownConfig from './cooldown_config.js'
@@ -645,10 +645,18 @@ export class TextHelper {
      * 获取幸运加成
      */
     static async getLuckBoost(userId, groupId) {
-        const luckData = await redis.get(`akasha:shop-luck:${groupId}:${userId}`)
-        if (luckData) {
-            const data = JSON.parse(luckData)
-            return data.boost || 0
+        if (isRedisAvailable()) {
+            const luckData = await redis.get(`akasha:shop-luck:${groupId}:${userId}`)
+            if (luckData) {
+                const data = JSON.parse(luckData)
+                return data.boost || 0
+            }
+        } else {
+            console.log(`[虚空终端] Redis不可用，使用内存缓存获取幸运加成: ${groupId}:${userId}`)
+            const luckData = memoryCache.get(`akasha:shop-luck:${groupId}:${userId}`)
+            if (luckData) {
+                return luckData.boost || 0
+            }
         }
         return 0
     }
@@ -658,15 +666,30 @@ export class TextHelper {
      */
     static async consumeLuckBoost(userId, groupId) {
         const cooldownConfig = (await import('../components/cooldown_config.js')).default
-        const luckData = await redis.get(`akasha:shop-luck:${groupId}:${userId}`)
-        if (luckData) {
-            const data = JSON.parse(luckData)
-            data.duration -= 1
-            if (data.duration <= 0) {
-                await redis.del(`akasha:shop-luck:${groupId}:${userId}`)
-            } else {
-                const luckDuration = cooldownConfig.getShopCooldown('luck_duration', 86400)
-                await redis.set(`akasha:shop-luck:${groupId}:${userId}`, JSON.stringify(data), { EX: luckDuration })
+        const luckKey = `akasha:shop-luck:${groupId}:${userId}`
+        
+        if (isRedisAvailable()) {
+            const luckData = await redis.get(luckKey)
+            if (luckData) {
+                const data = JSON.parse(luckData)
+                data.duration -= 1
+                if (data.duration <= 0) {
+                    await redis.del(luckKey)
+                } else {
+                    const luckDuration = cooldownConfig.getShopCooldown('luck_duration', 86400)
+                    await redis.set(luckKey, JSON.stringify(data), { EX: luckDuration })
+                }
+            }
+        } else {
+            console.log(`[虚空终端] Redis不可用，使用内存缓存消耗幸运加成: ${groupId}:${userId}`)
+            const luckData = memoryCache.get(luckKey)
+            if (luckData) {
+                luckData.duration -= 1
+                if (luckData.duration <= 0) {
+                    memoryCache.delete(luckKey)
+                } else {
+                    memoryCache.set(luckKey, luckData)
+                }
             }
         }
     }
@@ -675,10 +698,18 @@ export class TextHelper {
      * 获取工作加成
      */
     static async getWorkBoost(userId, groupId) {
-        const workData = await redis.get(`akasha:shop-workboost:${groupId}:${userId}`)
-        if (workData) {
-            const data = JSON.parse(workData)
-            return data.boost || 1
+        if (isRedisAvailable()) {
+            const workData = await redis.get(`akasha:shop-workboost:${groupId}:${userId}`)
+            if (workData) {
+                const data = JSON.parse(workData)
+                return data.boost || 1
+            }
+        } else {
+            console.log(`[虚空终端] Redis不可用，使用内存缓存获取工作加成: ${groupId}:${userId}`)
+            const workData = memoryCache.get(`akasha:shop-workboost:${groupId}:${userId}`)
+            if (workData) {
+                return workData.boost || 1
+            }
         }
         return 1
     }
@@ -688,15 +719,30 @@ export class TextHelper {
      */
     static async consumeWorkBoost(userId, groupId) {
         const cooldownConfig = (await import('../components/cooldown_config.js')).default
-        const workData = await redis.get(`akasha:shop-workboost:${groupId}:${userId}`)
-        if (workData) {
-            const data = JSON.parse(workData)
-            data.duration -= 1
-            if (data.duration <= 0) {
-                await redis.del(`akasha:shop-workboost:${groupId}:${userId}`)
-            } else {
-                const workboostDuration = cooldownConfig.getShopCooldown('workboost_duration', 604800)
-                await redis.set(`akasha:shop-workboost:${groupId}:${userId}`, JSON.stringify(data), { EX: workboostDuration })
+        const workKey = `akasha:shop-workboost:${groupId}:${userId}`
+        
+        if (isRedisAvailable()) {
+            const workData = await redis.get(workKey)
+            if (workData) {
+                const data = JSON.parse(workData)
+                data.duration -= 1
+                if (data.duration <= 0) {
+                    await redis.del(workKey)
+                } else {
+                    const workboostDuration = cooldownConfig.getShopCooldown('workboost_duration', 604800)
+                    await redis.set(workKey, JSON.stringify(data), { EX: workboostDuration })
+                }
+            }
+        } else {
+            console.log(`[虚空终端] Redis不可用，使用内存缓存消耗工作加成: ${groupId}:${userId}`)
+            const workData = memoryCache.get(workKey)
+            if (workData) {
+                workData.duration -= 1
+                if (workData.duration <= 0) {
+                    memoryCache.delete(workKey)
+                } else {
+                    memoryCache.set(workKey, workData)
+                }
             }
         }
     }
@@ -720,8 +766,14 @@ export class TextHelper {
     /**
      * 获取用户金币
      */
-    static async getUserMoney(userId, groupId) {
+    static async getUserMoney(userId, groupId = null) {
         try {
+            // 如果没有提供groupId，尝试从当前上下文获取
+            if (!groupId) {
+                console.warn('getUserMoney: groupId未提供，返回默认值0')
+                return 0
+            }
+            
             const akasha_data = (await import('../components/akasha_data.js')).default
             const filename = `${groupId}.json`
             const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
@@ -730,6 +782,195 @@ export class TextHelper {
             console.error('获取用户金币失败:', error)
         }
         return 0
+    }
+
+    /**
+     * 获取用户数据
+     */
+    static async getUserData(userId, groupId = null) {
+        try {
+            const battleDataPath = 'plugins/trss-akasha-terminal-plugin/data/battle.json'
+            let userData = {
+                money: 0,
+                points: 0,
+                level: 1,
+                experience: 0
+            }
+            
+            // 从战斗数据获取等级和经验
+            if (fs.existsSync(battleDataPath)) {
+                const battleData = JSON.parse(fs.readFileSync(battleDataPath, 'utf8'))
+                if (battleData[userId]) {
+                    userData.level = battleData[userId].level || 1
+                    userData.experience = battleData[userId].experience || 0
+                }
+            }
+            
+            // 如果提供了groupId，尝试获取金币数据
+            if (groupId) {
+                try {
+                    const akasha_data = (await import('../components/akasha_data.js')).default
+                    const filename = `${groupId}.json`
+                    const homejson = await akasha_data.getQQYUserHome(userId, {}, filename, false)
+                    if (homejson[userId]) {
+                        userData.money = homejson[userId].money || 0
+                    }
+                } catch (error) {
+                    console.error('获取用户金币数据失败:', error)
+                }
+            }
+            
+            return userData
+        } catch (error) {
+            console.error('获取用户数据失败:', error)
+            return {
+                money: 0,
+                points: 0,
+                level: 1,
+                experience: 0
+            }
+        }
+    }
+
+    /**
+     * 获取签到数据
+     */
+    static async getSigninData(userId, groupId) {
+        const signinKey = `akasha:signin-data:${groupId}:${userId}`
+        
+        try {
+            let signinData = {
+                streak: 0,
+                lastSignin: null,
+                totalDays: 0
+            }
+            
+            if (isRedisAvailable()) {
+                const data = await redis.get(signinKey)
+                if (data) {
+                    signinData = JSON.parse(data)
+                }
+            } else {
+                console.log(`[虚空终端] Redis不可用，使用内存缓存获取签到数据: ${signinKey}`)
+                const cachedData = memoryCache.get(signinKey)
+                if (cachedData) {
+                    signinData = cachedData
+                }
+            }
+            
+            return signinData
+        } catch (error) {
+            console.error('获取签到数据失败:', error)
+            return {
+                streak: 0,
+                lastSignin: null,
+                totalDays: 0
+            }
+        }
+    }
+
+    /**
+     * 获取连续签到天数
+     */
+    static async getSignInStreak(userId, groupId) {
+        try {
+            const signinData = await TextHelper.getSigninData(userId, groupId)
+            return signinData.streak || 0
+        } catch (error) {
+            console.error('获取连续签到天数失败:', error)
+            return 0
+        }
+    }
+
+    /**
+     * 更新签到连击
+     */
+    static async updateSignInStreak(userId, groupId) {
+        const signinKey = `akasha:signin-data:${groupId}:${userId}`
+        
+        try {
+            const signinData = await TextHelper.getSigninData(userId, groupId)
+            const today = moment().format('YYYY-MM-DD')
+            const yesterday = moment().subtract(1, 'day').format('YYYY-MM-DD')
+            
+            // 如果是连续签到，增加连击数
+            if (signinData.lastSignin === yesterday) {
+                signinData.streak += 1
+            } else {
+                // 重新开始连击
+                signinData.streak = 1
+            }
+            
+            signinData.lastSignin = today
+            signinData.totalDays += 1
+            
+            // 保存数据
+            if (isRedisAvailable()) {
+                await redis.set(signinKey, JSON.stringify(signinData), { EX: 2592000 }) // 30天过期
+            } else {
+                console.log(`[虚空终端] Redis不可用，使用内存缓存更新签到数据: ${signinKey}`)
+                memoryCache.set(signinKey, signinData)
+            }
+            
+            return signinData.streak
+        } catch (error) {
+            console.error('更新签到连击失败:', error)
+            return 1
+        }
+    }
+
+    /**
+     * 获取商店数据
+     */
+    static async getShopData() {
+        try {
+            const shopDataPath = 'plugins/trss-akasha-terminal-plugin/data/shop_data.json'
+            return await dataManager.loadJsonData(shopDataPath, {})
+        } catch (error) {
+            console.error('获取商店数据失败:', error)
+            return {}
+        }
+    }
+
+    /**
+     * 自动刷新商店
+     */
+    static async autoRefreshShop() {
+        // 这个方法通常在商店类中实现，这里提供一个基础版本
+        console.log('自动刷新商店功能需要在商店类中实现')
+        return true
+    }
+
+    /**
+     * 获取道具图标
+     */
+    static getItemIcon(itemType) {
+        const iconMap = {
+            'consumable': '🍭',
+            'buff': '✨',
+            'mystery': '🎁',
+            'material': '🔧',
+            'weapon': '⚔️',
+            'armor': '🛡️',
+            'accessory': '💍',
+            'food': '🍎',
+            'potion': '🧪'
+        }
+        return iconMap[itemType] || '📦'
+    }
+
+    /**
+     * 获取稀有度表情符号
+     */
+    static getRarityEmoji(rarity) {
+        const rarityMap = {
+            'common': '⚪',
+            'rare': '🔵', 
+            'epic': '🟣',
+            'legendary': '🟡',
+            'mythic': '🔴'
+        }
+        return rarityMap[rarity] || '⚪'
     }
 }
 

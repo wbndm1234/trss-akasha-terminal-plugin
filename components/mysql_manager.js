@@ -263,6 +263,46 @@ class MySQLManager {
                 error_message TEXT,
                 INDEX idx_user_command (user_id, command_name),
                 INDEX idx_time (execution_time)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+            // 全局武器数据表
+            `CREATE TABLE IF NOT EXISTS global_weapon_data (
+                id INT PRIMARY KEY DEFAULT 1,
+                weapon_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+            // 全局商店数据表
+            `CREATE TABLE IF NOT EXISTS global_shop_data (
+                id INT PRIMARY KEY DEFAULT 1,
+                shop_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+            // 全局任务数据表
+            `CREATE TABLE IF NOT EXISTS global_quest_data (
+                id INT PRIMARY KEY DEFAULT 1,
+                quest_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+            // 全局合成配方数据表
+            `CREATE TABLE IF NOT EXISTS global_synthesis_data (
+                id INT PRIMARY KEY DEFAULT 1,
+                synthesis_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+            // 全局关系数据表
+            `CREATE TABLE IF NOT EXISTS global_relationship_data (
+                id INT PRIMARY KEY DEFAULT 1,
+                relationship_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`
         ]
 
@@ -810,6 +850,10 @@ class MySQLManager {
                     tableName = 'global_relationship_data';
                     dataColumn = 'relationship_data';
                     break;
+                case 'weapon':
+                    tableName = 'global_weapon_data';
+                    dataColumn = 'weapon_data';
+                    break;
                 default:
                     throw new Error(`不支持的全局数据类型: ${dataType}`);
             }
@@ -859,6 +903,10 @@ class MySQLManager {
                 case 'relationship':
                     tableName = 'global_relationship_data';
                     dataColumn = 'relationship_data';
+                    break;
+                case 'weapon':
+                    tableName = 'global_weapon_data';
+                    dataColumn = 'weapon_data';
                     break;
                 default:
                     throw new Error(`不支持的全局数据类型: ${dataType}`);

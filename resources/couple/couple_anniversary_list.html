@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纪念日列表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .anniversary-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(255, 154, 158, 0.3);
+        }
+
+        .stats-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stats-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .anniversary-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .anniversary-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .anniversary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .anniversary-item.upcoming {
+            border-left-color: #3498db;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+
+        .anniversary-item.today {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .anniversary-item.past {
+            border-left-color: #95a5a6;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 6px 12px rgba(243, 156, 18, 0.3); }
+            to { box-shadow: 0 8px 20px rgba(243, 156, 18, 0.6); }
+        }
+
+        .anniversary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .anniversary-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .anniversary-date {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .anniversary-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-badge.upcoming {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .status-badge.today {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .status-badge.past {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+
+        .days-info {
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        .anniversary-meta {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #95a5a6;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 8px;
+        }
+
+        .no-anniversaries {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .no-anniversaries-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .no-anniversaries-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .no-anniversaries-hint {
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .heart-decoration {
+            color: #e74c3c;
+            font-size: 16px;
+            margin: 0 8px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .anniversary-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="anniversary-container">
+        <div class="header">
+            <div class="title">📅 纪念日列表</div>
+            <div class="subtitle">记录每一个重要的日子</div>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-number">{{totalAnniversaries}}</div>
+            <div class="stats-label">共有 {{totalAnniversaries}} 个纪念日</div>
+        </div>
+
+        {{#if anniversaryList.length}}
+        
+        <!-- 今日纪念日 -->
+        {{#each anniversaryList}}
+        {{#if this.isToday}}
+        {{#unless @first}}
+        <div class="section-title">🎉 今日纪念日</div>
+        {{/unless}}
+        <div class="anniversary-item today">
+            <div class="anniversary-header">
+                <div class="anniversary-name">
+                    <span class="anniversary-icon">🎊</span>
+                    {{this.name}}
+                </div>
+                <div class="anniversary-date">{{this.date}}</div>
+            </div>
+            <div class="anniversary-status">
+                <span class="status-badge today">今天</span>
+                <span class="days-info">🎉 今天就是这个特殊的日子！</span>
+            </div>
+            <div class="anniversary-meta">
+                创建时间：{{this.createdAt}}
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+
+        <!-- 即将到来的纪念日 -->
+        {{#if (hasUpcoming anniversaryList)}}
+        <div class="section-title">⏰ 即将到来</div>
+        {{#each anniversaryList}}
+        {{#if this.isUpcoming}}
+        <div class="anniversary-item upcoming">
+            <div class="anniversary-header">
+                <div class="anniversary-name">
+                    <span class="anniversary-icon">⭐</span>
+                    {{this.name}}
+                </div>
+                <div class="anniversary-date">{{this.date}}</div>
+            </div>
+            <div class="anniversary-status">
+                <span class="status-badge upcoming">即将到来</span>
+                <span class="days-info">
+                    {{#if (this.daysFromNow > 0)}}
+                    还有 {{this.daysFromNow}} 天
+                    {{else}}
+                    就在今年
+                    {{/if}}
+                </span>
+            </div>
+            <div class="anniversary-meta">
+                创建时间：{{this.createdAt}}
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+        {{/if}}
+
+        <!-- 已过去的纪念日 -->
+        {{#if (hasPast anniversaryList)}}
+        <div class="section-title">📚 美好回忆</div>
+        {{#each anniversaryList}}
+        {{#if this.isPast}}
+        <div class="anniversary-item past">
+            <div class="anniversary-header">
+                <div class="anniversary-name">
+                    <span class="anniversary-icon">💭</span>
+                    {{this.name}}
+                </div>
+                <div class="anniversary-date">{{this.date}}</div>
+            </div>
+            <div class="anniversary-status">
+                <span class="status-badge past">已过去</span>
+                <span class="days-info">
+                    {{#if (this.daysPassed > 0)}}
+                    {{this.daysPassed}} 天前
+                    {{else}}
+                    今年已过
+                    {{/if}}
+                </span>
+            </div>
+            <div class="anniversary-meta">
+                创建时间：{{this.createdAt}}
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+        {{/if}}
+
+        {{else}}
+        <div class="no-anniversaries">
+            <div class="no-anniversaries-icon">📅</div>
+            <div class="no-anniversaries-text">还没有设置纪念日</div>
+            <div class="no-anniversaries-hint">
+                使用 #设置纪念日 YYYY-MM-DD 纪念日名称 来添加你们的特殊日子吧！
+            </div>
+        </div>
+        {{/if}}
+
+        <div class="footer">
+            <span class="heart-decoration">💕</span>
+            珍惜每一个值得纪念的时刻
+            <span class="heart-decoration">💕</span>
+            <br>
+            更新时间：{{updateTime}}
+        </div>
+    </div>
+
+    <script>
+        
+        function hasUpcoming(anniversaryList) {
+            return anniversaryList.some(ann => ann.isUpcoming);
+        }
+        
+        function hasPast(anniversaryList) {
+            return anniversaryList.some(ann => ann.isPast);
+        }
+    </script>
+</body>
+</html>

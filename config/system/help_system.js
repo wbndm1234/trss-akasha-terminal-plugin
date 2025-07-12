@@ -7,7 +7,7 @@
 
 export const helpCfg = {
   // 帮助标题
-  title: '虚空trss版帮助',
+  title: 'TRSS虚空帮助',
 
   // 帮助副标题
   subTitle: 'TRSS-Yunzai & trss-akasha-terminal-plugin',
@@ -38,17 +38,6 @@ export const helpCfg = {
 
 // 帮助菜单内容
 export const helpList = [{
-  group: '决斗!属性系统',
-  list: [{
-    icon: 21,
-    title: '#锻炼',
-    desc: '生命在于运动。锻炼提升你的经验吧'
-}, {
-    icon: 22,
-    title: '#闭关突破',
-    desc: '当经验满足时，即可提升等级'
-  }]
-}, {
   group: '决斗!抽卡系统',
   list: [{
     icon: 19,
@@ -77,10 +66,6 @@ export const helpList = [{
 }, {
   group: '群友?老婆?!',
   list: [{
-    icon: 20,
-    title: '创建老婆',
-    desc: '创建老婆存档'
-  }, {
     icon: 20,
     title: '领取低保',
     desc: '钱太少可以使用'
@@ -158,10 +143,6 @@ export const helpList = [{
     desc: '?'
   }, {
     icon: 20,
-    title: '群cp',
-    desc: '看看本群的cp们'
-  }, {
-    icon: 20,
     title: '家庭信息',
     desc: '看看家,看看资产'
   }, {
@@ -170,30 +151,224 @@ export const helpList = [{
     desc: '部分指令无响应时使用'
   }]
 }, {
+  group: '虚空商城',
+  list: [{
+    icon: 30,
+    title: '#虚空商城',
+    desc: '查看虚空商城中的道具'
+  }, {
+    icon: 31,
+    title: '#购买道具+编号',
+    desc: '购买指定编号的道具'
+  }, {
+    icon: 32,
+    title: '#我的虚空背包',
+    desc: '查看自己拥有的道具'
+  }, {
+    icon: 33,
+    title: '#使用道具+编号',
+    desc: '使用指定编号的道具'
+  }, {
+    icon: 34,
+    title: '#赠送道具+编号',
+    desc: '将道具赠送给其他人'
+  }, {
+    icon: 35,
+    title: '#道具详情+编号',
+    desc: '查看道具的详细信息'
+  }, {
+    icon: 36,
+    title: '#每日签到',
+    desc: '每日签到获得奖励'
+  }, {
+    icon: 37,
+    title: '#商城刷新',
+    desc: '刷新商城中的道具'
+  }]
+}, {
+  group: '虚空合成系统',
+  list: [{
+    icon: 40,
+    title: '#合成列表',
+    desc: '查看所有可合成的配方'
+  }, {
+    icon: 41,
+    title: '#虚空合成+道具名',
+    desc: '合成指定的道具'
+  }, {
+    icon: 42,
+    title: '#我的工坊',
+    desc: '查看自己的合成工坊信息'
+  }, {
+    icon: 43,
+    title: '#升级工坊',
+    desc: '升级合成工坊等级'
+  }, {
+    icon: 44,
+    title: '#批量合成+道具名',
+    desc: '批量合成指定道具'
+  }, {
+    icon: 45,
+    title: '#分解道具+道具名',
+    desc: '分解道具获得材料'
+  }, {
+    icon: 46,
+    title: '#合成历史',
+    desc: '查看合成制作记录'
+  }]
+}, {
+  group: '任务系统',
+  list: [{
+    icon: 50,
+    title: '#任务列表',
+    desc: '查看所有可接取的任务'
+  }, {
+    icon: 51,
+    title: '#每日任务',
+    desc: '查看每日任务进度'
+  }, {
+    icon: 52,
+    title: '#周常任务',
+    desc: '查看每周任务进度'
+  }, {
+    icon: 53,
+    title: '#特殊任务',
+    desc: '查看特殊活动任务'
+  }, {
+    icon: 54,
+    title: '#领取奖励+任务名',
+    desc: '完成任务并领取奖励'
+  }, {
+    icon: 55,
+    title: '#刷新任务',
+    desc: '重置任务列表'
+  }, {
+    icon: 56,
+    title: '#任务商店',
+    desc: '查看任务积分兑换商店'
+  }, {
+    icon: 57,
+    title: '#兑换+物品名',
+    desc: '使用任务积分兑换物品'
+  }]
+}, {
+  group: '情侣',
+  list: [{
+    icon: 60,
+    title: '#约会',
+    desc: '与伴侣进行约会活动'
+  }, {
+    icon: 61,
+    title: '#情侣任务',
+    desc: '查看情侣专属任务'
+  }, {
+    icon: 62,
+    title: '#表白',
+    desc: '向心仪的人表白'
+  }, {
+    icon: 63,
+    title: '#求婚',
+    desc: '向恋人求婚结婚'
+  }, {
+    icon: 64,
+    title: '#情侣排行',
+    desc: '查看情侣亲密度排行榜'
+  }, {
+    icon: 65,
+    title: '#送礼物',
+    desc: '给伴侣赠送礼物'
+  }, {
+    icon: 66,
+    title: '#情侣决斗',
+    desc: '情侣之间的决斗对战'
+  }, {
+    icon: 67,
+    title: '#开设店铺',
+    desc: '开设属于自己的店铺'
+  }, {
+    icon: 68,
+    title: '#我的店铺',
+    desc: '查看店铺经营信息'
+  }, {
+    icon: 69,
+    title: '#升级店铺',
+    desc: '升级店铺等级'
+  }, {
+    icon: 71,
+    title: '#cp银行',
+    desc: '存储爱心到情侣银行'
+  }, {
+    icon: 72,
+    title: '#取爱心',
+    desc: '从情侣银行提取爱心'
+  }]
+}, {
+  group: '情侣打卡系统',
+  list: [{
+    icon: 80,
+    title: '#情侣打卡',
+    desc: '情侣每日打卡记录'
+  }, {
+    icon: 81,
+    title: '#打卡记录',
+    desc: '查看历史打卡记录'
+  }, {
+    icon: 82,
+    title: '#设置纪念日+内容',
+    desc: '添加重要的纪念日'
+  }, {
+    icon: 83,
+    title: '#纪念日列表',
+    desc: '查看所有纪念日'
+  }, {
+    icon: 84,
+    title: '#删除纪念日+内容',
+    desc: '删除指定的纪念日'
+  }, {
+    icon: 85,
+    title: '#纪念日提醒',
+    desc: '查看今日纪念日提醒'
+  }]
+}, {
   group: '管理命令，仅bot管理员可用',
   auth: 'master',
   list: [{
-    icon: 40,
-    title: '#虚空设置/回收权能',
-    desc: '赋予/撤销一名群员特殊权能'
-  }, {
-    icon: 40,
+    icon: 91,
     title: '虚空重置时间',
     desc: '清除本群的时间记录,at则清除对方的'
   }, {
-    icon: 40,
+    icon: 92,
     title: '#虚空彩球开奖',
     desc: '顾名思义'
+  }, {
+    icon: 93,
+    title: '#虚空更新',
+    desc: '更新插件到最新版本'
+  }, {
+    icon: 94,
+    title: '#虚空强制更新',
+    desc: '强制更新插件'
+  }, {
+    icon: 95,
+    title: '#虚空重启',
+    desc: '重启虚空插件'
+  }, {
+    icon: 96,
+    title: '#重置虚空配置',
+    desc: '重置插件配置文件'
+  }, {
+    icon: 97,
+    title: '#获取虚空配置',
+    desc: '获取当前配置文件'
   }]
 }, {
   group: '测试功能',
   auth: 'master',
   list: [{
-    icon: 40,
+    icon: 100,
     title: '#虚空cp文生成',
     desc: '本地生成cp文的（不太确定能不能用）'
-    }, {
-}]
+  }]
 
 }]
 export const isSys = true

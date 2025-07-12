@@ -66,7 +66,11 @@
                         <div class="refresh-button">🔄 手动刷新 (消耗 50 任务点数)</div>
                     </div>
                     <div class="quest-list">
+<<<<<<< HEAD
+                        {{each dailyQuests}}
+=======
                         {{#each dailyQuests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="quest-card {{status}} {{difficulty}}">
                             <div class="quest-header">
                                 <div class="quest-icon">{{icon}}</div>
@@ -85,14 +89,22 @@
                             </div>
                             <div class="quest-rewards">
                                 <div class="rewards-title">奖励:</div>
+<<<<<<< HEAD
+                                {{each rewards}}
+=======
                                 {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                                 <div class="reward-item">
                                     <span class="reward-icon">{{icon}}</span>
                                     <span class="reward-text">{{text}}</span>
                                 </div>
                                 {{/each}}
                             </div>
+<<<<<<< HEAD
+                            {{if canClaim}}
+=======
                             {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                             <div class="claim-button">🎁 领取奖励</div>
                             {{/if}}
                         </div>
@@ -108,7 +120,11 @@
                         <div class="refresh-text">距离刷新还有: {{weeklyRefreshTime}}</div>
                     </div>
                     <div class="quest-list">
+<<<<<<< HEAD
+                        {{each weeklyQuests}}
+=======
                         {{#each weeklyQuests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="quest-card {{status}} {{difficulty}}">
                             <div class="quest-header">
                                 <div class="quest-icon">{{icon}}</div>
@@ -127,14 +143,22 @@
                             </div>
                             <div class="quest-rewards">
                                 <div class="rewards-title">奖励:</div>
+<<<<<<< HEAD
+                                {{each rewards}}
+=======
                                 {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                                 <div class="reward-item">
                                     <span class="reward-icon">{{icon}}</span>
                                     <span class="reward-text">{{text}}</span>
                                 </div>
                                 {{/each}}
                             </div>
+<<<<<<< HEAD
+                            {{if canClaim}}
+=======
                             {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                             <div class="claim-button">🎁 领取奖励</div>
                             {{/if}}
                         </div>
@@ -150,7 +174,11 @@
                         <div class="info-text">特殊任务不会自动刷新，完成后将永久消失</div>
                     </div>
                     <div class="quest-list">
+<<<<<<< HEAD
+                        {{each specialQuests}}
+=======
                         {{#each specialQuests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="quest-card {{status}} {{difficulty}} special">
                             <div class="quest-header">
                                 <div class="quest-icon">{{icon}}</div>
@@ -171,14 +199,22 @@
                             </div>
                             <div class="quest-rewards">
                                 <div class="rewards-title">奖励:</div>
+<<<<<<< HEAD
+                                {{each rewards}}
+=======
                                 {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                                 <div class="reward-item special">
                                     <span class="reward-icon">{{icon}}</span>
                                     <span class="reward-text">{{text}}</span>
                                 </div>
                                 {{/each}}
                             </div>
+<<<<<<< HEAD
+                            {{if canClaim}}
+=======
                             {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                             <div class="claim-button special">🌟 领取特殊奖励</div>
                             {{/if}}
                         </div>
@@ -205,7 +241,11 @@
                         </div>
                     </div>
                     <div class="quest-list completed">
+<<<<<<< HEAD
+                        {{each completedQuests}}
+=======
                         {{#each completedQuests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="quest-card completed {{difficulty}}">
                             <div class="quest-header">
                                 <div class="quest-icon">{{icon}}</div>
@@ -218,7 +258,11 @@
                             <div class="quest-description">{{description}}</div>
                             <div class="quest-rewards">
                                 <div class="rewards-title">已获得奖励:</div>
+<<<<<<< HEAD
+                                {{each rewards}}
+=======
                                 {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                                 <div class="reward-item claimed">
                                     <span class="reward-icon">{{icon}}</span>
                                     <span class="reward-text">{{text}}</span>
@@ -241,7 +285,11 @@
                 </div>
             </div>
             <div class="shop-items">
+<<<<<<< HEAD
+                {{each shopItems}}
+=======
                 {{#each shopItems}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <div class="shop-item {{rarity}}">
                     <div class="item-icon">{{icon}}</div>
                     <div class="item-info">
@@ -253,7 +301,11 @@
                         <div class="price-icon">🏆</div>
                         <div class="price-text">{{price}}</div>
                     </div>
+<<<<<<< HEAD
+                    {{if canBuy}}
+=======
                     {{#if canBuy}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                     <div class="buy-button">💰 购买</div>
                     {{else}}
                     <div class="buy-button disabled">点数不足</div>
@@ -266,19 +318,32 @@
         <div class="achievements-section">
             <h2>🏅 任务成就</h2>
             <div class="achievements-grid">
+<<<<<<< HEAD
+                {{each achievements}}
+                <div class="achievement-card {{if unlocked}}unlocked{{else}}locked{{/if}}">
+=======
                 {{#each achievements}}
                 <div class="achievement-card {{#if unlocked}}unlocked{{else}}locked{{/if}}">
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                     <div class="achievement-icon">{{icon}}</div>
                     <div class="achievement-info">
                         <div class="achievement-title">{{title}}</div>
                         <div class="achievement-description">{{description}}</div>
+<<<<<<< HEAD
+                        {{if unlocked}}
+=======
                         {{#if unlocked}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="achievement-date">解锁时间: {{unlockDate}}</div>
                         {{else}}
                         <div class="achievement-progress">进度: {{progress}}/{{target}}</div>
                         {{/if}}
                     </div>
+<<<<<<< HEAD
+                    {{if unlocked}}
+=======
                     {{#if unlocked}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                     <div class="achievement-badge">✅</div>
                     {{else}}
                     <div class="achievement-progress-bar">

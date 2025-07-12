@@ -50,6 +50,13 @@ async function getUser2(user_id, json, dirname, is_save) {
     }
 }
 async function getQQYUserBattle(id, json, is_save) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[getQQYUserBattle] 无效的用户ID: ${id}`);
+        return {};
+    }
+    
     if (!is_save) {
         var battlefilename = `battle.json`;//文件名
         if (!fs.existsSync(dirpath)) {//如果文件夹不存在
@@ -78,6 +85,13 @@ async function getQQYUserBattle(id, json, is_save) {
     }
 }
 async function getQQYUserPlace(id, json, filename, is_save) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[getQQYUserPlace] 无效的用户ID: ${id}`);
+        return {};
+    }
+    
     if (!is_save) {
         if (!fs.existsSync(QQYpath)) {//如果文件夹不存在
             fs.mkdirSync(QQYpath);//创建文件夹
@@ -106,6 +120,13 @@ async function getQQYUserPlace(id, json, filename, is_save) {
     }
 }
 async function getQQYUserxiaoqie(id, json, filename, is_save){
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[getQQYUserxiaoqie] 无效的用户ID: ${id}`);
+        return {};
+    }
+    
     if (!is_save) {
         if (!fs.existsSync(QQYpath)) {//如果文件夹不存在
             fs.mkdirSync(QQYpath);//创建文件夹
@@ -135,6 +156,12 @@ async function getQQYUserxiaoqie(id, json, filename, is_save){
     }
 }
 async function getQQYUserHome(id, json, filename, is_save) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[getQQYUserHome] 无效的用户ID: ${id}`);
+        return {};
+    }
     if (!is_save) {
         if (!fs.existsSync(QQYpath)) {//如果文件夹不存在
             fs.mkdirSync(QQYpath);//创建文件夹
@@ -179,6 +206,13 @@ async function getQQYUserHome(id, json, filename, is_save) {
     }
 }
 async function getQQYUserHouse(id, json, filename, is_save) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[getQQYUserHouse] 无效的用户ID: ${id}`);
+        return {};
+    }
+    
     if (!is_save) {
         if (!fs.existsSync(QQYpath)) {//如果文件夹不存在
             fs.mkdirSync(QQYpath);//创建文件夹
@@ -210,31 +244,67 @@ async function getQQYUserHouse(id, json, filename, is_save) {
 }
 // 保存方法。这样应该会没问题把，大概
 async function saveQQYUserBattle(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveQQYUserBattle] 无效的用户ID: ${id}`);
+        return json;
+    }
     const filename = 'default.json'
     return await getQQYUserBattle(id, json, filename, true)
 }
 
 async function saveQQYUserHome(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveQQYUserHome] 无效的用户ID: ${id}`);
+        return json;
+    }
     const filename = 'default.json'
     return await getQQYUserHome(id, json, filename, true)
 }
 
 async function saveQQYUserPlace(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveQQYUserPlace] 无效的用户ID: ${id}`);
+        return json;
+    }
     const filename = 'default.json'
     return await getQQYUserPlace(id, json, filename, true)
 }
 
 async function saveQQYUserHouse(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveQQYUserHouse] 无效的用户ID: ${id}`);
+        return json;
+    }
     const filename = 'default.json'
     return await getQQYUserHouse(id, json, filename, true)
 }
 
 async function saveQQYUserxiaoqie(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveQQYUserxiaoqie] 无效的用户ID: ${id}`);
+        return json;
+    }
     const filename = 'default.json'
     return await getQQYUserxiaoqie(id, json, filename, true)
 }
 
 async function saveUser(id, json) {
+    // 验证用户ID的有效性
+    if (!id || id === '0' || id === 0 || id === 'undefined' || id === 'null' || 
+        (typeof id === 'string' && id.length < 5)) {
+        console.warn(`[saveUser] 无效的用户ID: ${id}`);
+        return json;
+    }
     const Template = {}
     const filename = 'default.json'
     return await getUser(id, json, Template, filename, true)

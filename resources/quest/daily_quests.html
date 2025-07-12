@@ -373,13 +373,21 @@
         </div>
 
         <div class="quest-list">
+<<<<<<< HEAD
+            {{each quests}}
+=======
             {{#each quests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
             <div class="quest-card {{status}}">
                 <div class="quest-header">
                     <div class="quest-info">
                         <div class="quest-title">{{name}}</div>
                         <div class="quest-description">{{description}}</div>
+<<<<<<< HEAD
+                        {{if requirement}}
+=======
                         {{#if requirement}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="requirement">⚠️ {{requirement}}</div>
                         {{/if}}
                     </div>
@@ -396,7 +404,11 @@
                 <div class="quest-rewards">
                     <div class="rewards-title">🎁 奖励</div>
                     <div class="reward-items">
+<<<<<<< HEAD
+                        {{each rewards}}
+=======
                         {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="reward-item">
                             <span>{{icon}}</span>
                             <span>{{text}}</span>
@@ -405,7 +417,11 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                {{if canClaim}}
+=======
                 {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <button class="claim-button">🎁 领取奖励</button>
                 {{/if}}
             </div>

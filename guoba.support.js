@@ -7,7 +7,7 @@ export function supportGuoba () {
   return {
       pluginInfo: {
       name: 'trss-akasha-terminal-plugin',
-      title: '虚空插件trss版',
+      title: 'trss虚空插件',
       description: '提供企鹅群游戏，目前实现了群内决斗，娶群友等有趣的小游戏（重做+更多功能插件来适配trss崽）',     
       author: ['@我不能倒霉','@nahida'],
       authorLink: ['https://gitee.com/dmqaq','https://gitee.com/nahida22'],
@@ -392,3 +392,4 @@ export function supportGuoba () {
     }
   }
 }
+

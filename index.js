@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import { BotApi } from './model/api/api.js';
-import { Data, Version } from './components/index.js'
 //import Ver from './components/Version.js'
 import chalk from 'chalk'//用粉笔写；用白垩粉擦
 

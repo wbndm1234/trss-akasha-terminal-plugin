@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+<<<<<<< HEAD
+    
+=======
     <link rel="stylesheet" type="text/css" href="<%= data.cssPath %>"/>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
     <style>
        
         .recipes-list-container {
@@ -292,6 +296,17 @@
                 <div class="workshop-summary">
                     <div class="summary-item">
                         <span class="summary-label">工坊等级</span>
+<<<<<<< HEAD
+                        <span class="summary-value">Lv.<%= workshopLevel %></span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">成功率加成</span>
+                        <span class="summary-value">+<%= successBonus %>%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">经验值</span>
+                        <span class="summary-value"><%= workshopExp %>/<%= expToNext %></span>
+=======
                         <span class="summary-value">Lv.<%= data.workshopLevel %></span>
                     </div>
                     <div class="summary-item">
@@ -301,6 +316,7 @@
                     <div class="summary-item">
                         <span class="summary-label">经验值</span>
                         <span class="summary-value"><%= data.workshopExp %>/<%= data.expToNext %></span>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                     </div>
                 </div>
             </div>
@@ -311,14 +327,22 @@
                     <div class="filter-title">📋 配方分类</div>
                     <div class="filter-options">
                         <div class="filter-tag active">全部配方</div>
+<<<<<<< HEAD
+                        <% recipes.forEach(recipe => { %>
+=======
                         <% data.recipes.forEach(recipe => { %>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="filter-tag"><%= recipe.categoryName %></div>
                         <% }); %>
                     </div>
                 </div>
                 
                 
+<<<<<<< HEAD
+                <% recipes.forEach(recipe => { %>
+=======
                 <% data.recipes.forEach(recipe => { %>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <div class="category-section">
                     <div class="category-header">
                         📦 <%= recipe.categoryName %> (<%= recipe.items.length %>个配方)
@@ -370,6 +394,21 @@
                     <div class="filter-title">📊 合成统计</div>
                     <div class="stats-grid">
                         <div class="stat-card">
+<<<<<<< HEAD
+                            <span class="stat-number"><%= stats.totalCrafts %></span>
+                            <div class="stat-label">总合成次数</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= stats.successfulCrafts %></span>
+                            <div class="stat-label">成功次数</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= stats.successRate %>%</span>
+                            <div class="stat-label">成功率</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number"><%= recipes.length %></span>
+=======
                             <span class="stat-number"><%= data.stats.totalCrafts %></span>
                             <div class="stat-label">总合成次数</div>
                         </div>
@@ -383,6 +422,7 @@
                         </div>
                         <div class="stat-card">
                             <span class="stat-number"><%= data.recipes.length %></span>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                             <div class="stat-label">可用配方</div>
                         </div>
                     </div>

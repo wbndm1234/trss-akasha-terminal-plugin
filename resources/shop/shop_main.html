@@ -253,14 +253,35 @@
         <div class="header">
             <h1>🏪 虚空商城</h1>
             <div class="user-info">
+<<<<<<< HEAD
+                <div class="money">💰 金币: <%= money %></div>
+                <div class="points">🏆 积分: <%= points %></div>
+=======
                 <div class="money">💰 金币: {{money}}</div>
                 <div class="points">🏆 积分: {{points}}</div>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
             </div>
         </div>
         
         <div class="shop-section">
             <h2>📦 商品列表</h2>
             <div class="items-grid">
+<<<<<<< HEAD
+                <% for(var i = 0; i < items.length; i++) { %>
+                <div class="item-card <%= items[i].rarity %>">
+                    <div class="item-icon"><%= items[i].icon %></div>
+                    <div class="item-name"><%= items[i].name %></div>
+                    <div class="item-description"><%= items[i].description %></div>
+                    <div class="item-price">💰 <%= items[i].price %> 金币</div>
+                    <div class="item-stock <% if(items[i].stock === 0) { %>out<% } else if(items[i].stock < 5) { %>low<% } %>">
+                        库存: <% if(items[i].stock === -1) { %>∞<% } else { %><%= items[i].stock %><% } %>
+                    </div>
+                    <button class="buy-button" <% if(items[i].stock === 0 || money < items[i].price) { %>disabled<% } %>>
+                        <% if(items[i].stock === 0) { %>已售罄<% } else if(money < items[i].price) { %>金币不足<% } else { %>购买道具<%= items[i].id %><% } %>
+                    </button>
+                </div>
+                <% } %>
+=======
                 {{#each items}}
                 <div class="item-card {{rarity}}">
                     <div class="item-icon">{{icon}}</div>
@@ -275,6 +296,7 @@
                     </button>
                 </div>
                 {{/each}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
             </div>
         </div>
 
@@ -282,6 +304,17 @@
             <h3>📊 商城统计</h3>
             <div class="stats-grid">
                 <div class="stat-item">
+<<<<<<< HEAD
+                    <div class="stat-value"><%= totalItems %></div>
+                    <div class="stat-label">商品种类</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value"><%= availableItems %></div>
+                    <div class="stat-label">有库存商品</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value"><%= todayRefresh %></div>
+=======
                     <div class="stat-value">{{totalItems}}</div>
                     <div class="stat-label">商品种类</div>
                 </div>
@@ -291,6 +324,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">{{todayRefresh}}</div>
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                     <div class="stat-label">今日刷新</div>
                 </div>
             </div>

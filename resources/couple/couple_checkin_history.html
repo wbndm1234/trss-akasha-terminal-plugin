@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打卡历史记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .history-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #5a67d8;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(255, 154, 158, 0.3);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+            padding: 10px;
+            background: #6c757d;
+            color: white;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .calendar-day.checked {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+        }
+
+        .calendar-day.unchecked {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #007bff;
+            font-weight: bold;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-date {
+            font-size: 16px;
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 8px;
+        }
+
+        .history-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 14px;
+            color: #8b4513;
+        }
+
+        .history-mood {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .history-message {
+            font-style: italic;
+            color: #c0392b;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .no-history-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #dee2e6;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .month-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .streak-badge {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <div class="header">
+            <div class="title">📊 打卡历史记录</div>
+            <div class="subtitle">{{currentMonth}} 情侣打卡统计</div>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-number">{{streakData.current}}</div>
+                <div class="stat-label">当前连续</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{streakData.max}}</div>
+                <div class="stat-label">最长连续</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{statsData.total}}</div>
+                <div class="stat-label">累计打卡</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{statsData.thisMonth}}</div>
+                <div class="stat-label">本月打卡</div>
+            </div>
+        </div>
+
+        <div class="month-title">
+            📅 最近30天打卡日历
+        </div>
+
+        <div class="calendar-grid">
+            <div class="calendar-header">日</div>
+            <div class="calendar-header">一</div>
+            <div class="calendar-header">二</div>
+            <div class="calendar-header">三</div>
+            <div class="calendar-header">四</div>
+            <div class="calendar-header">五</div>
+            <div class="calendar-header">六</div>
+            
+            {{#each calendarDays}}
+            <div class="calendar-day {{#if this.checked}}checked{{else}}unchecked{{/if}} {{#if this.isToday}}today{{/if}}">
+                {{this.day}}
+                {{#if this.checked}}
+                <div style="position: absolute; top: -2px; right: -2px; font-size: 8px;">✓</div>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        {{#if recentCheckins.length}}
+        <div class="month-title">
+            📝 最近打卡记录
+        </div>
+        
+        <div class="history-list">
+            {{#each recentCheckins}}
+            <div class="history-item">
+                <div class="history-date">
+                    {{this.date}}
+                    {{#if this.streak}}
+                    <span class="streak-badge">连续{{this.streak}}天</span>
+                    {{/if}}
+                </div>
+                <div class="history-details">
+                    <div>⏰ {{this.time}}</div>
+                    <div>📍 {{this.location}}</div>
+                </div>
+                <div class="history-mood">{{this.mood}}</div>
+                <div class="history-message">"{{this.message}}"</div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="no-history">
+            <div class="no-history-icon">📝</div>
+            <div>还没有打卡记录哦~</div>
+            <div style="margin-top: 10px; font-size: 14px;">快和你的伴侣一起开始打卡吧！</div>
+        </div>
+        {{/if}}
+
+        <div class="footer">
+            💕 记录每一个美好的日子 💕
+            <br>
+            更新时间：{{updateTime}}
+        </div>
+    </div>
+</body>
+</html>

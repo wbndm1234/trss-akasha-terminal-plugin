@@ -560,14 +560,23 @@
         </div>
 
         <div class="shop-grid">
+<<<<<<< HEAD
+            {{each items}}
+            <div class="shop-item {{if isLimited}}limited{{/if}}" data-category="{{category}}">
+=======
             {{#each items}}
             <div class="shop-item {{#if isLimited}}limited{{/if}}" data-category="{{category}}">
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <div class="item-header">
                     <div class="item-info">
                         <div class="item-name">{{name}}</div>
                         <div class="item-category {{category}}">{{categoryText}}</div>
                         <div class="item-description">{{description}}</div>
+<<<<<<< HEAD
+                        {{if effect}}
+=======
                         {{#if effect}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="item-effect">💫 {{effect}}</div>
                         {{/if}}
                     </div>
@@ -585,11 +594,19 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                <button class="buy-button" {{if !canBuy}}disabled{{/if}}>
+                    {{if canBuy}}
+                        💰 购买
+                    {{else}}
+                        {{if outOfStock}}
+=======
                 <button class="buy-button" {{#unless canBuy}}disabled{{/unless}}>
                     {{#if canBuy}}
                         💰 购买
                     {{else}}
                         {{#if outOfStock}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                             ❌ 缺货
                         {{else}}
                             💸 点数不足

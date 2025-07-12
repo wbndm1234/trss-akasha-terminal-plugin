@@ -595,17 +595,28 @@
         </div>
 
         <div class="quest-list">
+<<<<<<< HEAD
+            {{each quests}}
+=======
             {{#each quests}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
             <div class="quest-card {{status}} {{rarity}}" data-rarity="{{rarity}}">
                 <div class="quest-header">
                     <div class="quest-info">
                         <div class="quest-title">{{name}}</div>
                         <div class="quest-rarity {{rarity}}">{{rarityText}}</div>
                         <div class="quest-description">{{description}}</div>
+<<<<<<< HEAD
+                        {{if lore}}
+                        <div class="quest-lore">"{{lore}}"</div>
+                        {{/if}}
+                        {{if requirement}}
+=======
                         {{#if lore}}
                         <div class="quest-lore">"{{lore}}"</div>
                         {{/if}}
                         {{#if requirement}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="requirement">⚠️ {{requirement}}</div>
                         {{/if}}
                     </div>
@@ -625,7 +636,11 @@
                         <span>特殊奖励</span>
                     </div>
                     <div class="reward-items">
+<<<<<<< HEAD
+                        {{each rewards}}
+=======
                         {{#each rewards}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                         <div class="reward-item {{../rarity}}">
                             <span>{{icon}}</span>
                             <span>{{text}}</span>
@@ -634,7 +649,11 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                {{if canClaim}}
+=======
                 {{#if canClaim}}
+>>>>>>> 7028ad7f53a21aee76e66c12776e499a071a9b3b
                 <button class="claim-button">🌟 领取特殊奖励</button>
                 {{/if}}
             </div>
