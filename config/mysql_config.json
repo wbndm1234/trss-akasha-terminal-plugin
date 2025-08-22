@@ -4,7 +4,7 @@
   "host": "localhost",
   "port": 3306,
   "user": "root",
-  "password": "jun513505",
+  "password": "",
   "database": "akasha_terminal",
   "charset": "utf8mb4"
 }
