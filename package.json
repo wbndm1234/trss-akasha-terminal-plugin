@@ -1,27 +1,15 @@
 {
   "name": "trss-akasha-terminal-plugin",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "dmqaq,nahida22",
-  "description": "trss虚空插件",
+  "description": "虚空终端 - 恋爱日常插件（基于 astrbot_plugin_akasha_terminal 重构）",
   "type": "module",
-  "imports": {
-    "#guoba.platform": "./components/guoba-platform.js"
-  },
   "main": "./index.js",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "ioredis": "^5.6.1",
-    "mysql2": "^3.6.0"
-  },
-  "scripts": {
-    "install-deps": "npm install mysql2 express cors",
-    "start-webui": "node webui/server.js"
-  },
+  "dependencies": {},
   "keywords": [
     "yunzai-bot",
     "trss-akasha-terminal-plugin",
-    "mysql",
-    "game"
+    "恋爱日常",
+    "情侣系统"
   ]
 }

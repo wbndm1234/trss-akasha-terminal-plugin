@@ -1,0 +1,21 @@
+# 虚空终端 - 恋爱日常插件配置
+
+akasha:
+  # 特权免冷却用户 QQ 列表（支持中英文逗号/空格分隔）
+  exempt_users: []
+  
+  # 打工冷却时间（秒）
+  work_cooldown: 3600
+  
+  # 表白冷却时间（秒）
+  confession_cooldown: 1800
+  
+  # 求婚冷却时间（秒）
+  propose_cooldown: 3600
+  
+  # 约会冷却时间（秒）
+  date_cooldown: 3600
+  
+  # 娶群友金币消耗
+  wife_random_cost: 100
+  wife_force_cost: 200
