@@ -1,0 +1,229 @@
+```
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Package manager caches
+.npm/
+.yarn/
+.pnpm-store/
+
+# IDE specific
+.vs/
+.project
+.classpath
+.settings/
+
+# Backup files
+*~
+*.bak
+*.orig
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Sensitive files
+config/*.key
+config/*.pem
+secrets/
+
+# Documentation builds
+docs/_build/
+_sass-cache/
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Web files
+*.min.js
+*.min.css
+
+# Mobile development
+*.ipa
+*.apk
+*.aab
+
+# Certificates
+*.crt
+*.cer
+*.p12
+
+# Lock files
+package-lock.json
+yarn.lock
+Pipfile.lock
+Gemfile.lock
+
+# Runtime specific
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+
+# Configuration backups
+config/backup/
+config/backups/
+
+# Generated files
+generated/
+.autotools/
+autom4te.cache/
+
+# Vim swap files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# IntelliJ IDEA
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.launch
+.settings/
+
+# Visual Studio
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+.externalToolBuilders/
+
+# Code::Blocks
+*.depend
+*.layout
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+*.moc.cpp
+*.qm
+
+# Android Studio
+*.iml
+.gradle/
+local.properties
+.pro
+captures/
+.externalNativeBuild/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+*.sortedsummary
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM/
+
+# Linux
+*~
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+Thumbs.db
+```

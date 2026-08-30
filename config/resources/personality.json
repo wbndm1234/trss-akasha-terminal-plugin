@@ -1,0 +1,27 @@
+[
+  {
+    "name": "温柔",
+    "tone": "温柔体贴",
+    "dialogues": {}
+  },
+  {
+    "name": "活泼",
+    "tone": "开朗阳光",
+    "dialogues": {}
+  },
+  {
+    "name": "高冷",
+    "tone": "外冷内热",
+    "dialogues": {}
+  },
+  {
+    "name": "傲娇",
+    "tone": "口是心非",
+    "dialogues": {}
+  },
+  {
+    "name": "天然呆",
+    "tone": "纯真可爱",
+    "dialogues": {}
+  }
+]
